@@ -8,7 +8,7 @@ class InternationalAccreditationForm(forms.Form):
         for visible in self.visible_fields():
             if visible.field.label != 'Tipo de acreditación':
                 visible.field.widget.attrs['class'] = 'input input-bordered w-full'
-        
+
     country_of_origin = forms.CharField(
         label='Pais de origen', 
         widget=forms.Select(
@@ -21,7 +21,7 @@ class InternationalAccreditationForm(forms.Form):
                 ('1', 'Estados Unidos'),
             ]
     ))
-    
+
     # Personal Data
     first_name = forms.CharField(label='Nombre', max_length=120)
     last_name = forms.CharField(label='Apellido', max_length=120)
