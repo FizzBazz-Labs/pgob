@@ -27,7 +27,7 @@ def get_vehicle_access_to_the_airport_form(request):
     template = 'core/vehicle_access_to_the_airport_form.html'
 
     context = {
-        'form': VehicleAccessToTheAirport
+        'form': VehicleAccessAirportForm()
     }
 
     return render(request, template, context)
@@ -37,7 +37,7 @@ def get_overflight_and_non_commercial_aircraft_form(request):
     template = 'core/overflight_and_non_commercial_aircraft.html'
 
     context  = {
-        'form': OverflightAndNonCommercialAircraft()
+        'form': OverflightNonCommercialAircraftForm()
     }
 
     return render(request, template, context)
