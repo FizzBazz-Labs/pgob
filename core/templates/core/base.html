@@ -13,7 +13,6 @@
     </style>
 </head>
 <body>
-
     <div class="my-5">
         <header class="text-2xl text-center font-bold">
             <h3> República de Panamá </h3>
@@ -23,39 +22,51 @@
             <div class="drawer lg:drawer-open">
                 <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
                 <div class="drawer-content">
-                  <!-- Page content here -->
-                  {% block content %}
-      
+                  {% block content %}      
                   {% endblock content %}
 
-                    <div class="p-5 grid md:grid-cols-3 gap-4">
-                        <div>
-                            <label for="" class="label-text"> Autorizado por </label>
-                            <input type="text" class="input input-bordered w-full">
-                        </div>
-                        <div>
-                            <label for="" class="label-text"> Fecha </label>
-                            <input type="date" class="input input-bordered w-full">
-                        </div>
+                <div class="p-5 grid md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="" class="label-text"> Autorizado por </label>
+                        <input type="text" class="input input-bordered w-full">
                     </div>
+                    <div>
+                        <label for="" class="label-text"> Fecha </label>
+                        <input type="date" class="input input-bordered w-full">
+                    </div>
+                </div>
                 
                 </div> 
                 <div class="drawer-side">
                   <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label> 
                   <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-                    <!-- Sidebar content here -->
-                    <li><a href="/"> Acreditación Nacional </a></li>
-                    <li><a href="{% url 'accreditation_forms:international-accreditation' %}"> Acreditación Internacional </a></li>
-                    <li><a href="{% url 'accreditation_forms:vehicle-access-to-the-airport' %}"> Acredita Acceso de Vehículos al Aeropuerto </a></li>
+                    <li>
+                        <a href="{% url 'accreditation:national-accreditation' %}">
+                            Acreditación Nacional
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="{% url 'accreditation:international-accreditation' %}">
+                            Acreditación Internacional
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'accreditation:overflight-and-non-commercial-aircraft-accreditation' %}">
+                            Solicitud de Sobrevuelo y Aterrizaje de Aeronave No Comercial
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'accreditation:vehicle-access-to-the-airport' %}">
+                            Acredita Acceso de Vehículos al Aeropuerto
+                        </a>
+                    </li>
                   </ul>
-                
                 </div>
             </div>
-
         </header>
     </div>
-
-    
-    
 </body>
 </html>
