@@ -3,3 +3,4 @@ from core.forms.international_accreditation_form import InternationalAccreditati
 from core.forms.security_weapons_registration_form import SecurityWeaponsRegistrationForm
 from core.forms.overflight_non_commercial_aircraft_form import OverflightNonCommercialAircraftForm
 from core.forms.vehicle_access_airport_form import VehicleAccessAirportForm
+from core.forms.medical_report_form import MedicalReportForm

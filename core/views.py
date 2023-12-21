@@ -41,3 +41,12 @@ def get_overflight_and_non_commercial_aircraft_form(request):
     }
 
     return render(request, template, context)
+
+def get_medical_report_form(request):
+    template = 'core/medical_report_form.html'
+
+    context  = {
+        'form': MedicalReportForm()
+    }
+
+    return render(request, template, context)

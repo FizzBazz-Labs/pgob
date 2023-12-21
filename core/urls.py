@@ -29,4 +29,10 @@ urlpatterns = [
         get_vehicle_access_to_the_airport_form,
         name='vehicle-access-to-the-airport',
     ),
+
+    path(
+        'medical_report/',
+        get_medical_report_form,
+        name='medical-report',
+    ),
 ]
