@@ -41,4 +41,9 @@ urlpatterns = [
         get_security_weapons_registration_form,
         name='security-weapons-registration',
     ),
+    path(
+        'newsletter_international/',
+        get_newsletter_international_form,
+        name='newsletter-international',
+    ),
 ]

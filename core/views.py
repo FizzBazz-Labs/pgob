@@ -61,3 +61,13 @@ def get_security_weapons_registration_form(request):
     }
 
     return render(request, template, context)
+
+
+def get_newsletter_international_form(request):
+    template = 'core/newsletter_international_accreditation_form.html'
+
+    context  = {
+        'form': NewsletterInternationalForm()
+    }
+
+    return render(request, template, context)
