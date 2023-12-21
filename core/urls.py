@@ -35,4 +35,10 @@ urlpatterns = [
         get_medical_report_form,
         name='medical-report',
     ),
+    
+    path(
+        'security_weapons_registration/',
+        get_security_weapons_registration_form,
+        name='security-weapons-registration',
+    ),
 ]
