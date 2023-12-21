@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.23/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{% block blockname %} Inicio {% endblock blockname %}</title>
+    <style>
+        input {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="my-5">
+        <header class="text-2xl text-center font-bold">
+            <h3> República de Panamá </h3>
+            <h3> Transmisión de Mando Presidencial 2024 </h3>
+            <h3>{% block form_type %}{% endblock form_type %}</h3>
+
+        </header>
+    </div>
+
+    {% block content %}
+      
+    {% endblock content %}
+    
+</body>
+</html>
