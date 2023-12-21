@@ -1,0 +1,41 @@
+{% extends "./base.html" %}
+
+{% block form_type %} Acreditación Nacional {% endblock form_type %}
+
+{% block content %}
+<div class="p-10">
+    <div class="text-xl mb-6">
+        <h2> Datos personales </h2>
+    </div>
+
+    <form action="/action/" method="post">
+        {% csrf_token %}    
+        <div class="grid md:grid-cols-3 gap-4">
+            {% for item in form %}    
+            {% if item.label != 'Tipo de acreditación' %}
+                <div>
+                    <label>
+                        <div class="label-text">
+                            {{ item.label }}
+                        </div>
+                        {{ item }}
+                    </label>
+                </div>
+                
+            {% endif %}
+              
+            {% endfor %}
+        </div>
+        
+        <div class="mt-4">
+            <div class="mb-6 text-xl"> {{ form.type_of_accreditation.label }} </div>
+            <div class="flex flex-wrap gap-5 text-xl">
+                {% for text in form.type_of_accreditation %}
+                {{text}}
+                {% endfor %}
+            </div>
+        </div>
+        <!-- <input type="submit" value="Submit"> -->
+    </form>
+</div>
+{% endblock content %}
