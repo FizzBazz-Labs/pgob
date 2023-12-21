@@ -8,7 +8,7 @@ class NationalAccreditationForm(forms.Form):
         for visible in self.visible_fields():
             if visible.field.label != 'Tipo de acreditación':
                 visible.field.widget.attrs['class'] = 'input input-bordered w-full'
-            
+
     # Personal Data
     first_name = forms.CharField(label='Nombre', max_length=120)
     last_name = forms.CharField(label='Apellido', max_length=120)
