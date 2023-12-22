@@ -7,7 +7,7 @@ app_name = 'accreditation'
 
 urlpatterns = [
     path(
-        'national_accreditation/',
+        '',
         get_national_accreditation_form,
         name='national-accreditation',
     ),
@@ -35,15 +35,22 @@ urlpatterns = [
         get_medical_report_form,
         name='medical-report',
     ),
-    
+
     path(
         'security_weapons_registration/',
         get_security_weapons_registration_form,
         name='security-weapons-registration',
     ),
+
     path(
         'newsletter_international/',
         get_newsletter_international_form,
         name='newsletter-international',
+    ),
+
+    path(
+        'newsletter_national/',
+        get_newsletter_national_form,
+        name='newsletter-national',
     ),
 ]

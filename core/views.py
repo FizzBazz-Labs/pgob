@@ -71,3 +71,14 @@ def get_newsletter_international_form(request):
     }
 
     return render(request, template, context)
+
+
+def get_newsletter_national_form(request):
+    template = 'core/newsletter_national_accreditation_form.html'
+
+    context  = {
+        'form': NewsletterNationalForm()
+    }
+
+    return render(request, template, context)
+
