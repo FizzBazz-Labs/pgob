@@ -51,3 +51,40 @@ class NewsletterInternationalForm(forms.Form):
             attrs={'type': 'date'}
         ),
     )
+
+    # Flight Information
+    flight_arrival_date = forms.DateField(
+        label='Fecha de Llegada', 
+        widget=forms.DateInput(
+            format=('%d/%m/%Y'),
+            attrs={'type': 'date'}
+        ),
+    )
+    flight_arrival_time = forms.DateField(
+        label='Hora de Llegada', 
+        widget=forms.DateInput(
+            format=('%H:%M'),
+            attrs={'type': 'time'}
+        ),
+    )
+
+    flight_arrival_airport = forms.CharField(label='Aeropuerto', max_length=120)
+
+    flight_departure_date = forms.DateField(
+        label='Fecha de Salida', 
+        widget=forms.DateInput(
+            format=('%d/%m/%Y'),
+            attrs={'type': 'date'}
+        ),
+    )
+
+    flight_arrival_time = forms.DateField(
+        label='Hora de Salida', 
+        widget=forms.DateInput(
+            format=('%H:%M'),
+            attrs={'type': 'time'}
+        ),
+    )
+
+    flight_departure_airport = forms.CharField(label='Aeropuerto', max_length=120)
+
