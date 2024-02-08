@@ -137,4 +137,141 @@ class InternationalAccreditation(models.Model):
     flight_departure_time = models.TimeField()
     flight_departure_number = models.CharField(max_length=120)
     flight_destination = models.CharField(max_length=120)
+
+
+
+class SecurityAccreditation(models.Model):
     
+    class WeaponType(models.TextChoices):
+        PISTOL = 'Pistol', _('Pistol')
+        RIFLE = 'Rifle', _('Rifle')
+        SHOTGUN = 'Shotgun', _('Shotgun')
+        OTHER = 'Other', _('Other')
+
+    class CommunicationType(models.TextChoices):
+        RADIO = 'Radio', _('Radio')
+        OTHER = 'Other', _('Other')
+
+    date_control = models.DateField()
+    time_control = models.TimeField()
+    disclaimer_accepted = models.BooleanField(default=False)
+    
+    # Weapon data
+    weapon = models.CharField(max_length=150)
+    brand = models.CharField(max_length=150)
+    model = models.CharField(max_length=150)
+    weapon_type = models.CharField(max_length=50, choices=WeaponType.choices)
+    serial_number = models.CharField(max_length=150)
+    caliber = models.CharField(max_length=150)
+    magazine_quantity = models.IntegerField()
+    ammunition_quantity = models.IntegerField()
+
+    # Communication equipment data
+    communication_radio = models.CharField(max_length=150)
+    communication_model = models.CharField(max_length=150)
+    communication_type = models.CharField(max_length=50, choices=CommunicationType.choices)
+    communication_serial = models.CharField(max_length=150)
+    communication_frequency = models.CharField(max_length=150)
+    
+
+class FlightRequest(models.Model):
+    class CivilianMilitary(models.TextChoices):
+        CIVIL = 'Civil', _('Civil')
+        MILITARY = 'Military', _('Military')
+
+    country = models.CharField(max_length=150)
+    
+    # Aircraft data
+    aircraft_type = models.CharField(max_length=150)
+    model = models.CharField(max_length=150)
+    civilian_military = models.CharField(max_length=50, choices=CivilianMilitary.choices)
+    registration_number = models.CharField(max_length=150)
+    color = models.CharField(max_length=150)
+    call_sign = models.CharField(max_length=150)
+    commander_name = models.CharField(max_length=150)
+    crew_members_count = models.IntegerField()
+    pmi_name = models.CharField(max_length=150)
+    position = models.CharField(max_length=150)
+    passengers_count = models.IntegerField()
+
+    # Flight information
+    entry_date = models.DateField()
+    exit_date = models.DateField()
+    overflight_info = models.TextField()
+    landing_info = models.TextField()
+    origin = models.CharField(max_length=150)
+    destination = models.CharField(max_length=150)
+    route = models.CharField(max_length=150)
+    ground_facilities = models.TextField()
+
+    # signature and dates
+    request_date = models.DateField()
+    requester_signature = models.CharField(max_length=150)
+
+
+
+class VehicleAccreditation(models.Model):
+    country_name = models.CharField(max_length=150)
+
+    class Vehicle(models.Model):
+
+        class VehicleTypes(models.TextChoices):
+            CAR = 'Car', _('Car')
+            PICK_UP = 'Pick up', _('Pick up')
+            VAN = 'Van', _('Van')
+            TRUCK = 'Truck', _('Truck')
+            OTHER = 'Other', _('Other')
+
+        vehicle_type = models.CharField(max_length=50, choices=VehicleTypes.choices)
+        brand = models.CharField(max_length=150)
+        color = models.CharField(max_length=150)
+        license_plate = models.CharField(max_length=20)
+        driver_name = models.CharField(max_length=150)
+        driver_id = models.CharField(max_length=20)
+        driver_phone = models.CharField(max_length=20)
+
+
+    vehicles = models.ManyToManyField(Vehicle, related_name='accreditations')
+
+    responsible_info = models.CharField(max_length=150)
+    responsible_signatures = models.TextField()
+    date = models.DateField()
+
+
+
+class CommunicationEquipmentDeclaration(models.Model):
+    country_name = models.CharField(max_length=150)
+    institution_or_media = models.CharField(max_length=150)
+
+class EquipmentItem(models.Model):
+    declaration = models.ForeignKey(CommunicationEquipmentDeclaration, on_delete=models.CASCADE, related_name='items')
+    object_type = models.CharField(max_length=50)
+    brand = models.CharField(max_length=150)
+    model = models.CharField(max_length=150)
+    serial_number = models.CharField(max_length=150)
+    approximate_value = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+
+
+
+class GeneralVehicleAccreditation(models.Model):
+    
+    mission = models.TextField()
+    vehicle_brand = models.CharField(max_length=150)
+    license_plate = models.CharField(max_length=20)
+    color = models.CharField(max_length=150)
+    driver_name = models.CharField(max_length=150)
+    dip = models.CharField(max_length=150)
+    assigned = models.TextField()
+    
+    distinctive = models.TextChoices(max_length=150)
+    observations = models.TextField()
+
+    responsible_signatures = models.TextField()
+    date = models.DateField()
+
+
+
+
+
