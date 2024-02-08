@@ -1,9 +1,19 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
+
+def create_image_path(instance, filename: str):
+    filename = filename.lower().replace(' ', '').replace('-', '')
+
+    return f'nationalacreditaion/files/{instance.id}/{filename}'
+
+#co
+class Country(models.Model):
+    name = models.CharField(max_length=150)
+
 class Nationality(models.Model):
     name = models.CharField(max_length=150)
-    country = models.CharField(max_length=150)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
     
 
 class Position(models.Model):
@@ -32,12 +42,12 @@ class NationalAcreditation(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=150)
-    image = models.ImageField(upload_to=create_file_path(is_image=True))
+    image = models.ImageField(upload_to=create_image_path)
     last_name = models.CharField(max_length=150)
     nationality = models.ForeignKey(Nationality, on_delete=models.CASCADE, related_name='national_accreditations')
     passport_id = models.CharField(max_length=100)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, related_name='national_acreditation')
-    letter_of_authorization = models.FileField(upload_to=create_file_path)
+    letter_of_authorization = models.FileField(upload_to=create_image_path)
     media_channel = models.ForeignKey(MediaChannel, on_delete=models.CASCADE, related_name='national_acreditation')
     institution = models.CharField(max_length=120)
     address = models.CharField(max_length=120)
@@ -90,15 +100,15 @@ class InternationalAccreditation(models.Model):
         TRIPULATION = 'Tripulacion', _('Tripulacion')
         COMERCIAL_PRESS = 'Prensa Comercial', _('Prensa Comercial')
     
-    country_of_origin = models.ForeignKey(Nationality, on_deleted=models.PROTECT, related_name='international_accreditations')
+    country_of_origin = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='international_accreditations')
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=150)
-    image = models.ImageField(upload_to=create_file_path(is_image=True))
+    image = models.ImageField(upload_to=create_image_path)
     last_name = models.CharField(max_length=150)
     nationality = models.ForeignKey(Nationality, on_delete=models.CASCADE, related_name='international_accreditations')
     passport_id = models.CharField(max_length=100)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, related_name='international_accreditations')
-    letter_of_authorization = models.FileField(upload_to=create_file_path)
+    letter_of_authorization = models.FileField(upload_to=create_image_path)
     media_channel = models.ForeignKey(MediaChannel, on_delete=models.CASCADE, related_name='international_accreditations')
     institution = models.CharField(max_length=120)
     address = models.CharField(max_length=120)
@@ -157,6 +167,8 @@ class SecurityAccreditation(models.Model):
     disclaimer_accepted = models.BooleanField(default=False)
     
     # Weapon data
+    #preguntar que va en weapon
+    #arama blanca o de fuego
     weapon = models.CharField(max_length=150)
     brand = models.CharField(max_length=150)
     model = models.CharField(max_length=150)
@@ -167,6 +179,7 @@ class SecurityAccreditation(models.Model):
     ammunition_quantity = models.IntegerField()
 
     # Communication equipment data
+    #preguntar que va en radio y tipo
     communication_radio = models.CharField(max_length=150)
     communication_model = models.CharField(max_length=150)
     communication_type = models.CharField(max_length=50, choices=CommunicationType.choices)
@@ -179,7 +192,7 @@ class FlightRequest(models.Model):
         CIVIL = 'Civil', _('Civil')
         MILITARY = 'Military', _('Military')
 
-    country = models.CharField(max_length=150)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
     
     # Aircraft data
     aircraft_type = models.CharField(max_length=150)
@@ -205,31 +218,32 @@ class FlightRequest(models.Model):
     ground_facilities = models.TextField()
 
     # signature and dates
+    #PEDIR UNA FIRMA DIGITAL
+    #PREGUNTAR COMO QUIEREN AGARRAR LA
     request_date = models.DateField()
     requester_signature = models.CharField(max_length=150)
 
 
+class Vehicle(models.Model):
+
+    class VehicleTypes(models.TextChoices):
+        CAR = 'Car', _('Car')
+        PICK_UP = 'Pick up', _('Pick up')
+        VAN = 'Van', _('Van')
+        TRUCK = 'Truck', _('Truck')
+        OTHER = 'Other', _('Other')
+
+    vehicle_type = models.CharField(max_length=50, choices=VehicleTypes.choices)
+    brand = models.CharField(max_length=150)
+    color = models.CharField(max_length=150)
+    license_plate = models.CharField(max_length=20)
+    driver_name = models.CharField(max_length=150)
+    driver_id = models.CharField(max_length=20)
+    driver_phone = models.CharField(max_length=20)
+
 
 class VehicleAccreditation(models.Model):
-    country_name = models.CharField(max_length=150)
-
-    class Vehicle(models.Model):
-
-        class VehicleTypes(models.TextChoices):
-            CAR = 'Car', _('Car')
-            PICK_UP = 'Pick up', _('Pick up')
-            VAN = 'Van', _('Van')
-            TRUCK = 'Truck', _('Truck')
-            OTHER = 'Other', _('Other')
-
-        vehicle_type = models.CharField(max_length=50, choices=VehicleTypes.choices)
-        brand = models.CharField(max_length=150)
-        color = models.CharField(max_length=150)
-        license_plate = models.CharField(max_length=20)
-        driver_name = models.CharField(max_length=150)
-        driver_id = models.CharField(max_length=20)
-        driver_phone = models.CharField(max_length=20)
-
+    country_name = models.ForeignKey(Country, on_delete=models.CASCADE)
 
     vehicles = models.ManyToManyField(Vehicle, related_name='accreditations')
 
@@ -240,17 +254,19 @@ class VehicleAccreditation(models.Model):
 
 
 class CommunicationEquipmentDeclaration(models.Model):
-    country_name = models.CharField(max_length=150)
+    country_name = models.ForeignKey(Country, on_delete=models.CASCADE)
     institution_or_media = models.CharField(max_length=150)
 
 class EquipmentItem(models.Model):
-    declaration = models.ForeignKey(CommunicationEquipmentDeclaration, on_delete=models.CASCADE, related_name='items')
     object_type = models.CharField(max_length=50)
     brand = models.CharField(max_length=150)
     model = models.CharField(max_length=150)
     serial_number = models.CharField(max_length=150)
-    approximate_value = models.DecimalField(max_digits=10, decimal_places=2)
+    approximate_value = models.IntegerField()   
 
+class CommunicationEquipmentDeclarationEquipmentItem(models.Model):
+    communication_equipment_declaration = models.ForeignKey(CommunicationEquipmentDeclaration, on_delete=models.CASCADE)
+    equipment_item = models.ForeignKey(EquipmentItem, on_delete=models.CASCADE)
 
 
 
@@ -265,7 +281,7 @@ class GeneralVehicleAccreditation(models.Model):
     dip = models.CharField(max_length=150)
     assigned = models.TextField()
     
-    distinctive = models.TextChoices(max_length=150)
+    distinctive = models.CharField(max_length=150)
     observations = models.TextField()
 
     responsible_signatures = models.TextField()
