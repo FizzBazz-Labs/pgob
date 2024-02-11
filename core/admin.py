@@ -3,11 +3,11 @@ from django.db import models
 from django import forms
 from django.utils.translation import gettext as _
 
-from core.models import Country, Nationality, Position, MediaChannel, NationalAcreditation, SecurityAccreditation, FlightRequest, Vehicle, VehicleAccreditation, CommunicationEquipmentDeclaration, EquipmentItem, CommunicationEquipmentDeclarationEquipmentItem, GeneralVehicleAccreditation
+from core.models import Country, Nationality, Position, MediaChannel, NationalAcreditation, SecurityAccreditation, FlightRequest, Vehicle, VehicleAccreditation, CommunicationEquipmentDeclaration, EquipmentItem, GeneralVehicleAccreditation
 
 from core.modelos.international_accreditation import InternationalAccreditation, MedicalHistory, Allergy, Inmunization
 
-modelos = [Country, Nationality, Position, MediaChannel, NationalAcreditation, SecurityAccreditation, FlightRequest, Vehicle, VehicleAccreditation, CommunicationEquipmentDeclaration, EquipmentItem, CommunicationEquipmentDeclarationEquipmentItem, GeneralVehicleAccreditation]
+modelos = [Country, Nationality, Position, MediaChannel, NationalAcreditation, SecurityAccreditation, FlightRequest, Vehicle, VehicleAccreditation, CommunicationEquipmentDeclaration, EquipmentItem, GeneralVehicleAccreditation]
 
 for modelo in modelos:
     admin.site.register(modelo)
@@ -106,8 +106,10 @@ class InternationalAccreditationAdmin(admin.ModelAdmin):
     
 
 @admin.register(Allergy)
-class AllergyAdmin(admin.ModelAdmin): ...
+class AllergyAdmin(admin.ModelAdmin): 
+    ...
 
 
 @admin.register(Inmunization)
-class InmunizationAdmin(admin.ModelAdmin): ...
+class InmunizationAdmin(admin.ModelAdmin): 
+    ...

@@ -42,6 +42,7 @@ class NationalAcreditation(models.Model):
         COMERCIAL_PRESS = 'Prensa Comercial', _('Prensa Comercial')
     
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     first_name = models.CharField(max_length=150)
     image = models.ImageField(upload_to=create_image_path)
     last_name = models.CharField(max_length=150)
@@ -101,13 +102,13 @@ class SecurityAccreditation(models.Model):
     
 
 class FlightRequest(models.Model):
+    
     class CivilianMilitary(models.TextChoices):
         CIVIL = 'Civil', _('Civil')
         MILITARY = 'Military', _('Military')
 
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     
-    # Aircraft data
     aircraft_type = models.CharField(max_length=150)
     model = models.CharField(max_length=150)
     civilian_military = models.CharField(max_length=50, choices=CivilianMilitary.choices)
@@ -117,7 +118,7 @@ class FlightRequest(models.Model):
     commander_name = models.CharField(max_length=150)
     crew_members_count = models.IntegerField()
     pmi_name = models.CharField(max_length=150)
-    position = models.CharField(max_length=150)
+    position = models.ForeignKey(Position, on_delete=models.PROTECT, related_name='flight_requests')
     passengers_count = models.IntegerField()
 
     # Flight information
@@ -165,23 +166,18 @@ class VehicleAccreditation(models.Model):
     date = models.DateField()
 
 
-
 class CommunicationEquipmentDeclaration(models.Model):
     country_name = models.ForeignKey(Country, on_delete=models.CASCADE)
     institution_or_media = models.CharField(max_length=150)
 
+
 class EquipmentItem(models.Model):
+    declaration = models.ForeignKey(CommunicationEquipmentDeclaration, on_delete=models.CASCADE, related_name='equipments')
     object_type = models.CharField(max_length=50)
     brand = models.CharField(max_length=150)
     model = models.CharField(max_length=150)
     serial_number = models.CharField(max_length=150)
     approximate_value = models.IntegerField()   
-
-class CommunicationEquipmentDeclarationEquipmentItem(models.Model):
-    communication_equipment_declaration = models.ForeignKey(CommunicationEquipmentDeclaration, on_delete=models.CASCADE)
-    equipment_item = models.ForeignKey(EquipmentItem, on_delete=models.CASCADE)
-
-
 
 
 class GeneralVehicleAccreditation(models.Model):
