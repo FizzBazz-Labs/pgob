@@ -53,4 +53,5 @@ urlpatterns = [
         get_newsletter_national_form,
         name='newsletter-national',
     ),
+    
 ]

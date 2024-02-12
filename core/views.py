@@ -1,16 +1,34 @@
 from django.shortcuts import render
 
+#TEMPORAL
+from django.http import HttpResponse
+
 from core.forms import *
+
+
+from core.modelos.national_accreditation import NationalAcreditation
+from core.models import Position, Nationality, Country, MediaChannel
+
+
 
 
 def get_national_accreditation_form(request):
     template = 'core/national_accreditation_form.html'
 
-    context  = {
-        'form': NationalAccreditationForm()
-    }
+    if(request.method == "GET"):
 
-    return render(request, template, context)
+        context  = {
+            'form': NationalAccreditationForm()
+        }
+
+        return render(request, template, context)
+
+    if(request.method == "POST"):
+        return HttpResponse(request)
+
+
+
+
 
 
 def get_international_accreditation_form(request):
