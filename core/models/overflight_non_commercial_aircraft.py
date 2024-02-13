@@ -1,10 +1,11 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models import Position, Nationality, Country, MediaChannel
+from core.models import Position, Country
+#, MediaChannel, Nationality 
 
 
-class FlightRequest(models.Model):
+class OverflightNonCommercialAircraft(models.Model):
 
     def upload_file_name(self, filename):
         return f'fligth_request/{self.accreditation_type}/{filename}'

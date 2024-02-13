@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models import Position, Nationality, Country, MediaChannel
+#from core.models import Position, Nationality, Country, MediaChannel
 
 
 class VehicleTypes(models.Model):
@@ -39,8 +39,8 @@ class Vehicle(models.Model):
     driver_phone = models.CharField(max_length=20)
 
 
-class VehicleAccreditation(models.Model):
-    country_name = models.ForeignKey(Country, on_delete=models.CASCADE)
+class VehicleAccessAirport(models.Model):
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
 
     vehicles = models.ManyToManyField(Vehicle, related_name='accreditations')
 

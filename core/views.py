@@ -8,7 +8,7 @@ from core.forms import *
 
 from core.modelos.national_accreditation import NationalAcreditation
 from core.models import Position, Nationality, Country, MediaChannel
-
+from core.forms import NationalAccreditationForm
 
 
 
@@ -25,6 +25,13 @@ def get_national_accreditation_form(request):
 
     if(request.method == "POST"):
         return HttpResponse(request)
+
+
+#prueba
+# def get_national_accreditation_form(request):
+#     national_accreditation =  NationalAccreditationForm
+#     return render_to_response ()
+
 
 
 

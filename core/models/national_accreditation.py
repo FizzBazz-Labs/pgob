@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models import Position, Nationality, Country, MediaChannel
+from core.models import Position, Nationality, MediaChannel
+#,Country
 
 
 class NationalAccreditation(models.Model):
