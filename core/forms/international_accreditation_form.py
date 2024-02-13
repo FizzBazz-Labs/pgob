@@ -1,5 +1,12 @@
 from django import forms
 
+# from core.models import CommunicationEquipmentDeclaration
+
+
+# class CommunicationEquipmentDeclarationForm(forms.ModelForm):
+#     class Meta:
+#         model = CommunicationEquipmentDeclaration
+
 
 class InternationalAccreditationForm(forms.Form):
     def __init__(self, *args, **kwargs):
