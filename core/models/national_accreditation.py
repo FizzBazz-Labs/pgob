@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 from core.models import Position, Nationality, Country, MediaChannel
 
 
-class NationalAcreditation(models.Model):
+class NationalAccreditation(models.Model):
     
     def upload_file_name(self, filename):
         return f'national_accreditation/{self.accreditation_type}/{filename}'
