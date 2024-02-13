@@ -3,25 +3,7 @@ from django.db import models
 from django import forms
 from django.utils.translation import gettext as _
 
-from core.models import Country, Nationality, Position, MediaChannel,  CommunicationEquipmentDeclaration, EquipmentItem
-
-from core.modelos.international_accreditation import InternationalAccreditation, MedicalHistory, Allergy, Inmunization
-
-from core.modelos.national_accreditation import NationalAcreditation
-
-from core.modelos.security_accreditation import SecurityAccreditation, CommunicationType, WeaponType
-
-from core.modelos.flight_request import FlightRequest
-
-from core.modelos.vehicle import Vehicle, VehicleAccreditation, VehicleTypes
-
-from core.modelos.general_vehicle_accreditation import GeneralVehicleAccreditation 
-
-#modelos = [Country, Nationality, Position, MediaChannel, NationalAcreditation, SecurityAccreditation, FlightRequest, Vehicle, VehicleAccreditation, CommunicationEquipmentDeclaration, EquipmentItem, GeneralVehicleAccreditation]
-
-#for modelo in modelos:
-#    admin.site.register(modelo)
-
+from core.models import *
 
 @admin.register(InternationalAccreditation)
 class InternationalAccreditationAdmin(admin.ModelAdmin):
