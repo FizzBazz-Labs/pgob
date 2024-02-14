@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models.position import Position
-
 
 class OverflightNonCommercialAircraft(models.Model):
 
@@ -31,7 +29,9 @@ class OverflightNonCommercialAircraft(models.Model):
     crew_members_count = models.IntegerField()
     pmi_name = models.CharField(max_length=150)
     position = models.ForeignKey(
-        Position, on_delete=models.PROTECT, related_name='flight_requests')
+        'positions.Position',
+        on_delete=models.PROTECT,
+        related_name='flight_forms')
     passengers_count = models.IntegerField()
 
     # Flight information

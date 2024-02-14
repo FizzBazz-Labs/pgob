@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'core.apps.CoreConfig',
     'countries.apps.CountriesConfig',
+    'positions.apps.PositionsConfig',
     'pgob_auth.apps.PgobAuthConfig',
 ]
 

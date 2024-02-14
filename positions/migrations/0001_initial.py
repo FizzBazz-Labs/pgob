@@ -12,14 +12,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Country',
+            name='Position',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=150)),
-                ('nationality', models.CharField(max_length=150)),
+                ('name', models.CharField(max_length=250)),
+                ('sub_position', models.CharField(blank='', choices=[('cameraman', 'Camarógrafo Oficial'), ('photographer', 'Fotógrafo Oficial'), ('technical', 'Técnico/Apoyo'), ('journalist', 'Periodista'), ('digital_communications_officer', 'Oficial de Comunicación Digital')], max_length=150)),
             ],
-            options={
-                'verbose_name_plural': 'countries',
-            },
         ),
     ]
