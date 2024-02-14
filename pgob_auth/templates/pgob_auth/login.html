@@ -1,9 +1,15 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
 {% load static %}
-
-{% block content %}
-<div
-  class="flex flex-row justify-center items-center h-screen bg-no-repeat bg-cover bg-[url({% static 'assets/background.png' %})]" >
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div class="flex flex-row justify-center items-center h-screen bg-no-repeat bg-cover bg-[url({% static 'assets/background.png' %})]">
   <div class="w-full max-w-xs">
     <form method="POST" class="bg-cyan-800 shadow-md rounded px-8 pt-6 pb-8 mb-4">
       {% csrf_token %}
@@ -50,6 +56,7 @@
         </a> -->
       </div>
     </form>
+
     <p class="text-center text-white text-xs">
       &copy;2023 Ministerio de Relaciones Exteriores. <br />
       Oficina de informática <br />
@@ -57,4 +64,6 @@
     </p>
   </div>
 </div>  
-{% endblock content %}
+
+</body>
+</html>

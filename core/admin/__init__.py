@@ -1,3 +1,5 @@
+from core.admin.country_admin import CountryAdmin
+
 from core.admin.communication_equipment_declaration_admin import CommunicationEquipmentDeclarationAdmin, EquipmentItemAdmin
 from core.admin.general_vehicle_accreditation_admin import GeneralVehicleAccreditationAdmin
 from core.admin.international_accreditation_admin import InternationalAccreditationAdmin

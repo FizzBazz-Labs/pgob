@@ -2,9 +2,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 from core.models.position import Position
-from core.models.country import Nationality
 from core.models.media_channel import MediaChannel
-
 
 
 class NationalAccreditation(models.Model):
@@ -28,13 +26,12 @@ class NationalAccreditation(models.Model):
         SUPPLIER = 'Proveedor', _('Proveedor')
         PRESS_COMMITTEE = 'Comision de Prensa', _('Comision de Prensa')
         COMERCIAL_PRESS = 'Prensa Comercial', _('Prensa Comercial')
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     first_name = models.CharField(max_length=150)
     image = models.ImageField(upload_to=create_image_path)
     last_name = models.CharField(max_length=150)
-    nationality = models.ForeignKey(Nationality, on_delete=models.CASCADE, related_name='national_accreditations')
     passport_id = models.CharField(max_length=100)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, related_name='national_acreditation')
     letter_of_authorization = models.FileField(upload_to=upload_file_name)

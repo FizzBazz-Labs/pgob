@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 from core.models.position import Position
-from core.models.country import Country, Nationality
+from core.models.country import Country
 from core.models.media_channel import MediaChannel
 
 
@@ -71,14 +71,12 @@ class InternationalAccreditation(models.Model):
         OFFICIAL_PRESS = 'Prensa oficial', _('Prensa oficial')
         TRIPULATION = 'Tripulacion', _('Tripulacion')
         COMERCIAL_PRESS = 'Prensa Comercial', _('Prensa Comercial')
-        
-    
-    country_of_origin = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='international_accreditations')
+
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name='international_accreditations')
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=150)
     image = models.ImageField(upload_to=create_image_path)
     last_name = models.CharField(max_length=150)
-    nationality = models.ForeignKey(Nationality, on_delete=models.CASCADE, related_name='international_accreditations')
     passport_id = models.CharField(max_length=100)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, related_name='international_accreditations')
     letter_of_authorization = models.FileField(upload_to=create_image_path)

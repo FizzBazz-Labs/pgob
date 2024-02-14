@@ -1,18 +1,11 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from core.forms import *
 from core.models import NationalAccreditation
-
-
-
-# from core.modelos.national_accreditation import NationalAcreditation
-# from core.models import Position, Nationality, Country, MediaChannel
-# from core.forms import NationalAccreditationForm
-
 
 
 class HomeView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -21,6 +14,7 @@ class HomeView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = NationalAccreditationForm
     success_url = reverse_lazy('core:home')
     success_message = "%(book)s was updated successfully"
+
 
 # def get_national_accreditation_form(request):
     # template = 'core/national_accreditation_form.html'
