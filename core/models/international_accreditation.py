@@ -1,82 +1,42 @@
+from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 
 
-class MedicalHistory(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
+def image_filename(instance, filename: str):
+    filename = filename.lower().replace(' ', '').replace('-', '')
+    return f'internationals/{instance.first_name}_{instance.last_name}/{filename}'
 
 
-class Allergy(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-
-class Inmunization(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
+def authorization_letter_filename(instance, filename: str):
+    return f'internationals/{instance.first_name}_{instance.last_name}/authorizations/{filename}'
 
 
 class InternationalAccreditation(models.Model):
-
-    def upload_file_name(self, filename):
-        return f'international_accreditation/{self.accreditation_type}/{filename}'
-
-    def create_image_path(self, filename: str):
-        filename = filename.lower().replace(' ', '').replace('-', '')
-
-        return f'international_accreditation/{self.id}/{filename}'
-
-    # class Allergies(models.TextChoices):
-    #     ENVIRONMENTAL = 'Ambientales', _('Ambientales')
-    #     NUTRITIONAL = 'Alimenticias', _('Alimenticias')
-    #     ANALGESICS = 'Analgesicos', _('Analgesicos')
-    #     ANTIBIOTICS = 'Antibioticos', _('Antibioticos')
-
-    # class Inmunizations(models.TextChoices):
-    #     CONTRAST_CHANNELS = 'Medios de contraste', _('Medios de contraste')
-    #     TETANO = 'Tetano', _('Tetano')
-    #     HEPATITIS = 'Hepatitis', _('Hepatitis')
-    #     OTHERS = 'Otros', _('Otros')
-
-    # class MEDICAL_HISTORIES(models.TextChoices):
-    #     ISCHEMIC_HEART_DISEASE = 'Cardiopatia Isquemica', _('Cardiopatia Isquemica')
-    #     MYOCARDIAL_INFARCTION = 'Infarto del miocardio', _('Infarto del miocardio')
-    #     ULTIMATE_PACEMAKER = 'Marcapaso definitivo', _('Marcapaso definitivo')
-    #     ANGINA = 'Angina', _('Angina')
-    #     DIABETES_MELLITUS = 'Diabetes Mellitus', _('Diabetes Mellitus')
-    #     ARTERIAL_HYPERTENSION = 'Hipertension arterial', _('Hipertension arterial')
-    #     ARRHYTHMIA = 'Arritmias', _('Arritmia')
-    #     OTHERS = 'Otros', _('Otros')
-
     class AccreditationType(models.TextChoices):
-        OFFICIAL_DELEGATION_HEAD = 'Jefe de delegacion oficial', _(
-            'jefe de delegacion oficial')
-        OFFICIAL_DELEGATION = 'Delegacion Oficial', _('Delegacion Oficial')
-        PROTOCOL = 'Protocolo', _('Protocolo')
-        SECURITY = 'Seguridad', _('Seguridad')
-        SUPPORT_STAFF = 'Personal de apoyo', _('Personal de apoyo')
-        OFFICIAL_PRESS = 'Prensa oficial', _('Prensa oficial')
-        TRIPULATION = 'Tripulacion', _('Tripulacion')
-        COMERCIAL_PRESS = 'Prensa Comercial', _('Prensa Comercial')
+        OFFICIAL_DELEGATION_HEAD = (
+            'jefe_de_delegación_oficial',
+            _('Jefe de Delegación Oficial'),
+        )
+        OFFICIAL_DELEGATION = 'delegación_oficial', _('Delegación Oficial')
+        PROTOCOL = 'protocolo', _('Protocolo')
+        SECURITY = 'seguridad', _('Seguridad')
+        SUPPORT_STAFF = 'personal_de_apoyo', _('Personal de Apoyo')
+        OFFICIAL_PRESS = 'prensa_oficial', _('Prensa Oficial')
+        CREW = 'tripulación', _('Tripulación')
+        COMMERCIAL_NEWSLETTER = 'prensa_comercial', _('Prensa Comercial')
 
     country = models.ForeignKey(
         'countries.Country',
         on_delete=models.PROTECT,
         related_name='international_forms')
-    created_at = models.DateTimeField(auto_now_add=True)
-    first_name = models.CharField(max_length=150)
-    image = models.ImageField(upload_to=create_image_path)
-    last_name = models.CharField(max_length=150)
-    passport_id = models.CharField(max_length=100)
 
-    # Positions
+    # Personal Data
+    image = models.ImageField(upload_to=image_filename)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    passport_id = models.CharField(max_length=150)
+
     position = models.ForeignKey(
         'positions.Position',
         on_delete=models.PROTECT,
@@ -86,50 +46,80 @@ class InternationalAccreditation(models.Model):
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='international_forms')
-
-    letter_of_authorization = models.FileField(upload_to=create_image_path)
     media_channel = models.ForeignKey(
         'media_channels.MediaChannel',
         on_delete=models.PROTECT,
+        blank=True, null=True,
         related_name='international_forms')
-    institution = models.CharField(max_length=120)
-    address = models.CharField(max_length=120)
-    phone = models.CharField(max_length=120)
-    cellphone = models.CharField(max_length=120)
+    authorization_letter = models.FileField(
+        upload_to=authorization_letter_filename,
+        blank=True)
+
+    institution = models.CharField(max_length=150)
+    address = models.CharField(max_length=150)
+    phone_number = models.CharField(max_length=150)
+    phone_number_2 = models.CharField(max_length=150)
     email = models.EmailField()
     birthday = models.DateField()
     birthplace = models.CharField(max_length=150)
-    authorized_by = models.CharField(max_length=150, null=True)
-    date = models.DateField()
-    accreditation_type = models.CharField(
-        max_length=120, choices=AccreditationType.choices)
+
     # Medical Information
-    blood_type = models.CharField(max_length=150)
+    blood_group = models.CharField(max_length=150, blank=True)
+    blood_rh_factor = models.CharField(max_length=150, blank=True)
     age = models.PositiveIntegerField(default=18)
-    diseases_under_treatment = models.CharField(max_length=150)
-    medications_in_use = models.CharField(max_length=200)
-    have_allergies = models.BooleanField(default=False)
+    diseases = models.TextField()
+    medication_1 = models.CharField(max_length=200)
+    medication_2 = models.CharField(max_length=200)
+    medication_3 = models.CharField(max_length=200)
+    medication_4 = models.CharField(max_length=200)
     allergies = models.ManyToManyField(
-        Allergy, related_name='international_accreditations', blank=True)
-    has_inmunizations = models.BooleanField(default=False)
-    inmunizations = models.ManyToManyField(
-        Inmunization, related_name='international_accreditations', blank=True)
-    have_medical_history = models.BooleanField(default=False)
-    medical_histories = models.ManyToManyField(
-        MedicalHistory, related_name='international_accreditations', blank=True)
-    surgical_history = models.CharField(max_length=150, blank=True)
-    has_personal_doctor = models.BooleanField(default=False)
+        'medicals.Allergy',
+        related_name='international_forms',
+        blank=True)
+    immunizations = models.ManyToManyField(
+        'medicals.Immunization',
+        related_name='international_forms',
+        blank=True)
+    medicals = models.ManyToManyField(
+        'medicals.MedicalHistory',
+        related_name='international_forms',
+        blank=True)
+    surgical = models.CharField(max_length=150, blank=True)
     doctor_name = models.CharField(max_length=100, blank=True)
-    # accomodation information
+
+    # Hotel Information
     hotel_name = models.CharField(max_length=120)
     hotel_address = models.CharField(max_length=120)
     hotel_phone = models.CharField(max_length=120)
+
     # Flight Information
     flight_arrival_date = models.DateField()
     flight_arrival_time = models.TimeField()
-    flight_arrival_number = models.CharField(max_length=120)
-    fligth_procedence = models.CharField(max_length=120)
+    flight_arrival_number = models.CharField(max_length=150)
+    flight_from = models.ForeignKey(
+        'countries.Country',
+        on_delete=models.PROTECT,
+        related_name='flight_from')
+
     flight_departure_date = models.DateField()
     flight_departure_time = models.TimeField()
-    flight_departure_number = models.CharField(max_length=120)
-    flight_destination = models.CharField(max_length=120)
+    flight_departure_number = models.CharField(max_length=150)
+    flight_to = models.ForeignKey(
+        'countries.Country',
+        on_delete=models.PROTECT,
+        related_name='flight_to')
+
+    # Accreditation Type
+    type = models.CharField(max_length=150, choices=AccreditationType.choices)
+
+    authorized_by = models.CharField(max_length=150)
+    authorized_by_position = models.ForeignKey(
+        'positions.Position',
+        on_delete=models.PROTECT)
+
+    created_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        related_name='international_forms')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

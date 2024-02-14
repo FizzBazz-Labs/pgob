@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'media_channels.apps.MediaChannelsConfig',
     'countries.apps.CountriesConfig',
     'positions.apps.PositionsConfig',
+    'medicals.apps.MedicalsConfig',
     'pgob_auth.apps.PgobAuthConfig',
 ]
 

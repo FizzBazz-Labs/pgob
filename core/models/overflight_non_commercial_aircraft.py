@@ -39,7 +39,7 @@ class OverflightNonCommercialAircraft(models.Model):
     passengers_count = models.IntegerField()
 
     # Flight information
-    entry_date = models.DateField()
+    arrival_date = models.DateField()
     departure_date = models.DateField()
     overflight_info = models.TextField()
     landing_info = models.TextField()
