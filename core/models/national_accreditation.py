@@ -3,13 +3,13 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 
-def image_filename(self, filename: str):
+def image_filename(instance, filename: str):
     filename = filename.lower().replace(' ', '').replace('-', '')
-    return f'nationals/{self.first_name}_{self.last_name}/{filename}'
+    return f'nationals/{instance.first_name}_{instance.last_name}/{filename}'
 
 
 def authorization_letter_filename(instance, filename: str):
-    return f'nationals/authorization_letters/{filename}'
+    return f'nationals/{instance.first_name}_{instance.last_name}/authorizations/{filename}'
 
 
 class NationalAccreditation(models.Model):
@@ -31,6 +31,7 @@ class NationalAccreditation(models.Model):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     passport_id = models.CharField(max_length=100)
+
     position = models.ForeignKey(
         'positions.Position',
         on_delete=models.PROTECT,
@@ -46,7 +47,9 @@ class NationalAccreditation(models.Model):
         blank=True, null=True,
         related_name='national_forms')
     authorization_letter = models.FileField(
-        upload_to=authorization_letter_filename, blank=True)
+        upload_to=authorization_letter_filename,
+        blank=True)
+
     institution = models.CharField(max_length=150)
     address = models.CharField(max_length=150)
     phone_number = models.CharField(max_length=150)
@@ -56,6 +59,7 @@ class NationalAccreditation(models.Model):
     birthplace = models.CharField(max_length=250)
     blood_type = models.CharField(max_length=150)
 
+    # Accreditation Type
     type = models.CharField(max_length=150, choices=AccreditationType.choices)
 
     authorized_by = models.CharField(max_length=150)
