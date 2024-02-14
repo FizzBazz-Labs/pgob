@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
+<<<<<<< HEAD
+=======
+from core.models.position import Position
+>>>>>>> auth
 from core.models.media_channel import MediaChannel
 
 
@@ -70,7 +74,8 @@ class InternationalAccreditation(models.Model):
 
     country = models.ForeignKey(
         'countries.Country',
-        on_delete=models.PROTECT, related_name='international_accreditations')
+        on_delete=models.PROTECT,
+        related_name='international_forms')
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=150)
     image = models.ImageField(upload_to=create_image_path)
