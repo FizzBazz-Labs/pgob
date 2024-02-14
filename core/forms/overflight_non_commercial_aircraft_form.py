@@ -20,7 +20,7 @@ class OverflightNonCommercialAircraftForm(forms.ModelForm):
             'position',
             'sub_position',
             'passengers_count',
-            'entry_date',
+            'arrival_date',
             'departure_date',
             'overflight_info',
             'landing_info',
