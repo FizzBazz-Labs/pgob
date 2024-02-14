@@ -17,8 +17,5 @@ class SignOutView(LoginRequiredMixin, LogoutView):
 
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
-        return redirect(reverse_lazy('auth:home'))
+        return redirect(reverse_lazy('core:home'))
 
-
-class HomeView(LoginRequiredMixin, TemplateView):
-    template_name = 'pgob_auth/home.html'

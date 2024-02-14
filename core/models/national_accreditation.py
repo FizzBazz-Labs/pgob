@@ -17,8 +17,6 @@ class NationalAccreditation(models.Model):
         filename = filename.lower().replace(' ', '').replace('-', '')
 
         return f'national_accreditation/{self.id}/{filename}'
-    
-
 
     class AccreditationType(models.TextChoices):
         GENERAL_COORDINATION = 'Coordinacion General', _('Coordinacion General')
@@ -39,7 +37,7 @@ class NationalAccreditation(models.Model):
     nationality = models.ForeignKey(Nationality, on_delete=models.CASCADE, related_name='national_accreditations')
     passport_id = models.CharField(max_length=100)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, related_name='national_acreditation')
-    letter_of_authorization = models.FileField(upload_to=create_image_path)
+    letter_of_authorization = models.FileField(upload_to=upload_file_name)
     media_channel = models.ForeignKey(MediaChannel, on_delete=models.CASCADE, related_name='national_acreditation')
     institution = models.CharField(max_length=120)
     address = models.CharField(max_length=120)
