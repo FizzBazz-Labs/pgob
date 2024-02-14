@@ -76,10 +76,18 @@ class InternationalAccreditation(models.Model):
     image = models.ImageField(upload_to=create_image_path)
     last_name = models.CharField(max_length=150)
     passport_id = models.CharField(max_length=100)
+
+    # Positions
     position = models.ForeignKey(
         'positions.Position',
         on_delete=models.PROTECT,
         related_name='international_forms')
+    sub_position = models.ForeignKey(
+        'positions.SubPosition',
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='international_forms')
+
     letter_of_authorization = models.FileField(upload_to=create_image_path)
     media_channel = models.ForeignKey(
         MediaChannel, on_delete=models.CASCADE, related_name='international_accreditations')

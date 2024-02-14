@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
+
 from core.models.media_channel import MediaChannel
 
 
@@ -32,10 +33,18 @@ class NationalAccreditation(models.Model):
     image = models.ImageField(upload_to=create_image_path)
     last_name = models.CharField(max_length=150)
     passport_id = models.CharField(max_length=100)
+
+    # Positions
     position = models.ForeignKey(
         'positions.Position',
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='national_forms')
+    sub_position = models.ForeignKey(
+        'positions.SubPosition',
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='national_forms')
+
     letter_of_authorization = models.FileField(upload_to=upload_file_name)
     media_channel = models.ForeignKey(
         MediaChannel,

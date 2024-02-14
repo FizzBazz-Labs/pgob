@@ -28,11 +28,18 @@ class OverflightNonCommercialAircraft(models.Model):
     commander_name = models.CharField(max_length=150)
     crew_members_count = models.IntegerField()
     pmi_name = models.CharField(max_length=150)
+    passengers_count = models.IntegerField()
+
+    # Positions
     position = models.ForeignKey(
         'positions.Position',
         on_delete=models.PROTECT,
         related_name='flight_forms')
-    passengers_count = models.IntegerField()
+    sub_position = models.ForeignKey(
+        'positions.SubPosition',
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='flight_forms')
 
     # Flight information
     entry_date = models.DateField()
