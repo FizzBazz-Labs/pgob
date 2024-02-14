@@ -44,25 +44,32 @@
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
 
         <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+          {% if admin_group in user.groups.all %}
           <li>
-            <a href="#">
+            <a href="{% url 'core:form-list' %}">
+              Lista de formularios creados
+            </a>
+          </li>
+          {% endif %}
+          <li>
+            <a href="{% url 'core:national' %}">
               Acreditación Nacional
             </a>
           </li>
-
+          <!--
           <li>
             <a href="#">
               Acreditación Internacional
             </a>
-          </li>
+          </li> -->
 
           <li>
-            <a href="#">
+            <a href="{% url 'core:overflight' %}">
               Solicitud de Sobrevuelo y Aterrizaje de Aeronave No Comercial
             </a>
           </li>
 
-          <li>
+          <!-- <li>
             <a href="#">
               Acredita Acceso de Vehículos al Aeropuerto
             </a>
@@ -89,13 +96,17 @@
             <a href="#">
               Acreditación Prensa Internacional
             </a>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>
   </div>
 
-
+  <script>
+    function toggleSidebar() {
+      document.getElementById('div-drawer').classList.toggle('drawer-open')
+    }
+  </script>
   {% block scripts %}
 
   {% endblock scripts %}

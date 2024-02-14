@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% block form_type %} Acreditación Nacional {% endblock form_type %}
 
 {% block content %}
 
@@ -111,7 +112,7 @@
         <span class="label-text"> Institucion/empresa </span>
       </div>
       <input type="text" class="input input-bordered w-full max-w-xs" name="institution"
-        value="{{ form.institution.value }}" />
+        value="{{ form.institution.value|default:'' }}" />
       <small> {{ form.institutio.errors }} </small>
     </label>
 
@@ -119,7 +120,8 @@
       <div class="label">
         <span class="label-text"> Dirección </span>
       </div>
-      <input type="text" class="input input-bordered w-full max-w-xs" name="address" value="{{ form.address.value }}" />
+      <input type="text" class="input input-bordered w-full max-w-xs" name="address"
+        value="{{ form.address.value|default:'' }}" />
       <small> {{ form.address.errors }} </small>
     </label>
 
@@ -128,7 +130,7 @@
         <span class="label-text"> Teléfono </span>
       </div>
       <input type="text" class="input input-bordered w-full max-w-xs" name="phone_number"
-        value="{{ form.phone_number.value }}" />
+        value="{{ form.phone_number.value|default:'' }}" />
       <small> {{ form.phone.errors }} </small>
     </label>
 
@@ -137,7 +139,7 @@
         <span class="label-text"> Celular </span>
       </div>
       <input type="text" class="input input-bordered w-full max-w-xs" name="phone_number_2"
-        value="{{ form.phone_number_2.value }}" />
+        value="{{ form.phone_number_2.value|default:'' }}" />
       <small> {{ form.cellphone.errors }} </small>
     </label>
 
@@ -145,7 +147,8 @@
       <div class="label">
         <span class="label-text"> Email </span>
       </div>
-      <input type="email" class="input input-bordered w-full max-w-xs" name="email" value="{{ form.email.value }}" />
+      <input type="email" class="input input-bordered w-full max-w-xs" name="email"
+        value="{{ form.email.value|default:'' }}" />
       <small> {{ form.email.errors }} </small>
     </label>
 
@@ -154,7 +157,7 @@
         <span class="label-text"> Fecha de nacimiento </span>
       </div>
       <input type="date" class="input input-bordered w-full max-w-xs" name="birthday"
-        value="{{ form.birthday.value }}" />
+        value="{{ form.birthday.value|default:'' }}" />
       <small> {{ form.birthday.errors }} </small>
     </label>
 
@@ -163,7 +166,7 @@
         <span class="label-text"> Lugar de nacimiento </span>
       </div>
       <input type="text" class="input input-bordered w-full max-w-xs" name="birthplace"
-        value="{{ form.birthplace.value }}" />
+        value="{{ form.birthplace.value|default:'' }}" />
       <small> {{ form.birthplace.errors }} </small>
     </label>
 
@@ -172,7 +175,7 @@
         <span class="label-text"> Tipo de sangre </span>
       </div>
       <input type="text" class="input input-bordered w-full max-w-xs" name="blood_type"
-        value="{{ form.blood_type.value }}" />
+        value="{{ form.blood_type.value|default:'' }}" />
       <small> {{ form.blood_type.errors }} </small>
     </label>
 

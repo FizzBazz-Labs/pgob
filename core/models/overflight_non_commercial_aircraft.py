@@ -3,12 +3,12 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class Jurisdiction(models.TextChoices):
-    CIVIL = 'civil', _('Civil')
-    MILITARY = 'military', _('Militar')
-
-
 class OverflightNonCommercialAircraft(models.Model):
+
+    class Jurisdiction(models.TextChoices):
+        CIVIL = 'civil', _('Civil')
+        MILITARY = 'military', _('Militar')
+
     country = models.ForeignKey(
         'countries.Country',
         on_delete=models.PROTECT,
