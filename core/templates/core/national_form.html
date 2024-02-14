@@ -23,14 +23,11 @@
 {% endif %}
 
 
+
+
 <form method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   <input type="hidden" name="created_by" value="{{ user.id }}">
-  <div class="mb-6">
-    <span class="text-xl font-bold">
-      Datos personales
-    </span>
-  </div>
   <div class="grid md:grid-cols-3 gap-4">
     <label class="form-control w-full max-w-xs">
       <div class="label">

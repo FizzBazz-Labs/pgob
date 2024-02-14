@@ -8,14 +8,13 @@ from django.contrib.auth.views import LoginView, LogoutView
 
 class SignInView(LoginView):
     template_name = 'pgob_auth/login.html'
-    success_url = reverse_lazy('auth:home')
+    success_url = reverse_lazy('auth:index')
 
 
 class SignOutView(LoginRequiredMixin, LogoutView):
     ...
-    
+
 
 class IndexView(LoginRequiredMixin, View):
     def get(self, request):
-        return redirect(reverse_lazy('core:home'))
-
+        return redirect(reverse_lazy('core:national'))

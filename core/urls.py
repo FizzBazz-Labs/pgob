@@ -6,7 +6,7 @@ from core.views import *
 app_name = 'core'
 
 urlpatterns = [
-    path('home/', HomeView.as_view(), name='home')
+    path('', NationalFormView.as_view(), name='national')
     # path(
     #     '',
     #     get_national_accreditation_form,
@@ -24,7 +24,7 @@ urlpatterns = [
     #     get_overflight_and_non_commercial_aircraft_form,
     #     name='overflight-and-non-commercial-aircraft-accreditation',
     # ),
-    
+
     # path(
     #     'vehicle_access_to_the_airport/',
     #     get_vehicle_access_to_the_airport_form,
@@ -54,5 +54,5 @@ urlpatterns = [
     #     get_newsletter_national_form,
     #     name='newsletter-national',
     # ),
-    
+
 ]

@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from media_channels.models import MediaChannel
+
+
+@admin.register(MediaChannel)
+class MediaChannelAdmin(admin.ModelAdmin):
+    ...

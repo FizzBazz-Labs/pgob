@@ -2,11 +2,36 @@ from django import forms
 
 from core.models import OverflightNonCommercialAircraft
 
+
 class OverflightNonCommercialAircraftForm(forms.ModelForm):
     class Meta:
         model = OverflightNonCommercialAircraft
-        fields = '__all__'
-
+        fields = [
+            'country',
+            'aircraft_type',
+            'model',
+            'jurisdiction',
+            'registration',
+            'color',
+            'call_sign',
+            'commander_name',
+            'crew_members_count',
+            'pmi_name',
+            'position',
+            'sub_position',
+            'passengers_count',
+            'entry_date',
+            'departure_date',
+            'overflight_info',
+            'landing_info',
+            'origin',
+            'destination',
+            'route',
+            'ground_facilities',
+            'date',
+            'signature',
+            'created_by',
+        ]
 
 
 # class OverflightNonCommercialAircraftForm(forms.Form):
@@ -51,17 +76,17 @@ class OverflightNonCommercialAircraftForm(forms.ModelForm):
 #     pmi_name = forms.CharField(label='Nombre del PMI')
 #     pmi_position = forms.CharField(label='Cargo')
 #     passengers_number = forms.IntegerField(label='No de Pasajeros')
-    
+
 #     # Flight Information
 #     flight_arrival_date = forms.DateField(
-#         label='Fecha de Entrada a Territario Nacional', 
+#         label='Fecha de Entrada a Territario Nacional',
 #         widget=forms.DateInput(
 #             format=('%d/%m/%Y'),
 #             attrs={'type': 'date'}
 #         ),
 #     )
 #     flight_departure_date = forms.DateField(
-#         label='Fecha de Salida a Territario Nacional', 
+#         label='Fecha de Salida a Territario Nacional',
 #         widget=forms.DateInput(
 #             format=('%d/%m/%Y'),
 #             attrs={'type': 'date'}
@@ -75,13 +100,13 @@ class OverflightNonCommercialAircraftForm(forms.ModelForm):
 #     overflight_destinity = forms.CharField(label='Destino')
 #     overflight_journey = forms.CharField(label='Ruta')
 #     overflight_facelities = forms.CharField(label='Facilidades que la aeronave requiere en tierra')
-    
+
 #     date = forms.DateField(
-#         label='Fecha de Salida a Territario Nacional', 
+#         label='Fecha de Salida a Territario Nacional',
 #         widget=forms.DateInput(
 #             format=('%d/%m/%Y'),
 #             attrs={'type': 'date'}
 #         ),
 #     )
-    
+
 #     applicant_sign = forms.CharField(label='Firma del solicitante')

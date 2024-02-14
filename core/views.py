@@ -7,14 +7,29 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from core.forms import *
 from core.models import NationalAccreditation
 
+from countries.models import Country
 
-class HomeView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    template_name = 'core/home.html'
+from positions.models import Position, SubPosition
+
+from media_channels.models import MediaChannel
+
+
+class NationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    template_name = 'core/national_form.html'
     model = NationalAccreditation
     form_class = NationalAccreditationForm
-    success_url = reverse_lazy('core:home')
-    success_message = "%(book)s was updated successfully"
+    success_url = reverse_lazy('core:national')
+    success_message = "Formulario creado exitosamente"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # context['countries'] = Country.objects.all()
+        context['positions'] = Position.objects.all()
+        context['types'] = NationalAccreditation.AccreditationType.choices
+        context['media_channels'] = MediaChannel.objects.all()
+
+        return context
 
 # def get_national_accreditation_form(request):
     # template = 'core/national_accreditation_form.html'
@@ -31,15 +46,10 @@ class HomeView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     #     return HttpResponse(request)
 
 
-#prueba
+# prueba
 # def get_national_accreditation_form(request):
 #     national_accreditation =  NationalAccreditationForm
 #     return render_to_response ()
-
-
-
-
-
 
 
 # def get_international_accreditation_form(request):
@@ -110,4 +120,3 @@ class HomeView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 #     }
 
 #     return render(request, template, context)
-
