@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "donjayamanne.python-extension-pack",
+    "editorconfig.editorconfig",
+    "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-spanish",
+    "ms-python.autopep8"
+  ]
+}

@@ -92,7 +92,6 @@ celerybeat-schedule
 .venv
 venv/
 ENV/
-.vscode/
 staticfiles/
 # Spyder project settings
 .spyderproject
@@ -113,7 +112,7 @@ media/
 *.pyc
 *.db
 *.pid
-# django migrations 
+# django migrations
 # **/migrations/**
 # !**/migrations
 # !**/migrations/__init__.py
