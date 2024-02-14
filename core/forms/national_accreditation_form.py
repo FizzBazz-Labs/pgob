@@ -6,7 +6,11 @@ from core.models import NationalAccreditation
 class NationalAccreditationForm(forms.ModelForm):
     class Meta:
         model = NationalAccreditation
-        fields = '__all__'
+        fields = ['first_name', 'image', 'last_name', 'nationality', 
+                  'passport_id', 'position', 'letter_of_authorization', 
+                  'media_channel', 'institution', 'address', 'phone', 
+                  'cellphone', 'email', 'birthday', 'birthplace', 'blood_type', 
+                  'accreditation_type', 'authorized_by']
 
 
 # class NationalAccreditationForm(forms.Form):

@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+    <div class="text-center alert alert-{{ message.tags }}">
+        {{ message|safe }}
+    </div>
+{% endfor %}
+{% endif %}
+
+<div class="mb-6">
+    <span class="text-xl font-bold">
+        Datos personales
+    </span>
+</div>
+
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="grid md:grid-cols-3 gap-4">
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text">Nombre</span>
+            </div>
+            <input type="text" placeholder="Type here"  name="first_name" class="input input-bordered w-full max-w-xs" value="{{ form.first_name.value }}" />
+            <small> {{ form.first_name.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text">Apellido</span>
+            </div>
+            <input type="text" placeholder="Type here"  name="last_name" class="input input-bordered w-full max-w-xs" value="{{ form.last_name.value }}" />
+            <small> {{ form.last_name.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text">Nacionalidad</span>
+            </div>
+            <select class="select select-bordered w-full max-w-xs" name="nationality">
+                <option disabled selected>Who shot first?</option>
+                <option>Han Solo</option>
+                <option>Greedo</option>
+            </select>
+            <small> {{ form.nationality.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text">Cargo en el evento</span>
+            </div>
+            <select class="select select-bordered w-full max-w-xs" name="position">
+                <option disabled selected>Who shot first?</option>
+                <option>Han Solo</option>
+                <option>Greedo</option>
+            </select>
+            <small> {{ form.position.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text"> Medios de comunicacion </span>
+            </div>
+            <select class="select select-bordered w-full max-w-xs" name="media_channel">
+                <option disabled selected>Who shot first?</option>
+                <option>Han Solo</option>
+                <option>Greedo</option>
+            </select>
+            <small> {{ form.media_channel.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text"> Carta de autorizacion </span>
+            </div>
+            <input type="file" class="file-input file-input-bordered w-full max-w-xs" name="letter_of_authorization"/>
+            <small> {{ form.letter_of_authorization.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text"> Institucion/empresa </span>
+            </div>
+            <input type="text" class="input input-bordered w-full max-w-xs" name="institution"/>
+            <small> {{ form.institutio.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text"> Direccion </span>
+            </div>
+            <input type="text" class="input input-bordered w-full max-w-xs" name="address"/>
+            <small> {{ form.address.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text"> Telefono </span>
+            </div>
+            <input type="text" class="input input-bordered w-full max-w-xs" name="phone"/>
+            <small> {{ form.phone.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text"> Celular </span>
+            </div>
+            <input type="text" class="input input-bordered w-full max-w-xs" name="cellphone"/>
+            <small> {{ form.cellphone.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text"> Email </span>
+            </div>
+            <input type="email" class="input input-bordered w-full max-w-xs" name="email"/>
+            <small> {{ form.email.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text"> Fecha de nacimiento </span>
+            </div>
+            <input type="date" class="input input-bordered w-full max-w-xs" name="birthday"/>
+            <small> {{ form.birthday.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text"> Lugar de nacimiento </span>
+            </div>
+            <input type="text" class="input input-bordered w-full max-w-xs" name="birthplace"/>
+            <small> {{ form.birthplace.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text"> Tipo de sangre </span>
+            </div>
+            <input type="text" class="input input-bordered w-full max-w-xs" name="blood_type"/>
+            <small> {{ form.blood_type.errors }} </small>
+        </label>
+    
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text"> Tipo de acreditación </span>
+            </div>
+            <select class="select select-bordered w-full max-w-xs" name="accreditation_type">
+                <option disabled selected>Who shot first?</option>
+                <option>Han Solo</option>
+                <option>Greedo</option>
+            </select>
+            <small> {{ form.accreditation_type.errors }} </small>
+        </label>
+    </div>
+
+    <button class="btn" type="submit"> Guardar </button>
+</form>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+function toggleSidebar(){
+    document.getElementById('div-drawer').classList.toggle('drawer-open')
+}
+</script>
+{% endblock scripts %}
