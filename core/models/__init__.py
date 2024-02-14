@@ -1,6 +1,5 @@
 from core.models.overflight_non_commercial_aircraft import OverflightNonCommercialAircraft
 from core.models.vehicle_access_airport import VehicleAccessAirport, VehicleTypes, Vehicle
-from core.models.country import Country
 from core.models.communication_equipment_declaration import CommunicationEquipmentDeclaration, EquipmentItem
 from core.models.international_accreditation import Allergy, MedicalHistory, Inmunization, InternationalAccreditation
 from core.models.general_vehicle_accreditation import GeneralVehicleAccreditation

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'core.apps.CoreConfig',
+    'countries.apps.CountriesConfig',
     'pgob_auth.apps.PgobAuthConfig',
 ]
 
