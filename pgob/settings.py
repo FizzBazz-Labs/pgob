@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'core.apps.CoreConfig',
+    'media_channels.apps.MediaChannelsConfig',
     'countries.apps.CountriesConfig',
     'positions.apps.PositionsConfig',
     'pgob_auth.apps.PgobAuthConfig',

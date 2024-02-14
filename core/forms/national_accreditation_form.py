@@ -7,22 +7,23 @@ class NationalAccreditationForm(forms.ModelForm):
     class Meta:
         model = NationalAccreditation
         fields = [
-            'first_name',
             'image',
+            'first_name',
             'last_name',
             'passport_id',
             'position',
-            'letter_of_authorization',
+            'authorization_letter',
             'media_channel',
             'institution',
             'address',
-            'phone',
-            'cellphone',
+            'phone_number',
+            'phone_number_2',
             'email',
             'birthday',
             'birthplace',
             'blood_type',
-            'accreditation_type', 'authorized_by',
+            'type',
+            'authorized_by',
         ]
 
 

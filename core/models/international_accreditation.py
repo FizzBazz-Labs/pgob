@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models.media_channel import MediaChannel
-
 
 class MedicalHistory(models.Model):
     name = models.CharField(max_length=100)
@@ -91,7 +89,9 @@ class InternationalAccreditation(models.Model):
 
     letter_of_authorization = models.FileField(upload_to=create_image_path)
     media_channel = models.ForeignKey(
-        MediaChannel, on_delete=models.CASCADE, related_name='international_accreditations')
+        'media_channels.MediaChannel',
+        on_delete=models.PROTECT,
+        related_name='international_forms')
     institution = models.CharField(max_length=120)
     address = models.CharField(max_length=120)
     phone = models.CharField(max_length=120)

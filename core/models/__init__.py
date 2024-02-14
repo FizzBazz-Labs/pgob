@@ -5,4 +5,3 @@ from core.models.international_accreditation import Allergy, MedicalHistory, Inm
 from core.models.general_vehicle_accreditation import GeneralVehicleAccreditation
 from core.models.national_accreditation import NationalAccreditation
 from core.models.security_weapon_accreditation import WeaponType, CommunicationType, SecurityWeaponAccreditation
-from core.models.media_channel import MediaChannel
