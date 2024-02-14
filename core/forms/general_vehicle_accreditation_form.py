@@ -6,3 +6,4 @@ from core.models import GeneralVehicleAccreditation
 class GeneralVehicleAccreditationForm(forms.ModelForm):
     class Meta:
         model = GeneralVehicleAccreditation
+        fields = '__all__'

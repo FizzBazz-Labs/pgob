@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from core.models import *
 
 
-@admin.register(SecurityWeaponAccreditationn)
+@admin.register(SecurityWeaponAccreditation)
 class  SecurityWeaponAccreditationAdmin(admin.ModelAdmin):
 
     fieldsets = [

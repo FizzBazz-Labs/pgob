@@ -1,13 +1,13 @@
 from django import forms
 
- from core.models import InternationalAccreditation
+from core.models import InternationalAccreditation
 
 
 
 class InternationalAccreditationForm(forms.ModelForm):
     class Meta:
         model = InternationalAccreditation
-
+        fields = '__all__'
 
 
 

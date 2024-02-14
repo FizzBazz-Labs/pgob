@@ -1,13 +1,11 @@
 from django.contrib import admin
-from django.db import models
-from django import forms
 from django.utils.translation import gettext as _
 
 from core.models import *
 
 
-@admin.register(NationalAcreditation)
-class NationalAcreditationAdmin(admin.ModelAdmin):
+@admin.register(NationalAccreditation)
+class NationalAccreditationAdmin(admin.ModelAdmin):
     
     fieldsets = [
         (_('Personal Info'), {

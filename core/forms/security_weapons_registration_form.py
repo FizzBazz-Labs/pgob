@@ -5,7 +5,7 @@ from core.models import SecurityWeaponAccreditation
 class SecurityWeaponAccreditationForm(forms.ModelForm):
     class Meta:
         model = SecurityWeaponAccreditation
-
+        fields = '__all__'
 
 # class SecurityWeaponsRegistrationForm(forms.Form):
 #     def __init__(self, *args, **kwargs):

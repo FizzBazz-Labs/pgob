@@ -5,7 +5,7 @@ from core.models import OverflightNonCommercialAircraft
 class OverflightNonCommercialAircraftForm(forms.ModelForm):
     class Meta:
         model = OverflightNonCommercialAircraft
-
+        fields = '__all__'
 
 
 
