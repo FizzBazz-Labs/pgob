@@ -1,11 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-<<<<<<< HEAD
-
-=======
-from core.models.position import Position
->>>>>>> auth
 from core.models.media_channel import MediaChannel
 
 
