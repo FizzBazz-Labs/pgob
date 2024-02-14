@@ -6,6 +6,7 @@ from core.models import NationalAccreditation
 class NationalAccreditationForm(forms.ModelForm):
     class Meta:
         model = NationalAccreditation
+        fields = '__all__'
 
 
 # class NationalAccreditationForm(forms.Form):

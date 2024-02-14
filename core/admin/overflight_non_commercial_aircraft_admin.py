@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from core.models import *
 
 
-@admin.register(OverflightNonCommercialAircraftt)
+@admin.register(OverflightNonCommercialAircraft)
 class OverflightNonCommercialAircraftAdmin(admin.ModelAdmin):
 
     fieldsets = [
