@@ -6,17 +6,30 @@ from core.models import NationalAccreditation
 class NationalAccreditationForm(forms.ModelForm):
     class Meta:
         model = NationalAccreditation
-        fields = ['first_name', 'image', 'last_name', 'nationality', 
-                  'passport_id', 'position', 'letter_of_authorization', 
-                  'media_channel', 'institution', 'address', 'phone', 
-                  'cellphone', 'email', 'birthday', 'birthplace', 'blood_type', 
-                  'accreditation_type', 'authorized_by']
+        fields = [
+            'first_name',
+            'image',
+            'last_name',
+            'passport_id',
+            'position',
+            'letter_of_authorization',
+            'media_channel',
+            'institution',
+            'address',
+            'phone',
+            'cellphone',
+            'email',
+            'birthday',
+            'birthplace',
+            'blood_type',
+            'accreditation_type', 'authorized_by',
+        ]
 
 
 # class NationalAccreditationForm(forms.Form):
 #     def __init__(self, *args, **kwargs):
 #         super().__init__(*args, **kwargs)
-        
+
 #         for visible in self.visible_fields():
 #             if visible.field.label != 'Tipo de acreditación':
 #                 visible.field.widget.attrs['class'] = 'input input-bordered w-full'
@@ -29,7 +42,7 @@ class NationalAccreditationForm(forms.ModelForm):
 #     id_document = forms.CharField(label='Cedula/Pasaporte', max_length=120)
 #     address = forms.CharField(label='Dirección', max_length=120)
 #     email = forms.EmailField(label='Email', max_length=120)
-#     birthday = forms.DateField(label='Fecha de nacimiento', 
+#     birthday = forms.DateField(label='Fecha de nacimiento',
 #                                widget=forms.DateInput(
 #                                    format=('%d/%m/%Y'),
 #                                    attrs={
@@ -38,7 +51,7 @@ class NationalAccreditationForm(forms.ModelForm):
 #                                 ))
 #     birthplace = forms.CharField(label='Lugar de nacimiento')
 #     blood_type = forms.CharField(label='Tipo de sangre')
-    
+
 #     type_of_accreditation = forms.CharField(
 #         label='Tipo de acreditación',
 #         widget=forms.RadioSelect(
