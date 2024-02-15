@@ -46,6 +46,10 @@ INSTALLED_APPS = [
     'positions.apps.PositionsConfig',
     'medicals.apps.MedicalsConfig',
     'pgob_auth.apps.PgobAuthConfig',
+    'allergies.apps.AllergiesConfig',
+    'immunizations.apps.ImmunizationsConfig',
+    'medical_histories.apps.MedicalHistoriesConfig',
+
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,1 @@
+[{"model": "immunizations.immunization", "pk": 1, "fields": {"name": "Medios De Contraste"}}, {"model": "immunizations.immunization", "pk": 2, "fields": {"name": "Tétano"}}, {"model": "immunizations.immunization", "pk": 3, "fields": {"name": "Hepatitis"}}, {"model": "immunizations.immunization", "pk": 4, "fields": {"name": "Otros"}}]

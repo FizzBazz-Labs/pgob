@@ -1,0 +1,1 @@
+[{"model": "allergies.allergy", "pk": 1, "fields": {"name": "Ambientales"}}, {"model": "allergies.allergy", "pk": 2, "fields": {"name": "Alimenticias"}}, {"model": "allergies.allergy", "pk": 3, "fields": {"name": "Analgésicos"}}, {"model": "allergies.allergy", "pk": 4, "fields": {"name": "Antibióticos"}}]
