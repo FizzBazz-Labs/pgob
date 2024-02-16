@@ -8,8 +8,10 @@ class VehicleAccessAirport(models.Model):
         'countries.Country',
         on_delete=models.CASCADE,
         related_name='vehicle_forms')
-    responsible_info = models.CharField(max_length=150)
-    responsible_signatures = models.TextField()
+
+    responsible = models.CharField(max_length=150)
+    signature = models.TextField()
+
     date = models.DateField()
 
     created_by = models.ForeignKey(
@@ -21,20 +23,11 @@ class VehicleAccessAirport(models.Model):
 
 
 class Vehicle(models.Model):
-    class VehicleType(models.TextChoices):
-        CAR = 'Car', _('Car')
-        PICK_UP = 'Pick up', _('Pick up')
-        VAN = 'Van', _('Van')
-        TRUCK = 'Truck', _('Truck')
-        OTHER = 'Other', _('Other')
-
-    type = models.CharField(
-        max_length=150,
-        choices=VehicleType.choices,
-        default=VehicleType.CAR)
+    type = models.CharField(max_length=150)
     brand = models.CharField(max_length=150)
     color = models.CharField(max_length=150)
-    license_plate = models.CharField(max_length=20)
+    plate = models.CharField(max_length=20)
+
     driver_name = models.CharField(max_length=150)
     driver_id = models.CharField(max_length=20)
     driver_phone = models.CharField(max_length=20)

@@ -8,7 +8,7 @@ class CommunicationEquipmentDeclaration(models.Model):
         'countries.Country',
         on_delete=models.PROTECT,
         related_name='equipment_forms')
-    institution_or_media = models.CharField(max_length=150)
+    institution = models.CharField(max_length=150)
 
     created_by = models.ForeignKey(
         get_user_model(),
@@ -23,8 +23,9 @@ class EquipmentItem(models.Model):
         'core.CommunicationEquipmentDeclaration',
         on_delete=models.CASCADE,
         related_name='equipments')
-    object_type = models.CharField(max_length=50)
+
+    type = models.CharField(max_length=50)
     brand = models.CharField(max_length=150)
     model = models.CharField(max_length=150)
-    serial_number = models.CharField(max_length=150)
-    approximate_value = models.IntegerField()
+    serial = models.CharField(max_length=150)
+    value = models.IntegerField()
