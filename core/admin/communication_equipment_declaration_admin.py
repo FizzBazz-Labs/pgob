@@ -1,16 +1,13 @@
 from django.contrib import admin
-from django.db import models
-from django import forms
 from django.utils.translation import gettext as _
 
-from core.models import *
+from core.models import CommunicationEquipmentDeclaration, EquipmentItem
+
+
+class EquipmentItemInline(admin.TabularInline):
+    model = EquipmentItem
 
 
 @admin.register(CommunicationEquipmentDeclaration)
 class CommunicationEquipmentDeclarationAdmin(admin.ModelAdmin):
-    ...
-
-
-@admin.register(EquipmentItem)
-class EquipmentItemAdmin(admin.ModelAdmin):
-    ...
+    inlines = [EquipmentItemInline]

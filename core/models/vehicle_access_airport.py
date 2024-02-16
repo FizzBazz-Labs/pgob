@@ -1,33 +1,37 @@
+from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 
 
-class VehicleTypes(models.Model):
-    name = models.CharField(max_length=100)
+class VehicleAccessAirport(models.Model):
+    country = models.ForeignKey(
+        'countries.Country',
+        on_delete=models.CASCADE,
+        related_name='vehicle_forms')
+    responsible_info = models.CharField(max_length=150)
+    responsible_signatures = models.TextField()
+    date = models.DateField()
 
-    def __str__(self):
-        return self.name
+    created_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        related_name='general_vehicle_forms')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Vehicle(models.Model):
+    class VehicleType(models.TextChoices):
+        CAR = 'Car', _('Car')
+        PICK_UP = 'Pick up', _('Pick up')
+        VAN = 'Van', _('Van')
+        TRUCK = 'Truck', _('Truck')
+        OTHER = 'Other', _('Other')
 
-    def upload_file_name(self, filename):
-        return f'vehicle/{self.accreditation_type}/{filename}'
-
-    def create_image_path(self, filename: str):
-        filename = filename.lower().replace(' ', '').replace('-', '')
-
-        return f'vehicle/{self.id}/{filename}'
-
-    # class VehicleTypes(models.TextChoices):
-    #     CAR = 'Car', _('Car')
-    #     PICK_UP = 'Pick up', _('Pick up')
-    #     VAN = 'Van', _('Van')
-    #     TRUCK = 'Truck', _('Truck')
-    #     OTHER = 'Other', _('Other')
-
-    vehicle_type = models.ManyToManyField(
-        VehicleTypes, related_name='vehicle', blank=True)
+    type = models.CharField(
+        max_length=150,
+        choices=VehicleType.choices,
+        default=VehicleType.CAR)
     brand = models.CharField(max_length=150)
     color = models.CharField(max_length=150)
     license_plate = models.CharField(max_length=20)
@@ -35,10 +39,7 @@ class Vehicle(models.Model):
     driver_id = models.CharField(max_length=20)
     driver_phone = models.CharField(max_length=20)
 
-
-class VehicleAccessAirport(models.Model):
-    country = models.ForeignKey('countries.Country', on_delete=models.CASCADE)
-    vehicles = models.ManyToManyField(Vehicle, related_name='accreditations')
-    responsible_info = models.CharField(max_length=150)
-    responsible_signatures = models.TextField()
-    date = models.DateField()
+    accreditation = models.ForeignKey(
+        'core.VehicleAccessAirport',
+        on_delete=models.CASCADE,
+        related_name='vehicles')
