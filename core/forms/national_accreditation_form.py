@@ -13,6 +13,7 @@ class NationalAccreditationForm(forms.ModelForm):
             'last_name',
             'passport_id',
             'position',
+            'sub_position',
             'authorization_letter',
             'media_channel',
             'institution',

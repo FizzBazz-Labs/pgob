@@ -24,8 +24,8 @@ class NationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # context['countries'] = Country.objects.all()
         context['positions'] = Position.objects.all()
+        context['sub_positions'] = SubPosition.objects.all()
         context['types'] = NationalAccreditation.AccreditationType.choices
         context['media_channels'] = MediaChannel.objects.all()
 
