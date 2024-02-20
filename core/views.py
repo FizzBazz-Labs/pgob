@@ -13,6 +13,10 @@ from positions.models import Position, SubPosition
 
 from media_channels.models import MediaChannel
 
+from immunizations.models import Immunization
+
+from medical_histories.models import MedicalHistory
+
 
 class NationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'core/national_form.html'
@@ -46,6 +50,25 @@ class OverflightAndNonCommercialAircraftFormView(LoginRequiredMixin, SuccessMess
         context['jurisdictions'] = OverflightNonCommercialAircraft.Jurisdiction.choices
         context['positions'] = Position.objects.all()
         context['media_channels'] = MediaChannel.objects.all()
+
+        return context
+
+
+class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    template_name = 'core/international_form.html'
+    model = InternationalAccreditation
+    form_class = InternationalAccreditationForm
+    success_url = reverse_lazy('core:international')
+    success_message = 'Formulario creado exitosamente'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['countries'] = Country.objects.all()
+
+        context['inmunizations'] = Immunization.objects.all()
+        context['positions'] = Position.objects.all()
+        context['medicals'] = MedicalHistory.objects.all()
+        context['types'] = InternationalAccreditation.AccreditationType.choices
 
         return context
 

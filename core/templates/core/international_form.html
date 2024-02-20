@@ -1,0 +1,616 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block form_type %} Acreditación Internacional {% endblock form_type %}
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="text-center alert alert-{{ message.tags }}">
+  {{ message|safe }}
+</div>
+{% endfor %}
+{% endif %}
+
+
+
+<div id="national_form_app">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="created_by" value="{{ user.id }}">
+
+    <div class="grid md:grid-cols-3">
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text text-lg"> Pais </span>
+        </div>
+        <select class="select select-bordered w-full max-w-xs" name="country">
+          <option value=""> Selecciona una opción </option>
+          {% for country in countries %}
+          <option value="{{ country.id }}"> {{ country.name }} </option>
+          {% endfor %}
+        </select>
+        <small class="text-red-600"> {{ form.country.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text text-lg"> Tipo de acreditación </span>
+        </div>
+
+        <select class="select select-bordered w-full max-w-xs" name="type">
+          <option value=""> Selecciona una opción </option>
+          {% for type in types %}
+          {% if type.0 == form.type.value %}
+          <option value="{{ type.0 }}" selected> {{ type.1 }} </option>
+          {% else %}
+          <option value="{{ type.0 }}"> {{ type.1 }} </option>
+          {% endif %}
+          {% endfor %}
+        </select>
+        <small class="text-red-600"> {{ form.type.errors }} </small>
+      </label>
+    </div>
+
+    <div class="mb-5 mt-5">
+      <span class="text-xl font-bold">
+        DATOS PERSONALES
+      </span>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4">
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text">Nombre</span>
+        </div>
+        <input type="text" placeholder="Type here" name="first_name" class="input input-bordered w-full max-w-xs"
+          value="{{ form.first_name.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.first_name.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text">Apellido</span>
+        </div>
+        <input type="text" placeholder="Type here" name="last_name" class="input input-bordered w-full max-w-xs"
+          value="{{ form.last_name.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.last_name.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Foto </span>
+        </div>
+        <input type="file" class="file-input file-input-bordered w-full max-w-xs" name="image" />
+        <small class="text-red-600"> {{ form.image.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text">Cedula/Pasaporte</span>
+        </div>
+        <input type="text" placeholder="Type here" name="passport_id" class="input input-bordered w-full max-w-xs"
+          value="{{ form.passport_id.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.passport_id.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text">Cargo en el evento</span>
+        </div>
+
+        <select class="select select-bordered w-full max-w-xs" name="position">
+
+          <option value="">Selecciona una opción</option>
+          {% for position in positions %}
+          {% if position.id|add:0 == form.position.value|add:0 %}
+          <option value="{{ position.id }}" selected> {{ position.name }} </option>
+          {% else %}
+          <option value="{{ position.id }}"> {{ position.name }} </option>
+          {% endif %}
+          {% endfor %}
+
+        </select>
+
+        <small class="text-red-600"> {{ form.position.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text">Tipo de cargo</span>
+        </div>
+        <select class="select select-bordered w-full max-w-xs" name="sub_position">
+          <option value="">Selecciona una opción</option>
+          {% for sub_position in sub_positions %}
+          <option value="{{ sub_position.id }}"> {{ sub_position.name }} </option>
+          {% endfor %}
+        </select>
+        <small class="text-red-600"> {{ form.sub_positions.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Medios de comunicación </span>
+        </div>
+        <select class="select select-bordered w-full max-w-xs" name="media_channel">
+          <option value=""> Selecciona una opción </option>
+          {% for channels in media_channels %}
+          {% if channels.id|add:0 == form.media_channel.value|add:0 %}
+          <option value="{{ channels.id }}" selected> {{ channels.name }} </option>
+          {% else %}
+          <option value="{{ channels.id }}"> {{ channels.name }} </option>
+          {% endif %}
+          {% endfor %}
+        </select>
+        <small class="text-red-600"> {{ form.media_channel.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Carta de autorización </span>
+        </div>
+        <input type="file" class="file-input file-input-bordered w-full max-w-xs" name="authorization_letter" />
+        <small class="text-red-600"> {{ form.authorization_letter.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Institucion/empresa </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="institution"
+          value="{{ form.institution.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.institution.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Dirección </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="address"
+          value="{{ form.address.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.address.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Teléfono </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="phone_number"
+          value="{{ form.phone_number.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.phone_number.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Celular </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="phone_number_2"
+          value="{{ form.phone_number_2.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.phone_number_2.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Email </span>
+        </div>
+        <input type="email" class="input input-bordered w-full max-w-xs" name="email"
+          value="{{ form.email.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.email.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Fecha de nacimiento </span>
+        </div>
+        <input type="date" class="input input-bordered w-full max-w-xs" name="birthday"
+          value="{{ form.birthday.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.birthday.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Lugar de nacimiento </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="birthplace"
+          value="{{ form.birthplace.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.birthplace.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Tipo de sangre </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="blood_type"
+          value="{{ form.blood_type.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.blood_type.errors }} </small>
+      </label>
+
+      <!-- <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Tipo de acreditación </span>
+        </div>
+
+        <select class="select select-bordered w-full max-w-xs" name="type">
+          <option value=""> Selecciona una opción </option>
+          {% for type in types %}
+          {% if type.0 == form.type.value %}
+          <option value="{{ type.0 }}" selected> {{ type.1 }} </option>
+          {% else %}
+          <option value="{{ type.0 }}"> {{ type.1 }} </option>
+          {% endif %}
+          {% endfor %}
+        </select>
+        <small class="text-red-600"> {{ form.type.errors }} </small>
+      </label> -->
+
+
+    </div>
+
+    <div class="mb-5 mt-5">
+      <span class="text-xl font-bold">
+        DATOS MEDICOS
+      </span>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4">
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Grupo sanguineo </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="blood_group"
+          value="{{ form.blood_group.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.blood_group.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Factor Rh </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="blood_rh_factor"
+          value="{{ form.blood_rh_factor.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.blood_rh_factor.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Edad </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="age"
+          value="{{ form.age.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.age.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Enfermedades en tratamiento </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="diseases"
+          value="{{ form.diseases.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.diseases.errors }} </small>
+      </label>
+    </div>
+
+    <div class="mb-5 mt-5">
+      <span class="text text-lg font-bold">
+        Medicamentos en uso
+      </span>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <label class="form-control w-full max-w-md">
+        <div class="label">
+          <span class="label-text"> Medicamento 1 </span>
+        </div>
+        <input type="text" class="input input-bordered w-full" name="medication_1"
+          value="{{ form.medication_1.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.medication_1.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-md">
+        <div class="label">
+          <span class="label-text"> Medicamento 2 </span>
+        </div>
+        <input type="text" class="input input-bordered w-full" name="medication_2"
+          value="{{ form.medication_2.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.medication_2.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-md">
+        <div class="label">
+          <span class="label-text"> Medicamento 3 </span>
+        </div>
+        <input type="text" class="input input-bordered w-full" name="medication_3"
+          value="{{ form.medication_3.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.medication_3.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-md">
+        <div class="label">
+          <span class="label-text"> Medicamento 4 </span>
+        </div>
+        <input type="text" class="input input-bordered w-full" name="medication_4"
+          value="{{ form.medication_4.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.medication_4.errors }} </small>
+      </label>
+    </div>
+
+    <div class="grid gap-4 my-6">
+      <div class="form-control max-w-md">
+        <label class="label cursor-pointer">
+          <span class="label-text font-bold"> Algun tipo de alergia? </span>
+          <input type="checkbox" class="checkbox" />
+        </label>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+
+
+      <div class="form-control max-w-md">
+        <label class="label cursor-pointer">
+          <span class="label-text"> Ambientales </span>
+          <input type="checkbox" class="checkbox" name="allergies" value="1" id="id_allergies_0" />
+        </label>
+      </div>
+
+      <div class="form-control max-w-md">
+        <label class="label cursor-pointer">
+          <span class="label-text"> Alimenticias </span>
+          <input type="checkbox" class="checkbox" name="allergies" value="2" id="id_allergies_1" />
+        </label>
+      </div>
+
+
+      <div class="form-control max-w-md">
+        <label class="label cursor-pointer">
+          <span class="label-text"> Analgésicos </span>
+          <input type="checkbox" class="checkbox" name="allergies" value="3" id="id_allergies_2" />
+        </label>
+      </div>
+
+
+      <div class="form-control max-w-md">
+        <label class="label cursor-pointer">
+          <span class="label-text"> Antibióticos </span>
+          <input type="checkbox" class="checkbox" name="allergies" value="4" id="id_allergies_3" />
+        </label>
+      </div>
+    </div>
+
+    <div class="mb-5 mt-5">
+      <span class="font-bold text-lg">
+        Inmunizaciones recientes
+      </span>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4 my-6">
+      {% for inmunization in inmunizations %}
+      <div class="form-control max-w-md">
+        <label class="label cursor-pointer">
+          <span class="label-text"> {{ inmunization.name }} </span>
+          <input type="checkbox" class="checkbox" name="immunizations" value="{{ inmunization.id }}" />
+        </label>
+      </div>
+      {% endfor %}
+
+    </div>
+
+    <div class="grid gap-4 my-6">
+      <div class="form-control max-w-md">
+        <label class="label cursor-pointer">
+          <span class="label-text font-bold text-lg"> Tiene antecedentes medicos? </span>
+          <input type="checkbox" class="checkbox" />
+        </label>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      {% for medical in medicals %}
+      <div class="form-control max-w-md">
+        <label class="label cursor-pointer">
+          <span class="label-text"> {{ medical.name }} </span>
+          <input type="checkbox" class="checkbox" name="medicals" value="{{ medical.id }}" />
+        </label>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="grid gap-4 my-4">
+      <label class="form-control w-full max-w-md">
+        <div class="label">
+          <span class="label-text"> Antecedentes quirurgicos </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-md" name="surgical"
+          value="{{ form.surgical.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.surgical.errors }} </small>
+      </label>
+
+      <div class="form-control max-w-md">
+        <label class="label cursor-pointer">
+          <span class="label-text font-bold"> Tiene antecedentes medicos? </span>
+          <input type="checkbox" class="checkbox" />
+        </label>
+      </div>
+      <label class="form-control w-full max-w-md">
+        <div class="label">
+          <span class="label-text"> Nombre del medico </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-md" name="doctor_name"
+          value="{{ form.doctor_name.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.doctor_name.errors }} </small>
+      </label>
+
+    </div>
+
+    <div class="mb-5 mt-5">
+      <span class="text font-bold">
+        Lugar de alojamiento
+      </span>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4">
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Hotel </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="hotel_name"
+          value="{{ form.hotel_name.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.hotel_name.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Dirección </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="hotel_address"
+          value="{{ form.hotel_address.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.hotel_address.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Telefono </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="hotel_phone"
+          value="{{ form.hotel_phone.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.hotel_phone.errors }} </small>
+      </label>
+    </div>
+
+
+    <div class="mb-5 mt-5">
+      <span class="text font-bold">
+        Información de vuelos
+      </span>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-4">
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Feche de llegada a Panama </span>
+        </div>
+        <input type="date" class="input input-bordered w-full max-w-xs" name="flight_arrival_date"
+          value="{{ form.flight_arrival_date.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.flight_arrival_date.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Procedencia </span>
+        </div>
+        <select class="select select-bordered w-full max-w-xs" name="flight_from">
+          <option value=""> Selecciona una opción </option>
+          {% for country in countries %}
+          <option value="{{ country.id }}"> {{ country.name }} </option>
+          {% endfor %}
+        </select>
+        <small class="text-red-600"> {{ form.flight_from.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Vuelo </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="flight_arrival_number"
+          value="{{ form.flight_arrival_number.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.flight_arrival_number.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Hora de arribo (hora panama) </span>
+        </div>
+        <input type="time" class="input input-bordered w-full max-w-xs" name="flight_arrival_time"
+          value="{{ form.flight_arrival_time.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.flight_arrival_time.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Feche de salida de Panama </span>
+        </div>
+        <input type="date" class="input input-bordered w-full max-w-xs" name="flight_departure_date"
+          value="{{ form.flight_departure_date.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.flight_departure_date.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Destino </span>
+        </div>
+        <select class="select select-bordered w-full max-w-xs" name="flight_to">
+          <option value=""> Selecciona una opción </option>
+          {% for country in countries %}
+          <option value="{{ country.id }}"> {{ country.name }} </option>
+          {% endfor %}
+        </select>
+        <small class="text-red-600"> {{ form.flight_to.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Vuelo </span>
+        </div>
+        <input type="text" class="input input-bordered w-full max-w-xs" name="flight_departure_number"
+          value="{{ form.flight_departure_number.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.flight_departure_number.errors }} </small>
+      </label>
+
+      <label class="form-control w-full max-w-xs">
+        <div class="label">
+          <span class="label-text"> Hora de arribo (hora panama) </span>
+        </div>
+        <input type="time" class="input input-bordered w-full max-w-xs" name="flight_departure_time"
+          value="{{ form.flight_departure_time.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.flight_departure_time.errors }} </small>
+      </label>
+
+    </div>
+
+    <div class="my-5">
+      <span class="text font-bold">
+        Para el caso de comitivas presidenciales
+      </span>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <label class="form-control w-full">
+        <div class="label">
+          <span class="label-text"> Autorizado por </span>
+        </div>
+        <input type="text" class="input input-bordered w-full" name="authorized_by"
+          value="{{ form.authorized_by.value|default:'' }}" />
+        <small class="text-red-600"> {{ form.authorized_by.errors }} </small>
+      </label>
+
+      <label class="form-control w-full">
+        <div class="label">
+          <span class="label-text">Cargo</span>
+        </div>
+
+        <select class="select select-bordered w-full" name="authorized_by_position">
+
+          <option value="">Selecciona una opción</option>
+          {% for position in positions %}
+          {% if position.id|add:0 == form.authorized_by_position.value|add:0 %}
+          <option value="{{ position.id }}" selected> {{ position.name }} </option>
+          {% else %}
+          <option value="{{ position.id }}"> {{ position.name }} </option>
+          {% endif %}
+          {% endfor %}
+
+        </select>
+
+        <small class="text-red-600"> {{ form.authorized_by_position.errors }} </small>
+      </label>
+
+    </div>
+
+    <button class="btn btn-info btn-active mt-3" type="submit"> Crear </button>
+
+  </form>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+{% endblock scripts %}

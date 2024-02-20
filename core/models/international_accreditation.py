@@ -73,15 +73,15 @@ class InternationalAccreditation(models.Model):
     medication_3 = models.CharField(max_length=200)
     medication_4 = models.CharField(max_length=200)
     allergies = models.ManyToManyField(
-        'medicals.Allergy',
+        'allergies.Allergy',
         related_name='international_forms',
         blank=True)
     immunizations = models.ManyToManyField(
-        'medicals.Immunization',
+        'immunizations.Immunization',
         related_name='international_forms',
         blank=True)
     medicals = models.ManyToManyField(
-        'medicals.MedicalHistory',
+        'medical_histories.MedicalHistory',
         related_name='international_forms',
         blank=True)
     surgical = models.CharField(max_length=150, blank=True)
