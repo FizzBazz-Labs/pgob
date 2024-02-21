@@ -86,10 +86,11 @@ class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
             self.request.POST,
             instance=accreditation)
 
-        for form in sw_formset:
-            if form.instance.weapon == '': continue
+        for sw_form in sw_formset:
+            if sw_form.instance.weapon == '':
+                continue
 
-            form.instance.created_by = self.request.user.pk
+            sw_form.instance.created_by = self.request.user.pk
 
         if not sw_formset.is_valid():
             return super().form_invalid(form)

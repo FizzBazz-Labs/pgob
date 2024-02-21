@@ -13,6 +13,25 @@
     {% endfor %}
   {% endif %}
 
+  {% if form.errors %}
+  <div class="alert alert-error">
+    <h4>Please fix the following errors</h4>
+    <ul>
+      {% for field in form %}
+        {% if field.errors %}
+          {% for error in field.errors %}
+            <span> {{ field.name }} </span>
+            <li><a href="#id_{{ field.name }}" class="error">{{ error|escape }}</a></li>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+    {% if form.non_field_errors %}
+      {{ form.non_field_errors }}
+    {% endif %}
+  </div>
+  {% endif %}
+
   <div id="national_form_app">
     <form method="POST" enctype="multipart/form-data" id="international-form">
       {% csrf_token %}
