@@ -20,7 +20,7 @@
   <div class="">
     <div class="drawer lg:drawer-open" id="div-drawer">
       <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-content py-5 px-5">
+      <div class="drawer-content">
         <button type="button" onclick="toggleSidebar()"
           class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
           <span class="sr-only">Open sidebar</span>
@@ -31,16 +31,24 @@
             </path>
           </svg>
         </button>
-        <div class="p-5 text-2xl text-center font-bold">
-          <h3> República de Panamá </h3>
-          <h3> Transmisión de Mando Presidencial 2024 </h3>
-          <h3>{% block form_type %}{% endblock form_type %}</h3>
+
+        <div class="navbar bg-base-100 shadow-xl">
+          <img src="{% static 'assets/logo.png' %}" alt="Escudo de Panamá" class="h-10">
         </div>
 
-        {% block content %}
+        {% block noheader %}
+          <div class="p-5 text-2xl text-center font-bold">
+            <h3> República de Panamá </h3>
+            <h3> Transmisión de Mando Presidencial 2024 </h3>
+            <h3>{% block form_type %}{% endblock form_type %}</h3>
+          </div>
+        {% endblock %}
 
-        {% endblock content %}
+        <main class="py-5 px-5">
+          {% block content %} {% endblock content %}
+        </main>
       </div>
+
       <div class="drawer-side">
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
 
