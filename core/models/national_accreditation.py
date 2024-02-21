@@ -28,13 +28,14 @@ class NationalAccreditation(models.Model):
         COMMERCIAL_NEWSLETTER = 'prensa_comercial', _('Prensa Comercial')
 
     image = models.ImageField(upload_to=image_filename)
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
-    passport_id = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=150, verbose_name=_('Nombre'))
+    last_name = models.CharField(max_length=150, verbose_name=_('Apellido'))
+    passport_id = models.CharField(max_length=100, verbose_name=_('Cédula /Pasaporte'))
 
     position = models.ForeignKey(
         'positions.Position',
         on_delete=models.PROTECT,
+        verbose_name=_('Cargo en el Evento'),
         related_name='national_forms')
     sub_position = models.ForeignKey(
         'positions.SubPosition',
@@ -50,24 +51,27 @@ class NationalAccreditation(models.Model):
         upload_to=authorization_letter_filename,
         blank=True)
 
-    institution = models.CharField(max_length=150)
-    address = models.CharField(max_length=150)
-    phone_number = models.CharField(max_length=150)
-    phone_number_2 = models.CharField(max_length=150)
-    email = models.EmailField()
-    birthday = models.DateField()
-    birthplace = models.CharField(max_length=250)
-    blood_type = models.CharField(max_length=150)
+    institution = models.CharField(max_length=150, verbose_name=_('Institución'))
+    address = models.CharField(max_length=150, verbose_name=_('Dirección'))
+    phone_number = models.CharField(max_length=150, verbose_name=_('Teléfono'))
+    phone_number_2 = models.CharField(max_length=150, blank=True, verbose_name=_('Teléfono 2'))
+    email = models.EmailField(verbose_name=_('Correo Electrónico'))
+    birthday = models.DateField(verbose_name=_('Fecha de Nacimiento'))
+    birthplace = models.CharField(max_length=250, verbose_name=_('Lugar de Nacimiento'))
+    blood_type = models.CharField(max_length=150, verbose_name=_('Tipo de Sangre'))
 
     # Accreditation Type
-    type = models.CharField(max_length=150, choices=AccreditationType.choices)
+    type = models.CharField(
+        max_length=150,
+        choices=AccreditationType.choices,
+        verbose_name=_('Tipo de Acreditación'))
 
-    authorized_by = models.CharField(max_length=150)
-    # date = models.DateField()
+    authorized_by = models.CharField(max_length=150, verbose_name=_('Autorizado por'))
 
     created_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
-        related_name='national_forms')
-    created_at = models.DateTimeField(auto_now_add=True)
+        related_name='national_forms',
+        verbose_name=_('Creado por'))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Creado el'))
     updated_at = models.DateTimeField(auto_now=True)

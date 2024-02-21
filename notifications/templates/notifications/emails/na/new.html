@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuevo Registro | Acreditación Nacional</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="antialiased bg-gray-100">
+    <div class="container mx-auto py-8 px-4">
+      <h2 class="text-3xl font-semibold text-blue-600 mb-4">
+        Nuevo Registro | Acreditación Nacional
+      </h2>
+
+      <div class="info">
+        <p>
+          <strong>Nombre Completo:</strong> {{ item.first_name }} {{item.last_name }}
+        </p>
+        <p><strong>Número de Pasaporte:</strong> {{ item.passport_id }}</p>
+        <p><strong>Cargo:</strong> {{ item.position }}</p>
+
+        {% if item.sub_position %}
+          <p><strong>Sub Cargo:</strong> {{ item.sub_position }}</p>
+        {% endif %}
+
+        {% if item.media_channel %}
+          <p><strong>Canal de Medios:</strong> {{ item.media_channel }}</p>
+        {% endif %}
+
+        <p><strong>Institución:</strong> {{ item.institution }}</p>
+        <p><strong>Dirección:</strong> {{ item.address }}</p>
+        <p><strong>Número de Teléfono:</strong> {{ item.phone_number }}</p>
+        <p>
+          <strong>Número de Teléfono Alternativo:</strong> {{item.phone_number_2 }}
+        </p>
+
+        <p><strong>Correo Electrónico:</strong> {{ item.email }}</p>
+        <p><strong>Fecha de Nacimiento:</strong> {{ item.birthday }}</p>
+        <p><strong>Lugar de Nacimiento:</strong> {{ item.birthplace }}</p>
+        <p><strong>Tipo de Sangre:</strong> {{ item.blood_type }}</p>
+
+        <p>
+          <strong>Tipo de Acreditación:</strong> {{ item.get_type_display }}
+        </p>
+
+        <p><strong>Autorizado por:</strong> {{ item.authorized_by }}</p>
+        <p><strong>Creado por:</strong> {{ item.created_by }}</p>
+        <p><strong>Fecha de Creación:</strong> {{ item.created_at }}</p>
+      </div>
+    </div>
+  </body>
+</html>

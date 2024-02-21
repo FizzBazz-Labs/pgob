@@ -23,40 +23,49 @@
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="hidden" name="created_by" value="{{ user.id }}">
+
+    <div>
+      <p class="font-semibold mb-2">
+        Datos Personales
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <label class="form-control w-full max-w-xs">
+          <div class="label">
+            <span class="label-text">Nombre</span>
+          </div>
+          <input type="text" placeholder="Ingresa tus datos" name="first_name" class="input input-bordered w-full max-w-xs"
+            value="{{ form.first_name.value|default:'' }}" />
+          <small class="text-red-600"> {{ form.first_name.errors }} </small>
+        </label>
+
+        <label class="form-control w-full max-w-xs">
+          <div class="label">
+            <span class="label-text">Apellido</span>
+          </div>
+          <input type="text" placeholder="Ingresa tus datos" name="last_name" class="input input-bordered w-full max-w-xs"
+            value="{{ form.last_name.value|default:'' }}" />
+          <small class="text-red-600"> {{ form.last_name.errors }} </small>
+        </label>
+
+        <label class="form-control w-full max-w-xs">
+          <div class="label">
+            <span class="label-text">Cedula/Pasaporte</span>
+          </div>
+          <input type="text" placeholder="Ingresa tus datos" name="passport_id" class="input input-bordered w-full max-w-xs"
+            value="{{ form.passport_id.value|default:'' }}" />
+          <small class="text-red-600"> {{ form.passport_id.errors }} </small>
+        </label>
+      </div>
+    </div>
+
     <div class="grid md:grid-cols-3 gap-4">
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text">Nombre</span>
-        </div>
-        <input type="text" placeholder="Type here" name="first_name" class="input input-bordered w-full max-w-xs"
-          value="{{ form.first_name.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.first_name.errors }} </small>
-      </label>
-
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text">Apellido</span>
-        </div>
-        <input type="text" placeholder="Type here" name="last_name" class="input input-bordered w-full max-w-xs"
-          value="{{ form.last_name.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.last_name.errors }} </small>
-      </label>
-
       <label class="form-control w-full max-w-xs">
         <div class="label">
           <span class="label-text"> Foto </span>
         </div>
         <input type="file" class="file-input file-input-bordered w-full max-w-xs" name="image" />
         <small class="text-red-600"> {{ form.image.errors }} </small>
-      </label>
-
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text">Cedula/Pasaporte</span>
-        </div>
-        <input type="text" placeholder="Type here" name="passport_id" class="input input-bordered w-full max-w-xs"
-          value="{{ form.passport_id.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.passport_id.errors }} </small>
       </label>
 
       <label class="form-control w-full max-w-xs">

@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'allergies.apps.AllergiesConfig',
     'immunizations.apps.ImmunizationsConfig',
     'medical_histories.apps.MedicalHistoriesConfig',
-
+    'notifications.apps.NotificationsConfig',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +147,13 @@ ALLOWED_HOSTS = ['*']
 LOGIN_URL = 'auth:login'
 LOGIN_REDIRECT_URL = 'auth:index'
 LOGOUT_REDIRECT_URL = 'auth:index'
+
+
+# Email settings
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'fizzbazz.labs@gmail.com'
+EMAIL_HOST_PASSWORD = 'okqzitaawmjnuexy'
+DEFAULT_FROM_EMAIL = 'fizzbazz.labs.@gmail.com'
