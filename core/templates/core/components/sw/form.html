@@ -1,4 +1,10 @@
 <section class="mb-16">
+  <input
+    type="hidden"
+    name="{{ prefix }}-0-created_by"
+    value="{{ user.id }}"
+  />
+
   <h4 class="font-bold text-xl mb-4">
     Acreditación {{ counter }}
   </h4>
@@ -12,7 +18,7 @@
 
         <input
           type="date"
-          name="{{ related }}-{{ counter }}-{{ form.control_date.name }}"
+          name="{{ prefix }}-{{ counter }}-{{ form.control_date.name }}"
           class="input input-bordered"
           value="{{ form.control_date.value | default:'' }}"
         />
@@ -29,7 +35,7 @@
 
         <input
           type="time"
-          name="{{ related }}-{{ counter }}-{{ form.control_time.name }}"
+          name="{{ prefix }}-{{ counter }}-{{ form.control_time.name }}"
           class="input input-bordered"
           value="{{ form.control_time.value|default:'' }}"
         />
@@ -54,7 +60,7 @@
           <input
             type="text"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-{{ form.weapon.name }}"
+            name="{{ prefix }}-{{ counter }}-{{ form.weapon.name }}"
             value="{{ form.weapon.value|default:'' }}"
           />
 
@@ -71,7 +77,7 @@
           <input
             type="text"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-brand"
+            name="{{ prefix }}-{{ counter }}-brand"
             value="{{ form.brand.value|default:'' }}"
           />
 
@@ -88,7 +94,7 @@
           <input
             type="text"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-model"
+            name="{{ prefix }}-{{ counter }}-model"
             value="{{ form.model.value|default:'' }}"
           />
 
@@ -105,7 +111,7 @@
           <input
             type="text"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-type"
+            name="{{ prefix }}-{{ counter }}-type"
             value="{{ form.type.value|default:'' }}"
           />
           <small class="text-red-600">
@@ -121,7 +127,7 @@
           <input
             type="text"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-serial"
+            name="{{ prefix }}-{{ counter }}-serial"
             value="{{ form.serial.value|default:'' }}"
           />
 
@@ -138,7 +144,7 @@
           <input
             type="text"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-caliber"
+            name="{{ prefix }}-{{ counter }}-caliber"
             value="{{ form.caliber.value|default:'' }}"
           />
 
@@ -155,7 +161,7 @@
           <input
             type="number"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-chargers"
+            name="{{ prefix }}-{{ counter }}-chargers"
             value="{{ form.chargers.value|default:'' }}"
           />
 
@@ -172,7 +178,7 @@
           <input
             type="number"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-ammunition"
+            name="{{ prefix }}-{{ counter }}-ammunition"
             value="{{ form.ammunition.value|default:'' }}"
           />
 
@@ -197,7 +203,7 @@
           <input
             type="text"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-{{ form.equipment_radio.name }}"
+            name="{{ prefix }}-{{ counter }}-{{ form.equipment_radio.name }}"
             value="{{ form.equipment_radio.value|default:'' }}"
           />
 
@@ -214,7 +220,7 @@
           <input
             type="text"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-{{ form.equipment_model.name }}"
+            name="{{ prefix }}-{{ counter }}-{{ form.equipment_model.name }}"
             value="{{ form.equipment_model.value|default:'' }}"
           />
 
@@ -231,7 +237,7 @@
           <input
             type="text"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-{{ form.equipment_type.name }}"
+            name="{{ prefix }}-{{ counter }}-{{ form.equipment_type.name }}"
             value="{{ form.equipment_type.value|default:'' }}"
           />
 
@@ -248,7 +254,7 @@
           <input
             type="text"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-{{ form.equipment_serial.name }}"
+            name="{{ prefix }}-{{ counter }}-{{ form.equipment_serial.name }}"
             value="{{ form.equipment_serial.value|default:'' }}"
           />
 
@@ -265,7 +271,7 @@
           <input
             type="text"
             class="input input-bordered"
-            name="{{ related }}-{{ counter }}-{{ form.equipment_frequency.name }}"
+            name="{{ prefix }}-{{ counter }}-{{ form.equipment_frequency.name }}"
             value="{{ form.equipment_frequency.value|default:'' }}"
           />
 
@@ -284,7 +290,7 @@
 
         <textarea
           class="textarea textarea-bordered"
-          name="{{ related }}-{{ counter }}-{{ form.observations.name }}"
+          name="{{ prefix }}-{{ counter }}-{{ form.observations.name }}"
         >{{ form.observations.value|default:'' }}</textarea>
 
         <small class="text-red-600">

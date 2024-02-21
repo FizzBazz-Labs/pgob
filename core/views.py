@@ -1,10 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 
 from core.forms import *
 from core.models import *
+
 from countries.models import Country
 from immunizations.models import Immunization
 from media_channels.models import MediaChannel
@@ -57,35 +59,40 @@ class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['countries'] = Country.objects.all()
 
+        context['countries'] = Country.objects.all()
         context['inmunizations'] = Immunization.objects.all()
         context['positions'] = Position.objects.all()
         context['medicals'] = MedicalHistory.objects.all()
         context['types'] = InternationalAccreditation.AccreditationType.choices
         context['sub_positions'] = SubPosition.objects.all()
         context['media_channels'] = MediaChannel.objects.all()
-        context['sw_formset'] = SecurityWeaponFormSet
+
+        if self.request.method == 'GET':
+            context['sw_formset'] = SecurityWeaponFormSet
+        else:
+            context['sw_formset'] = SecurityWeaponFormSet(self.request.POST)
 
         return context
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        accreditation = form.save()
+        accreditation = form.save(commit=False)
 
-        formset = SecurityWeaponFormSet(
+        # Edecán Position ID
+        if accreditation.position.pk != 10:
+            return super().form_valid(form)
+
+        sw_formset = SecurityWeaponFormSet(
             self.request.POST,
             instance=accreditation)
 
-        print(f'FormSet: {formset}')
+        if not sw_formset.is_valid():
+            return super().form_invalid(form)
 
-        if formset.is_valid():
-            print('formset is valid')
-            formset.save()
-        else:
-            print(formset.errors)
+        accreditation.save()
+        sw_formset.save()
 
-        return response
+        return super().form_valid(form)
 
 
 class CreatedFormsView(LoginRequiredMixin, TemplateView):

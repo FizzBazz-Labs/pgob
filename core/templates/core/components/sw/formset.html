@@ -18,6 +18,6 @@
   {% endfor %}
 
   {% for form in formset %}
-    {% include 'core/components/sw/form.html' with form=form counter=forloop.counter0 related='sw_set' %}
+    {% include 'core/components/sw/form.html' with form=form counter=forloop.counter0 prefix='sw_set' %}
   {% endfor %}
 </section>

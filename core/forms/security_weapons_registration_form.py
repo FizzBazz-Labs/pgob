@@ -5,7 +5,7 @@ from core.models import InternationalAccreditation, SecurityWeaponAccreditation
 SecurityWeaponFormSet = forms.inlineformset_factory(
     InternationalAccreditation,
     SecurityWeaponAccreditation,
-    fields='__all__'
+    fields='__all__',
 )
 
 
