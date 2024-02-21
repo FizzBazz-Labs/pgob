@@ -27,6 +27,7 @@ class NationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         context['types'] = NationalAccreditation.AccreditationType.choices
         context['sub_positions'] = SubPosition.objects.all()
         context['media_channels'] = MediaChannel.objects.all()
+        context['blood_types'] = NationalAccreditation.BloodType.choices
 
         return context
 

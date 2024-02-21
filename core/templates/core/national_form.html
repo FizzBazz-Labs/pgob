@@ -25,56 +25,95 @@
     <input type="hidden" name="created_by" value="{{ user.id }}">
 
     <div>
-      <p class="font-semibold mb-2">
-        Datos Personales
-      </p>
+      <div class="divider">
+        <span class="font-bold text-xl"> Datos personales </span>
+      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <label class="form-control w-full max-w-xs">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+        <label class="form-control w-full">
           <div class="label">
             <span class="label-text">Nombre</span>
           </div>
-          <input type="text" placeholder="Ingresa tus datos" name="first_name" class="input input-bordered w-full max-w-xs"
+          <input type="text" placeholder="Ingresa tus datos" name="first_name" class="input input-bordered w-full"
             value="{{ form.first_name.value|default:'' }}" />
           <small class="text-red-600"> {{ form.first_name.errors }} </small>
         </label>
 
-        <label class="form-control w-full max-w-xs">
+        <label class="form-control w-full">
           <div class="label">
             <span class="label-text">Apellido</span>
           </div>
-          <input type="text" placeholder="Ingresa tus datos" name="last_name" class="input input-bordered w-full max-w-xs"
+          <input type="text" placeholder="Ingresa tus datos" name="last_name" class="input input-bordered w-full"
             value="{{ form.last_name.value|default:'' }}" />
           <small class="text-red-600"> {{ form.last_name.errors }} </small>
         </label>
 
-        <label class="form-control w-full max-w-xs">
+        <label class="form-control w-full">
           <div class="label">
             <span class="label-text">Cedula/Pasaporte</span>
           </div>
-          <input type="text" placeholder="Ingresa tus datos" name="passport_id" class="input input-bordered w-full max-w-xs"
+          <input type="text" placeholder="Ingresa tus datos" name="passport_id" class="input input-bordered w-full"
             value="{{ form.passport_id.value|default:'' }}" />
           <small class="text-red-600"> {{ form.passport_id.errors }} </small>
+        </label>
+
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Fecha de nacimiento </span>
+          </div>
+          <input type="date" class="input input-bordered w-full" name="birthday"
+            value="{{ form.birthday.value|default:'' }}" />
+          <small class="text-red-600"> {{ form.birthday.errors }} </small>
+        </label>
+
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Lugar de nacimiento </span>
+          </div>
+          <input type="text" class="input input-bordered w-full" name="birthplace"
+            value="{{ form.birthplace.value|default:'' }}" />
+          <small class="text-red-600"> {{ form.birthplace.errors }} </small>
+        </label>
+
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Tipo de sangre </span>
+          </div>
+
+          <select class="select select-bordered w-full" name="blood_type">
+            <option value=""> Selecciona una opción </option>
+            {% for type in blood_types %}
+            {% if type.0 == form.blood_type.value %}
+            <option value="{{ type.0 }}" selected> {{ type.1 }} </option>
+            {% else %}
+            <option value="{{ type.0 }}"> {{ type.1 }} </option>
+            {% endif %}
+            {% endfor %}
+          </select>
+
+          <small class="text-red-600"> {{ form.blood_type.errors }} </small>
+        </label>
+
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Foto </span>
+          </div>
+          <input type="file" class="file-input file-input-bordered w-full" name="image" />
+          <small class="text-red-600"> {{ form.image.errors }} </small>
         </label>
       </div>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-4">
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text"> Foto </span>
-        </div>
-        <input type="file" class="file-input file-input-bordered w-full max-w-xs" name="image" />
-        <small class="text-red-600"> {{ form.image.errors }} </small>
-      </label>
+    <div class="grid md:grid-cols-3 gap-4 my-4">
 
-      <label class="form-control w-full max-w-xs">
+
+      <label class="form-control w-full">
         <div class="label">
           <span class="label-text">Cargo en el evento</span>
         </div>
 
         <input type="hidden" ref="position_value" value="{{ form.position.value }}">
-        <select class="select select-bordered w-full max-w-xs" name="position" v-model="position">
+        <select class="select select-bordered w-full" name="position" v-model="position">
 
           <option value="">Selecciona una opción</option>
           {% for position in positions %}
@@ -90,11 +129,11 @@
         <small class="text-red-600"> {{ form.position.errors }} </small>
       </label>
 
-      <label class="form-control w-full max-w-xs" v-show="showSubPositions">
+      <label class="form-control w-full" v-show="showSubPositions">
         <div class="label">
           <span class="label-text">Tipo de cargo</span>
         </div>
-        <select class="select select-bordered w-full max-w-xs" name="sub_position" ref="subPositions">
+        <select class="select select-bordered w-full" name="sub_position" ref="subPositions">
           <option value="">Selecciona una opción</option>
           {% for sub_position in sub_positions %}
           <option value="{{ sub_position.id }}"> {{ sub_position.name }} </option>
@@ -102,130 +141,125 @@
         </select>
         <small class="text-red-600"> {{ form.sub_positions.errors }} </small>
       </label>
+    </div>
 
-      <label class="form-control w-full max-w-xs" v-show="showMediaChannels">
-        <div class="label">
-          <span class="label-text"> Medios de comunicación </span>
-        </div>
-        <select class="select select-bordered w-full max-w-xs" name="media_channel">
-          <option value=""> Selecciona una opción </option>
-          {% for channels in media_channels %}
-          {% if channels.id|add:0 == form.media_channel.value|add:0 %}
-          <option value="{{ channels.id }}" selected> {{ channels.name }} </option>
-          {% else %}
-          <option value="{{ channels.id }}"> {{ channels.name }} </option>
-          {% endif %}
-          {% endfor %}
-        </select>
-        <small class="text-red-600"> {{ form.media_channel.errors }} </small>
-      </label>
 
-      <label class="form-control w-full max-w-xs" v-show="showMediaChannels">
-        <div class="label">
-          <span class="label-text"> Carta de autorización </span>
-        </div>
-        <input type="file" class="file-input file-input-bordered w-full max-w-xs" name="authorization_letter" />
-        <small class="text-red-600"> {{ form.authorization_letter.errors }} </small>
-      </label>
+    <div v-show="showMediaChannels" class="my-4">
+      <p class="font-semibold mt-4">
+        Campos adicionales
+      </p>
 
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text"> Institucion/empresa </span>
-        </div>
-        <input type="text" class="input input-bordered w-full max-w-xs" name="institution"
-          value="{{ form.institution.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.institution.errors }} </small>
-      </label>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Medios de comunicación </span>
+          </div>
+          <select class="select select-bordered w-full" name="media_channel">
+            <option value=""> Selecciona una opción </option>
+            {% for channels in media_channels %}
+            {% if channels.id|add:0 == form.media_channel.value|add:0 %}
+            <option value="{{ channels.id }}" selected> {{ channels.name }} </option>
+            {% else %}
+            <option value="{{ channels.id }}"> {{ channels.name }} </option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          <small class="text-red-600"> {{ form.media_channel.errors }} </small>
+        </label>
 
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text"> Dirección </span>
-        </div>
-        <input type="text" class="input input-bordered w-full max-w-xs" name="address"
-          value="{{ form.address.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.address.errors }} </small>
-      </label>
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Carta de autorización </span>
+          </div>
+          <input type="file" class="file-input file-input-bordered w-full" name="authorization_letter" />
+          <small class="text-red-600"> {{ form.authorization_letter.errors }} </small>
+        </label>
+      </div>
+    </div>
 
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text"> Teléfono </span>
-        </div>
-        <input type="text" class="input input-bordered w-full max-w-xs" name="phone_number"
-          value="{{ form.phone_number.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.phone_number.errors }} </small>
-      </label>
+    <div class="mt-14">
+      <div class="divider mt-8">
+        <span class="font-bold text-xl"> Datos de contacto </span>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4 my-4">
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Institucion/empresa </span>
+          </div>
+          <input type="text" class="input input-bordered w-full" name="institution"
+            value="{{ form.institution.value|default:'' }}" />
+          <small class="text-red-600"> {{ form.institution.errors }} </small>
+        </label>
 
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text"> Celular </span>
-        </div>
-        <input type="text" class="input input-bordered w-full max-w-xs" name="phone_number_2"
-          value="{{ form.phone_number_2.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.phone_number_2.errors }} </small>
-      </label>
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Dirección </span>
+          </div>
+          <input type="text" class="input input-bordered w-full" name="address"
+            value="{{ form.address.value|default:'' }}" />
+          <small class="text-red-600"> {{ form.address.errors }} </small>
+        </label>
 
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text"> Email </span>
-        </div>
-        <input type="email" class="input input-bordered w-full max-w-xs" name="email"
-          value="{{ form.email.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.email.errors }} </small>
-      </label>
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Teléfono </span>
+          </div>
+          <input type="text" class="input input-bordered w-full" name="phone_number"
+            value="{{ form.phone_number.value|default:'' }}" />
+          <small class="text-red-600"> {{ form.phone_number.errors }} </small>
+        </label>
 
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text"> Fecha de nacimiento </span>
-        </div>
-        <input type="date" class="input input-bordered w-full max-w-xs" name="birthday"
-          value="{{ form.birthday.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.birthday.errors }} </small>
-      </label>
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Celular </span>
+          </div>
+          <input type="text" class="input input-bordered w-full" name="phone_number_2"
+            value="{{ form.phone_number_2.value|default:'' }}" />
+          <small class="text-red-600"> {{ form.phone_number_2.errors }} </small>
+        </label>
 
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text"> Lugar de nacimiento </span>
-        </div>
-        <input type="text" class="input input-bordered w-full max-w-xs" name="birthplace"
-          value="{{ form.birthplace.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.birthplace.errors }} </small>
-      </label>
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Email </span>
+          </div>
+          <input type="email" class="input input-bordered w-full" name="email"
+            value="{{ form.email.value|default:'' }}" />
+          <small class="text-red-600"> {{ form.email.errors }} </small>
+        </label>
 
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text"> Tipo de sangre </span>
-        </div>
-        <input type="text" class="input input-bordered w-full max-w-xs" name="blood_type"
-          value="{{ form.blood_type.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.blood_type.errors }} </small>
-      </label>
 
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text"> Tipo de acreditación </span>
-        </div>
 
-        <select class="select select-bordered w-full max-w-xs" name="type">
-          <option value=""> Selecciona una opción </option>
-          {% for type in types %}
-          {% if type.0 == form.type.value %}
-          <option value="{{ type.0 }}" selected> {{ type.1 }} </option>
-          {% else %}
-          <option value="{{ type.0 }}"> {{ type.1 }} </option>
-          {% endif %}
-          {% endfor %}
-        </select>
-        <small class="text-red-600"> {{ form.type.errors }} </small>
-      </label>
 
-      <label class="form-control w-full max-w-xs">
-        <div class="label">
-          <span class="label-text"> Autorizado por </span>
-        </div>
-        <input type="text" class="input input-bordered w-full max-w-xs" name="authorized_by"
-          value="{{ form.authorized_by.value|default:'' }}" />
-        <small class="text-red-600"> {{ form.authorized_by.errors }} </small>
-      </label>
+
+          <!-- <label class="form-control w-full">
+            <div class="label">
+              <span class="label-text"> Autorizado por </span>
+            </div>
+            <input type="text" class="input input-bordered w-full" name="authorized_by"
+              value="{{ form.authorized_by.value|default:'' }}" />
+            <small class="text-red-600"> {{ form.authorized_by.errors }} </small>
+          </label> -->
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 my-4">
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text"> Tipo de acreditación </span>
+          </div>
+
+          <select class="select select-bordered w-full" name="type">
+            <option value=""> Selecciona una opción </option>
+            {% for type in types %}
+            {% if type.0 == form.type.value %}
+            <option value="{{ type.0 }}" selected> {{ type.1 }} </option>
+            {% else %}
+            <option value="{{ type.0 }}"> {{ type.1 }} </option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          <small class="text-red-600"> {{ form.type.errors }} </small>
+        </label>
+      </div>
     </div>
 
 
