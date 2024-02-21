@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %} Acreditación Internacional {% endblock title %}
 {% block form_type %} Acreditación Internacional {% endblock form_type %}
 
 {% block content %}
@@ -696,83 +697,8 @@
         </label>
       </div>
 
-      <section>
-        <div class="my-5">
-          <span class="text font-bold"> Armas </span>
-        </div>
-
-        <input type="hidden" name="weapons-TOTAL_FORMS" id="id_weapons-TOTAL_FORMS" value="3">
-        <input type="hidden" name="weapons-INITIAL_FORMS" id="id_weapons-INITIAL_FORMS" value="0">
-        <input type="hidden" name="weapons-MIN_NUM_FORMS" id="id_weapons-MIN_NUM_FORMS" value="0">
-        <input type="hidden" name="weapons-MAX_NUM_FORMS" id="id_weapons-MAX_NUM_FORMS" value="1000">
-
-        {% for form in formset %}
-          <section class="mb-5">
-            <h4 class="text-gray">
-              Registro Arma {{ forloop.counter }}
-            </h4>
-
-            <div class="grid md:grid-cols-4 gap-4">
-              <label class="form-control w-full">
-                <div class="label">
-                  <span class="label-text">
-                    {{ form.weapon.label }}
-                  </span>
-                </div>
-
-                <input
-                  type="text"
-                  class="input input-bordered w-full"
-                  name="authorized_by"
-                  value="{{ form.weapon.value|default:'' }}"
-                />
-
-                <small class="text-red-600">
-                  {{ form.weapon.errors }}
-                </small>
-              </label>
-
-              <label class="form-control w-full">
-                <div class="label">
-                  <span class="label-text">
-                    {{ form.brand.label }}
-                  </span>
-                </div>
-
-                <input
-                  type="text"
-                  class="input input-bordered w-full"
-                  name="authorized_by"
-                  value="{{ form.brand.value|default:'' }}"
-                />
-
-                <small class="text-red-600">
-                  {{ form.brand.errors }}
-                </small>
-              </label>
-
-              <label class="form-control w-full">
-                <div class="label">
-                  <span class="label-text">
-                    {{ form.model.label }}
-                  </span>
-                </div>
-
-                <input
-                  type="text"
-                  class="input input-bordered w-full"
-                  name="authorized_by"
-                  value="{{ form.model.value|default:'' }}"
-                />
-
-                <small class="text-red-600">
-                  {{ form.model.errors }}
-                </small>
-              </label>
-            </div>
-          </section>
-        {% endfor %}
-      </section>
+      <!-- TODO: Show if Edecán position was selected -->
+      {% include 'core/components/sw/formset.html' with formset=sw_formset %}
 
       <button class="btn btn-info btn-active mt-3" type="submit">
         Crear

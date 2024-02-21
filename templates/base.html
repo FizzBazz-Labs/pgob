@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en" data-theme="light">
 
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>
+    {% block title %} Acreditación {% endblock title %}
+  </title>
+
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdn.tailwindcss.com"></script>
 
   {% block links %}
 
   {% endblock links %}
-
 </head>
-
 <body>
   <div class="">
     <div class="drawer lg:drawer-open" id="div-drawer">

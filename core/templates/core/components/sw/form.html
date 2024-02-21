@@ -1,0 +1,296 @@
+<section class="mb-16">
+  <h4 class="font-bold text-xl mb-4">
+    Acreditación {{ counter }}
+  </h4>
+
+  <div class="flex flex-col gap-6">
+    <div class="grid grid-cols-6 gap-4">
+      <label class="form-control w-full">
+        <span class="label-text">
+          {{ form.control_date.label }}
+        </span>
+
+        <input
+          type="date"
+          name="{{ related }}-{{ counter }}-{{ form.control_date.name }}"
+          class="input input-bordered"
+          value="{{ form.control_date.value | default:'' }}"
+        />
+
+        <small class="text-red-600">
+          {{ form.control_date.errors }}
+        </small>
+      </label>
+
+      <label class="form-control w-full">
+        <span class="label-text">
+          {{ form.control_time.label }}
+        </span>
+
+        <input
+          type="time"
+          name="{{ related }}-{{ counter }}-{{ form.control_time.name }}"
+          class="input input-bordered"
+          value="{{ form.control_time.value|default:'' }}"
+        />
+
+        <small class="text-red-600">
+          {{ form.control_time.errors }}
+        </small>
+      </label>
+    </div>
+
+    <div>
+      <p class="font-semibold mb-2">
+        Datos de Arma
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.weapon.label }}
+          </span>
+
+          <input
+            type="text"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-{{ form.weapon.name }}"
+            value="{{ form.weapon.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.weapon.errors }}
+          </small>
+        </label>
+
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.brand.label }}
+          </span>
+
+          <input
+            type="text"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-brand"
+            value="{{ form.brand.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.brand.errors }}
+          </small>
+        </label>
+
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.model.label }}
+          </span>
+
+          <input
+            type="text"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-model"
+            value="{{ form.model.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.model.errors }}
+          </small>
+        </label>
+
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.type.label }}
+          </span>
+
+          <input
+            type="text"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-type"
+            value="{{ form.type.value|default:'' }}"
+          />
+          <small class="text-red-600">
+            {{ form.type.errors }}
+          </small>
+        </label>
+
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.serial.label }}
+          </span>
+
+          <input
+            type="text"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-serial"
+            value="{{ form.serial.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.serial.errors }}
+          </small>
+        </label>
+
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.caliber.label }}
+          </span>
+
+          <input
+            type="text"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-caliber"
+            value="{{ form.caliber.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.caliber.errors }}
+          </small>
+        </label>
+
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.chargers.label }}
+          </span>
+
+          <input
+            type="number"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-chargers"
+            value="{{ form.chargers.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.chargers.errors }}
+          </small>
+        </label>
+
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.ammunition.label }}
+          </span>
+
+          <input
+            type="number"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-ammunition"
+            value="{{ form.ammunition.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.ammunition.errors }}
+          </small>
+        </label>
+      </div>
+    </div>
+
+    <div>
+      <p class="font-semibold mb-2">
+        Datos del Equipo de Comunicación
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.equipment_radio.label }}
+          </span>
+
+          <input
+            type="text"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-{{ form.equipment_radio.name }}"
+            value="{{ form.equipment_radio.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.equipment_radio.errors }}
+          </small>
+        </label>
+
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.equipment_model.label }}
+          </span>
+
+          <input
+            type="text"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-{{ form.equipment_model.name }}"
+            value="{{ form.equipment_model.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.equipment_model.errors }}
+          </small>
+        </label>
+
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.equipment_type.label }}
+          </span>
+
+          <input
+            type="text"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-{{ form.equipment_type.name }}"
+            value="{{ form.equipment_type.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.equipment_type.errors }}
+          </small>
+        </label>
+
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.equipment_serial.label }}
+          </span>
+
+          <input
+            type="text"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-{{ form.equipment_serial.name }}"
+            value="{{ form.equipment_serial.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.equipment_serial.errors }}
+          </small>
+        </label>
+
+        <label class="form-control">
+          <span class="label-text">
+            {{ form.equipment_frequency.label }}
+          </span>
+
+          <input
+            type="text"
+            class="input input-bordered"
+            name="{{ related }}-{{ counter }}-{{ form.equipment_frequency.name }}"
+            value="{{ form.equipment_frequency.value|default:'' }}"
+          />
+
+          <small class="text-red-600">
+            {{ form.equipment_frequency.errors }}
+          </small>
+        </label>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4">
+      <label class="form-control w-full">
+        <span class="label-text">
+          {{ form.observations.label }}
+        </span>
+
+        <textarea
+          class="textarea textarea-bordered"
+          name="{{ related }}-{{ counter }}-{{ form.observations.name }}"
+        >{{ form.observations.value|default:'' }}</textarea>
+
+        <small class="text-red-600">
+          {{ form.observations.errors }}
+        </small>
+      </label>
+    </div>
+  </div>
+</section>

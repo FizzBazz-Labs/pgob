@@ -65,7 +65,7 @@ class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         context['types'] = InternationalAccreditation.AccreditationType.choices
         context['sub_positions'] = SubPosition.objects.all()
         context['media_channels'] = MediaChannel.objects.all()
-        context['formset'] = SecurityWeaponFormSet
+        context['sw_formset'] = SecurityWeaponFormSet
 
         return context
 

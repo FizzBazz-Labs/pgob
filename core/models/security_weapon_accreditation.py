@@ -7,32 +7,34 @@ class SecurityWeaponAccreditation(models.Model):
     accreditation = models.ForeignKey(
         'core.InternationalAccreditation',
         on_delete=models.CASCADE,
-        related_name='weapons')
-    control_date = models.DateField()
-    control_time = models.TimeField()
+        related_name='sw_set')
+    control_date = models.DateField(verbose_name=_('Fecha de Control'))
+    control_time = models.TimeField(verbose_name=_('Hora'))
 
     # Weapon data
-    weapon = models.CharField(max_length=150)
-    brand = models.CharField(max_length=150)
-    model = models.CharField(max_length=150)
-    type = models.CharField(max_length=150)
-    serial = models.CharField(max_length=150)
-    caliber = models.CharField(max_length=150)
-    chargers = models.IntegerField()
-    ammunition = models.IntegerField()
+    weapon = models.CharField(max_length=150, verbose_name=_('Arma'))
+    brand = models.CharField(max_length=150, verbose_name=_('Marca'))
+    model = models.CharField(max_length=150, verbose_name=_('Modelo'))
+    type = models.CharField(max_length=150, verbose_name=_('Tipo'))
+    serial = models.CharField(max_length=150, verbose_name=_('Serial No.'))
+    caliber = models.CharField(max_length=150, verbose_name=_('Calibre'))
+    chargers = models.IntegerField(verbose_name=_('Cantidad de Cargadores'))
+    ammunition = models.IntegerField(verbose_name=_('Total de Municiones'))
 
     # Communication Data
-    equipment_radio = models.CharField(max_length=150)
-    equipment_model = models.CharField(max_length=150)
-    equipment_type = models.CharField(max_length=150)
-    equipment_serial = models.CharField(max_length=150)
-    equipment_frequency = models.CharField(max_length=150)
+    equipment_radio = models.CharField(max_length=150, verbose_name=_('Radio'))
+    equipment_model = models.CharField(max_length=150, verbose_name=_('Modelo'))
+    equipment_type = models.CharField(max_length=150, verbose_name=_('Tipo'))
+    equipment_serial = models.CharField(max_length=150, verbose_name=_('Serie'))
+    equipment_frequency = models.CharField(max_length=150, verbose_name=_('Frecuencia'))
 
-    observations = models.TextField(blank=True)
+    observations = models.TextField(
+        blank=True,
+        verbose_name=_('Observaciones: (detallar otros elementos de protección y detención)'))
 
     created_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
-        related_name='weapon_forms')
+        related_name='sw_set')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
