@@ -76,7 +76,7 @@ class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         return context
 
     def form_valid(self, form):
-        accreditation = form.save(commit=False)
+        accreditation: InternationalAccreditation = form.save(commit=False)
 
         # Edecán Position ID
         if accreditation.position.pk != 10:
@@ -85,6 +85,11 @@ class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         sw_formset = SecurityWeaponFormSet(
             self.request.POST,
             instance=accreditation)
+
+        for form in sw_formset:
+            if form.instance.weapon == '': continue
+
+            form.instance.created_by = self.request.user.pk
 
         if not sw_formset.is_valid():
             return super().form_invalid(form)
