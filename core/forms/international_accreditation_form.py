@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 
 from core.models import InternationalAccreditation
@@ -59,3 +60,7 @@ class InternationalAccreditationForm(forms.ModelForm):
             'authorized_by_position',
             'created_by',
         ]
+
+    def save(self, commit: bool = ...) -> Any:
+        print(self.data)
+        return super().save(commit)

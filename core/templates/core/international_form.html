@@ -16,7 +16,7 @@
 
 
 <div id="national_form_app">
-  <form method="POST" enctype="multipart/form-data">
+  <form method="POST" enctype="multipart/form-data" id="international-form">
     {% csrf_token %}
     <input type="hidden" name="created_by" value="{{ user.id }}">
 
@@ -52,6 +52,7 @@
         <small class="text-red-600"> {{ form.type.errors }} </small>
       </label>
     </div>
+
 
     <div class="mb-5 mt-5">
       <span class="text-xl font-bold">
@@ -100,7 +101,8 @@
           <span class="label-text">Cargo en el evento</span>
         </div>
 
-        <select class="select select-bordered w-full max-w-xs" name="position">
+        <input type="hidden" ref="position_value" value="{{ form.position.value }}">
+        <select class="select select-bordered w-full max-w-xs" name="position" v-model="position">
 
           <option value="">Selecciona una opción</option>
           {% for position in positions %}
@@ -116,11 +118,12 @@
         <small class="text-red-600"> {{ form.position.errors }} </small>
       </label>
 
-      <label class="form-control w-full max-w-xs">
+      <label class="form-control w-full max-w-xs" v-show="showSubPositions">
         <div class="label">
           <span class="label-text">Tipo de cargo</span>
         </div>
-        <select class="select select-bordered w-full max-w-xs" name="sub_position">
+        <select class="select select-bordered w-full max-w-xs" name="sub_position" ref="subPositions"
+          :disabled="!showSubPositions" :required="showSubPositions">
           <option value="">Selecciona una opción</option>
           {% for sub_position in sub_positions %}
           <option value="{{ sub_position.id }}"> {{ sub_position.name }} </option>
@@ -129,11 +132,12 @@
         <small class="text-red-600"> {{ form.sub_positions.errors }} </small>
       </label>
 
-      <label class="form-control w-full max-w-xs">
+      <label class="form-control w-full max-w-xs" v-show="showSubPositions">
         <div class="label">
           <span class="label-text"> Medios de comunicación </span>
         </div>
-        <select class="select select-bordered w-full max-w-xs" name="media_channel">
+        <select class="select select-bordered w-full max-w-xs" name="media_channel" :disabled="!showSubPositions"
+          :required="showSubPositions">
           <option value=""> Selecciona una opción </option>
           {% for channels in media_channels %}
           {% if channels.id|add:0 == form.media_channel.value|add:0 %}
@@ -146,11 +150,12 @@
         <small class="text-red-600"> {{ form.media_channel.errors }} </small>
       </label>
 
-      <label class="form-control w-full max-w-xs">
+      <label class="form-control w-full max-w-xs" v-show="showSubPositions">
         <div class="label">
           <span class="label-text"> Carta de autorización </span>
         </div>
-        <input type="file" class="file-input file-input-bordered w-full max-w-xs" name="authorization_letter" />
+        <input type="file" class="file-input file-input-bordered w-full max-w-xs" name="authorization_letter"
+          :disabled="!showSubPositions" :required="showSubPositions" />
         <small class="text-red-600"> {{ form.authorization_letter.errors }} </small>
       </label>
 
@@ -339,11 +344,11 @@
       <div class="form-control max-w-md">
         <label class="label cursor-pointer">
           <span class="label-text font-bold"> Algun tipo de alergia? </span>
-          <input type="checkbox" class="checkbox" />
+          <input type="checkbox" class="checkbox" v-model="hasAllergies" />
         </label>
       </div>
     </div>
-    <div class="grid md:grid-cols-2 gap-4">
+    <div class="grid md:grid-cols-2 gap-4" v-if="hasAllergies">
 
 
       <div class="form-control max-w-md">
@@ -398,12 +403,12 @@
       <div class="form-control max-w-md">
         <label class="label cursor-pointer">
           <span class="label-text font-bold text-lg"> Tiene antecedentes medicos? </span>
-          <input type="checkbox" class="checkbox" />
+          <input type="checkbox" class="checkbox" v-model="hasMedicalHistory" />
         </label>
       </div>
     </div>
 
-    <div class="grid md:grid-cols-2 gap-4">
+    <div class="grid md:grid-cols-2 gap-4" v-if="hasMedicalHistory">
       {% for medical in medicals %}
       <div class="form-control max-w-md">
         <label class="label cursor-pointer">
@@ -426,16 +431,16 @@
 
       <div class="form-control max-w-md">
         <label class="label cursor-pointer">
-          <span class="label-text font-bold"> Tiene antecedentes medicos? </span>
-          <input type="checkbox" class="checkbox" />
+          <span class="label-text font-bold"> Acompaña medico personal </span>
+          <input type="checkbox" class="checkbox" v-model="hasMedicalStaff" />
         </label>
       </div>
-      <label class="form-control w-full max-w-md">
+      <label class="form-control w-full max-w-md" v-if="hasMedicalStaff">
         <div class="label">
           <span class="label-text"> Nombre del medico </span>
         </div>
         <input type="text" class="input input-bordered w-full max-w-md" name="doctor_name"
-          value="{{ form.doctor_name.value|default:'' }}" />
+          value="{{ form.doctor_name.value|default:'' }}" :required="hasMedicalStaff" />
         <small class="text-red-600"> {{ form.doctor_name.errors }} </small>
       </label>
 
@@ -613,4 +618,6 @@
 
 {% block scripts %}
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{% static 'js/forms/international_form.js' %}"></script>
 {% endblock scripts %}

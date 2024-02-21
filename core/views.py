@@ -1,3 +1,4 @@
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
@@ -29,8 +30,8 @@ class NationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context['positions'] = Position.objects.all()
-        context['sub_positions'] = SubPosition.objects.all()
         context['types'] = NationalAccreditation.AccreditationType.choices
+        context['sub_positions'] = SubPosition.objects.all()
         context['media_channels'] = MediaChannel.objects.all()
 
         return context
@@ -69,6 +70,8 @@ class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         context['positions'] = Position.objects.all()
         context['medicals'] = MedicalHistory.objects.all()
         context['types'] = InternationalAccreditation.AccreditationType.choices
+        context['sub_positions'] = SubPosition.objects.all()
+        context['media_channels'] = MediaChannel.objects.all()
 
         return context
 
