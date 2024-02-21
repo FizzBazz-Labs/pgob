@@ -1,22 +1,15 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic import CreateView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, TemplateView
 
 from core.forms import *
 from core.models import *
-
 from countries.models import Country
-
-from positions.models import Position, SubPosition
-
-from media_channels.models import MediaChannel
-
 from immunizations.models import Immunization
-
+from media_channels.models import MediaChannel
 from medical_histories.models import MedicalHistory
+from positions.models import Position, SubPosition
 
 
 class NationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -72,8 +65,27 @@ class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         context['types'] = InternationalAccreditation.AccreditationType.choices
         context['sub_positions'] = SubPosition.objects.all()
         context['media_channels'] = MediaChannel.objects.all()
+        context['formset'] = SecurityWeaponFormSet
 
         return context
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        accreditation = form.save()
+
+        formset = SecurityWeaponFormSet(
+            self.request.POST,
+            instance=accreditation)
+
+        print(f'FormSet: {formset}')
+
+        if formset.is_valid():
+            print('formset is valid')
+            formset.save()
+        else:
+            print(formset.errors)
+
+        return response
 
 
 class CreatedFormsView(LoginRequiredMixin, TemplateView):

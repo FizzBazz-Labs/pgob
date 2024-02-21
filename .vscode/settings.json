@@ -1,11 +1,12 @@
 {
   "python.formatting.provider": "none",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "python.languageServer": "Pylance",
   "python.linting.enabled": true,
   "python.linting.lintOnSave": true,
   "python.testing.pytestEnabled": true,
   "[python]": {
+    "editor.formatOnSave": true,
     "editor.defaultFormatter": "ms-python.autopep8"
   },
   "python.linting.pycodestyleArgs": [
