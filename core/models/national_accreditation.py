@@ -66,7 +66,13 @@ class NationalAccreditation(models.Model):
         choices=AccreditationType.choices,
         verbose_name=_('Tipo de Acreditación'))
 
-    authorized_by = models.CharField(max_length=150, verbose_name=_('Autorizado por'))
+    # Todo: Move to Many to Many
+    authorized_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='national_forms_verifies',
+        verbose_name=_('Creado por'))
 
     created_by = models.ForeignKey(
         get_user_model(),

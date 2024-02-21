@@ -1,8 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, DetailView
 
 from core.forms import *
 from core.models import *
@@ -30,6 +29,20 @@ class NationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         context['media_channels'] = MediaChannel.objects.all()
 
         return context
+
+
+class NationalDetailView(LoginRequiredMixin, DetailView):
+    template_name = 'core/na/detail.html'
+    model = NationalAccreditation
+    context_object_name = 'item'
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['positions'] = Position.objects.all()
+    #     context['types'] = NationalAccreditation.AccreditationType.choices
+    #     context['sub_positions'] = SubPosition.objects.all()
+    #     context['media_channels'] = MediaChannel.objects.all()
+    #     return context
 
 
 class OverflightAndNonCommercialAircraftFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %} Detalle de Acreditación {% endblock %}
+
+{% block content %}
+  <div class="flex">
+    <div class="flex-1 mr-10">
+      <section class="mb-10">
+        <section class="mb-10">
+          <h2 class="text-xl font-bold mb-2">
+            Datos Personales
+          </h2>
+
+          <p><strong>Nombre:</strong> {{ item.first_name }}</p>
+          <p><strong>Apellido:</strong> {{ item.last_name }}</p>
+          <p><strong>Cédula / Pasaporte:</strong> {{ item.passport_id }}</p>
+          <p><strong>Fecha de Nacimiento:</strong> {{ item.birthday }}</p>
+          <p><strong>Lugar de Nacimiento:</strong> {{ item.birthplace }}</p>
+          <p><strong>Tipo de Sangre:</strong> {{ item.blood_type }}</p>
+        </section>
+
+        <section class="mb-10">
+          <h2 class="text-xl font-bold mb-2">
+            Datos de Contacto
+          </h2>
+
+          <p><strong>Correo Electrónico:</strong> {{ item.email }}</p>
+          <p><strong>Teléfono:</strong> {{ item.phone_number }}</p>
+          <p><strong>Teléfono 2:</strong> {{ item.phone_number_2 }}</p>
+          <p><strong>Dirección:</strong> {{ item.institution }}</p>
+          <p><strong>Dirección:</strong> {{ item.address }}</p>
+        </section>
+
+        <section class="mb-10">
+          <h2 class="text-xl font-bold mb-4">
+            Posición
+          </h2>
+
+          <p><strong>Cargo en el Evento:</strong> {{ item.position.name }}</p>
+
+          {% if item.sub_position %}
+            <p><strong>Sub Posición:</strong> {{ item.sub_position.name }}</p>
+          {% endif %}
+
+          {% if item.media_channel %}
+            <p><strong>Sub Posición:</strong> {{ item.media_channel.name }}</p>
+          {% endif %}
+
+          {% if item.authorization_letter %}
+            <p><strong>Sub Posición:</strong> {{ item.authorization_letter.name }}</p>
+          {% endif %}
+        </section>
+
+        <section class="mb-10">
+          <h2 class="text-xl font-bold mb-4">
+            Otros
+          </h2>
+
+          <p><strong>Autorizado por:</strong> {{ item.authorized_by }}</p>
+          <p><strong>Creado por:</strong> {{ item.created_by }}</p>
+          <p><strong>Creado el:</strong> {{ item.created_at }}</p>
+          <p><strong>Actualizado el:</strong> {{ item.updated_at }}</p>
+        </section>
+      </section>
+    </div>
+
+    <div class="flex-1">
+      {% if item.image %}
+        <img
+          src="{{ item.image.url }}"
+          alt="Foto de {{ item.first_name }} {{ item.last_name }}"
+          width="250"
+        />
+      {% else %}
+        <p>No hay imagen disponible</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
