@@ -62,7 +62,7 @@
           </h2>
 
           <p><strong>Tipo de Acreditación:</strong> {{ item.type }}</p>
-          <p><strong>Autorizado por:</strong> {{ item.authorized_by }}</p>
+          {% comment %} <p><strong>Autorizado por:</strong> {{ item.authorized_by }}</p> {% endcomment %}
           <p><strong>Creado por:</strong> {{ item.created_by }}</p>
           <p><strong>Creado el:</strong> {{ item.created_at }}</p>
           <p><strong>Actualizado el:</strong> {{ item.updated_at }}</p>

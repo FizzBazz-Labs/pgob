@@ -31,9 +31,9 @@
           </svg>
         </button>
 
-        <div class="navbar bg-base-100 shadow-xl">
+        {% comment %} <div class="navbar bg-base-100 shadow-xl">
           <img src="{% static 'assets/logo.png' %}" alt="Escudo de Panamá" class="h-10">
-        </div>
+        </div> {% endcomment %}
 
         {% block noheader %}
           <div class="p-5 text-2xl text-center font-bold">
@@ -48,64 +48,52 @@
         </main>
       </div>
 
-      <div class="drawer-side">
+      <div class="drawer-side bg-base-200 max-w-[20vw]">
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
 
-        <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-          {% if admin_group in user.groups.all %}
-          <li>
-            <a href="{% url 'core:form-list' %}">
-              Lista de formularios creados
-            </a>
-          </li>
-          {% endif %}
-          <li>
-            <a href="{% url 'core:national' %}">
-              Acreditación Nacional
-            </a>
-          </li>
+        <div class="flex justify-center w-full my-6">
+          <img src="{% static 'assets/logo.png' %}" alt="Escudo de Panamá" class="h-20">
+        </div>
 
-          <li>
-            <a href="{% url 'core:international' %}">
-              Acreditación Internacional
-            </a>
-          </li>
+        <div class="flex flex-col justify-between h-[85vh]">
+          <ul class="menu">
+            {% if admin_group in user.groups.all %}
+              <li>
+                <a href="{% url 'core:form-list' %}">
+                  Lista de formularios creados
+                </a>
+              </li>
+            {% endif %}
 
-          <li>
-            <a href="{% url 'core:overflight' %}">
-              Solicitud de Sobrevuelo y Aterrizaje de Aeronave No Comercial
-            </a>
-          </li>
+            <li>
+              <a href="{% url 'core:national' %}">
+                Acreditación Nacional
+              </a>
+            </li>
 
-          <!-- <li>
-            <a href="#">
-              Acredita Acceso de Vehículos al Aeropuerto
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              Ficha de Informe Medico
-            </a>
-          </li>
+            <li>
+              <a href="{% url 'core:international' %}">
+                Acreditación Internacional
+              </a>
+            </li>
 
-          <li>
-            <a href="#'">
-              Acreditación de Seguridad y Registro de Armas
-            </a>
-          </li>
+            <li>
+              <a href="{% url 'core:overflight' %}">
+                Solicitud de Sobrevuelo y Aterrizaje de Aeronave No Comercial
+              </a>
+            </li>
 
-          <li>
-            <a href="#">
-              Acreditación Prensa Nacional
-            </a>
-          </li>
+            <div class="flex-1"></div>
+          </ul>
 
-          <li>
-            <a href="#">
-              Acreditación Prensa Internacional
-            </a>
-          </li> -->
-        </ul>
+          <ul class="menu">
+            <li>
+              <a href="{% url 'auth:login' %}" class="text-red-500">
+                Cerrar Sesión
+              </a>
+            </li>
+          <ul>
+        </div>
       </div>
     </div>
   </div>

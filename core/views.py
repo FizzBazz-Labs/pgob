@@ -13,6 +13,18 @@ from medical_histories.models import MedicalHistory
 from positions.models import Position, SubPosition
 
 
+class AccreditationList(LoginRequiredMixin, TemplateView):
+    template_name = 'core/accreditation_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['nationals'] = NationalAccreditation.objects.all()
+        context['internationals'] = InternationalAccreditation.objects.all()
+
+        return context
+
+
 class NationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'core/national_form.html'
     model = NationalAccreditation
@@ -31,11 +43,18 @@ class NationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
         return context
 
+    def get_success_url(self) -> str:
+        return reverse_lazy(
+            'core:national-detail',
+            kwargs={'pk': self.object.pk}
+        )
+
 
 class NationalDetailView(LoginRequiredMixin, DetailView):
     template_name = 'core/na/detail.html'
     model = NationalAccreditation
     context_object_name = 'item'
+
 
 class OverflightAndNonCommercialAircraftFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'core/overflight_and_non_commercial_aircraft.html'
@@ -74,52 +93,46 @@ class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         context['media_channels'] = MediaChannel.objects.all()
         context['blood_types'] = NationalAccreditation.BloodType.choices
 
-        if self.request.method == 'GET':
-            context['sw_formset'] = SecurityWeaponFormSet
-        else:
-            context['sw_formset'] = SecurityWeaponFormSet(self.request.POST)
+        # if self.request.method == 'GET':
+        #     context['sw_formset'] = SecurityWeaponFormSet
+        # else:
+        #     context['sw_formset'] = SecurityWeaponFormSet(self.request.POST)
 
         return context
 
-    def form_valid(self, form):
-        accreditation: InternationalAccreditation = form.save(commit=False)
+    # def form_valid(self, form):
+    #     accreditation: InternationalAccreditation = form.save(commit=False)
 
-        # Edecán Position ID
-        if accreditation.position.pk != 10:
-            return super().form_valid(form)
+    #     # Edecán Position ID
+    #     if accreditation.position.pk != 10:
+    #         return super().form_valid(form)
 
-        sw_formset = SecurityWeaponFormSet(
-            self.request.POST,
-            instance=accreditation)
+    #     sw_formset = SecurityWeaponFormSet(
+    #         self.request.POST,
+    #         instance=accreditation)
 
-        for sw_form in sw_formset:
-            if sw_form.instance.weapon == '':
-                continue
+    #     for sw_form in sw_formset:
+    #         if sw_form.instance.weapon == '':
+    #             continue
 
-            sw_form.instance.created_by = self.request.user.pk
+    #         sw_form.instance.created_by = self.request.user.pk
 
-        if not sw_formset.is_valid():
-            return super().form_invalid(form)
+    #     if not sw_formset.is_valid():
+    #         return super().form_invalid(form)
 
-        accreditation.save()
-        sw_formset.save()
+    #     accreditation.save()
+    #     sw_formset.save()
 
-        return super().form_valid(form)
+    #     return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return reverse_lazy(
+            'core:international-detail',
+            kwargs={'pk': self.object.pk}
+        )
 
 
 class InternationalAccreditationDetail(LoginRequiredMixin, DetailView):
     template_name = 'core/ia/detail.html'
     model = InternationalAccreditation
     context_object_name = 'item'
-
-
-class AccreditationList(LoginRequiredMixin, TemplateView):
-    template_name = 'core/accreditation_list.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['nationals'] = NationalAccreditation.objects.all()
-        context['internationals'] = InternationalAccreditation.objects.all()
-
-        return context

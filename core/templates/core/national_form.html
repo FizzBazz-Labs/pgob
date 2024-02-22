@@ -32,6 +32,16 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
         <label class="form-control w-full">
           <div class="label">
+            <span class="label-text"> Foto </span>
+          </div>
+          <input type="file" class="file-input file-input-bordered w-full" name="image" />
+          <small class="text-red-600"> {{ form.image.errors }} </small>
+        </label>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+        <label class="form-control w-full">
+          <div class="label">
             <span class="label-text">Nombre</span>
           </div>
           <input type="text" placeholder="Ingresa tus datos" name="first_name" class="input input-bordered w-full"
@@ -95,14 +105,6 @@
           <small class="text-red-600">
             {{ form.blood_type.errors }}
           </small>
-        </label>
-
-        <label class="form-control w-full">
-          <div class="label">
-            <span class="label-text"> Foto </span>
-          </div>
-          <input type="file" class="file-input file-input-bordered w-full" name="image" />
-          <small class="text-red-600"> {{ form.image.errors }} </small>
         </label>
       </div>
     </div>
