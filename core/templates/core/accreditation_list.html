@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %} Listado Acreditaciones {% endblock %}
+{% block noheader %} {% endblock %}
+
+{% block content %}
+  <h3 class="text-2xl font-bold mb-10">
+    Detalle de Acreditación
+  </h3>
+
+  <table class="table table-sm table-zebra">
+    <thead>
+      <tr>
+        <th> Nombre </th>
+        <th> Apellido </th>
+        <th> Tipo </th>
+        <th> Cargo </th>
+        <th> Pais </th>
+        <th> </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for item in nationals %}
+        <tr class="hover">
+          <td> {{ item.first_name }} </td>
+          <td> {{ item.last_name }} </td>
+          <td> Nacional </td>
+          <td> {{ item.position.name }} </td>
+          <td> Panamá </td>
+
+          <td class="flex justify-end gap-3">
+            <div class="tooltip" data-tip="Ver Detalles">
+              <a
+                href="{% url 'core:national-detail' pk=item.pk %}"
+                class="btn btn-ghost"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+              </a>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+
+      {% for item in internationals %}
+        <tr class="hover">
+          <td> {{ item.first_name }} </td>
+          <td> {{ item.last_name }} </td>
+          <td> Internacional </td>
+          <td> {{ item.position.name }} </td>
+          <td> {{ item.country }} </td>
+
+          <td class="flex justify-end gap-3">
+            <div class="tooltip" data-tip="Ver Detalles">
+              <a
+                href="{% url 'core:international-detail' pk=item.pk %}"
+                class="btn btn-ghost"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+              </a>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

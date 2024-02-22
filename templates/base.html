@@ -13,7 +13,7 @@
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdn.tailwindcss.com"></script>
 
-  {% block links %} {% endblock links %}
+  {% block links %}{% endblock links %}
 </head>
 <body>
   <div class="">
@@ -43,7 +43,7 @@
           </div>
         {% endblock %}
 
-        <main class="py-5 px-5">
+        <main class="container md:mx-auto py-5 px-5">
           {% block content %} {% endblock content %}
         </main>
       </div>

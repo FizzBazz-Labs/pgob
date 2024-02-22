@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %} Detalle de Acreditación {% endblock %}
+{% block noheader %} {% endblock %}
+
+{% block content %}
+  <h3 class="text-2xl font-bold mb-5">
+    Detalle de Acreditación
+  </h3>
+
+  <div class="flex">
+    <div class="flex-1 mr-10">
+      <section class="mb-10">
+        <section class="mb-10">
+          <h2 class="text-xl font-bold mb-2">
+            Datos Personales
+          </h2>
+
+          <p><strong>Nombre:</strong> {{ item.first_name }}</p>
+          <p><strong>Apellido:</strong> {{ item.last_name }}</p>
+          <p><strong>Cédula / Pasaporte:</strong> {{ item.passport_id }}</p>
+          <p><strong>Fecha de Nacimiento:</strong> {{ item.birthday }}</p>
+          <p><strong>Lugar de Nacimiento:</strong> {{ item.birthplace }}</p>
+          <p><strong>Tipo de Sangre:</strong> {{ item.blood_type }}</p>
+        </section>
+
+        <section class="mb-10">
+          <h2 class="text-xl font-bold mb-2">
+            Datos de Contacto
+          </h2>
+
+          <p><strong>Correo Electrónico:</strong> {{ item.email }}</p>
+          <p><strong>Teléfono:</strong> {{ item.phone_number }}</p>
+          <p><strong>Teléfono 2:</strong> {{ item.phone_number_2 }}</p>
+          <p><strong>Dirección:</strong> {{ item.institution }}</p>
+          <p><strong>Dirección:</strong> {{ item.address }}</p>
+        </section>
+
+        <section class="mb-10">
+          <h2 class="text-xl font-bold mb-4">
+            Información Médica
+          </h2>
+
+          <p><strong>Grupo sanguíneo:</strong> {{ item.blood_group }}</p>
+          <p><strong>Factor RH:</strong> {{ item.blood_rh_factor }}</p>
+          <p><strong>Edad:</strong> {{ item.age }}</p>
+          <p><strong>Enfermedades:</strong> {{ item.diseases }}</p>
+
+          <div class="my-4">
+            <h3 class="text-lg font-bold">
+              Medicación
+            </h3>
+
+            <ul class="list-disc list-inside">
+              <li>{{ item.medication_1 }}</li>
+              <li>{{ item.medication_2 }}</li>
+              <li>{{ item.medication_3 }}</li>
+              <li>{{ item.medication_4 }}</li>
+            </ul>
+          </div>
+
+          <div class="mb-4">
+            <h3 class="text-lg font-bold">Alergias</h3>
+
+            {% for allergy in item.allergies.all %}
+              <p><strong>Alergia:</strong> {{ allergy }}</p>
+            {% empty %}
+              <p>No hay alergias registradas</p>
+            {% endfor %}
+          </div>
+
+          <div class="mb-4">
+            <h3 class="text-lg font-bold">
+              Inmunizaciones
+            </h3>
+
+            {% for inmunization in item.inmunizations.all %}
+              <p><strong>Inmunización:</strong> {{ inmunization }}</p>
+            {% empty %}
+              <p>No hay inmunizaciones registradas</p>
+            {% endfor %}
+          </div>
+
+          <div class="mb-4">
+            <h3 class="text-lg font-bold">
+              Historial Médico
+            </h3>
+
+            {% for medical in item.medicals.all %}
+              <p><strong>Historial:</strong> {{ medical }}</p>
+            {% empty %}
+              <p>No hay inmunizaciones registradas</p>
+            {% endfor %}
+          </div>
+
+          <p><strong>Intervenciones quirúrgicas:</strong> {{ item.surgical }}</p>
+
+          <p class="mt-2">
+            {% if item.doctor_name %}
+              <strong>Nombre del doctor:</strong> {{ item.doctor_name }}
+            {% else %}
+              No acopaña médico personal
+            {% endif %}
+          </p>
+        </section>
+
+        <section class="mb-10">
+          <h2 class="text-xl font-bold mb-4">
+            Información de Alojamiento
+          </h2>
+
+          <p><strong>Hotel:</strong> {{ item.hotel_name }}</p>
+          <p><strong>Dirección:</strong> {{ item.hotel_address }}</p>
+          <p><strong>Teléfono:</strong> {{ item.hotel_phone }}</p>
+        </section>
+
+        <section class="mb-10">
+          <h2 class="text-xl font-bold mb-4">
+            Información de Vuelo
+          </h2>
+
+          <p><strong>Llegada:</strong> {{ item.flight_arrival_date }} {{ item.flight_arrival_time }}</p>
+          <p><strong>No Vuelo:</strong> {{ item.flight_arrival_number }}</p>
+          <p><strong>Procedencia:</strong> {{ item.flight_from }}</p>
+
+          <br>
+
+          <p><strong>Salida:</strong> {{ item.flight_departure_date }} {{ item.flight_departure_time }}</p>
+          <p><strong>No Vuelo:</strong> {{ item.flight_departure_number }}</p>
+          <p><strong>Procedencia:</strong> {{ item.flight_to }}</p>
+        </section>
+
+        <section class="mb-10">
+          <h2 class="text-xl font-bold mb-4">
+            Acreditación
+          </h2>
+
+          <p><strong>Tipo de Acreditación:</strong> {{ item.type }}</p>
+          <p><strong>Autorizado por:</strong> {{ item.authorized_by }}</p>
+          <p><strong>Creado por:</strong> {{ item.created_by }}</p>
+          <p><strong>Creado el:</strong> {{ item.created_at }}</p>
+          <p><strong>Actualizado el:</strong> {{ item.updated_at }}</p>
+        </section>
+      </section>
+    </div>
+
+    <div class="flex-1 flex justify-center items-start">
+      {% if item.image %}
+        <img
+          src="{{ item.image.url }}"
+          alt="Foto de {{ item.first_name }} {{ item.last_name }}"
+          width="250"
+        />
+      {% else %}
+        <p>No hay imagen disponible</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

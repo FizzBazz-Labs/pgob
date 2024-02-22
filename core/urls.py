@@ -11,7 +11,15 @@ urlpatterns = [
     path('overflight-and-non-commercial-aircraft-form',
          OverflightAndNonCommercialAircraftFormView.as_view(),
          name='overflight'),
-    path("form-list/", CreatedFormsView.as_view(), name="form-list"),
 
-    path('na/<int:pk>/', NationalDetailView.as_view(), name='na-detail'),
+    path('accreditations/',
+         AccreditationList.as_view(),
+         name="form-list"),
+
+    path('accreditations/nationals/<int:pk>/',
+         NationalDetailView.as_view(),
+         name='national-detail'),
+    path('accreditations/internationals/<int:pk>/',
+         InternationalAccreditationDetail.as_view(),
+         name='international-detail'),
 ]

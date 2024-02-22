@@ -48,19 +48,20 @@
           {% endif %}
 
           {% if item.media_channel %}
-            <p><strong>Sub Posición:</strong> {{ item.media_channel.name }}</p>
+            <p><strong>Medio de Comunicación:</strong> {{ item.media_channel.name }}</p>
           {% endif %}
 
           {% if item.authorization_letter %}
-            <p><strong>Sub Posición:</strong> {{ item.authorization_letter.name }}</p>
+            <p><strong>Carta de Autorización::</strong> {{ item.authorization_letter.name }}</p>
           {% endif %}
         </section>
 
         <section class="mb-10">
           <h2 class="text-xl font-bold mb-4">
-            Otros
+            Acreditación
           </h2>
 
+          <p><strong>Tipo de Acreditación:</strong> {{ item.type }}</p>
           <p><strong>Autorizado por:</strong> {{ item.authorized_by }}</p>
           <p><strong>Creado por:</strong> {{ item.created_by }}</p>
           <p><strong>Creado el:</strong> {{ item.created_at }}</p>
@@ -69,7 +70,7 @@
       </section>
     </div>
 
-    <div class="flex-1">
+    <div class="flex-1 flex justify-center items-start">
       {% if item.image %}
         <img
           src="{{ item.image.url }}"

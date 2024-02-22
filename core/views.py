@@ -37,15 +37,6 @@ class NationalDetailView(LoginRequiredMixin, DetailView):
     model = NationalAccreditation
     context_object_name = 'item'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['positions'] = Position.objects.all()
-    #     context['types'] = NationalAccreditation.AccreditationType.choices
-    #     context['sub_positions'] = SubPosition.objects.all()
-    #     context['media_channels'] = MediaChannel.objects.all()
-    #     return context
-
-
 class OverflightAndNonCommercialAircraftFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'core/overflight_and_non_commercial_aircraft.html'
     model = OverflightNonCommercialAircraft
@@ -116,11 +107,19 @@ class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         return super().form_valid(form)
 
 
-class CreatedFormsView(LoginRequiredMixin, TemplateView):
-    template_name = 'core/forms_list.html'
+class InternationalAccreditationDetail(LoginRequiredMixin, DetailView):
+    template_name = 'core/ia/detail.html'
+    model = InternationalAccreditation
+    context_object_name = 'item'
+
+
+class AccreditationList(LoginRequiredMixin, TemplateView):
+    template_name = 'core/accreditation_list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['national_forms'] = NationalAccreditation.objects.all()
-        context['overflight'] = OverflightNonCommercialAircraft.objects.all()
+
+        context['nationals'] = NationalAccreditation.objects.all()
+        context['internationals'] = InternationalAccreditation.objects.all()
+
         return context
