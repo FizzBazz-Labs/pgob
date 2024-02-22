@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+    'drf_spectacular',
+
     'core.apps.CoreConfig',
     'media_channels.apps.MediaChannelsConfig',
     'countries.apps.CountriesConfig',
@@ -85,6 +88,44 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pgob.wsgi.application'
 
+# Django Rest Framework Settings
+# https://www.django-rest-framework.org/
+# https://github.com/vbabiy/djangorestframework-camel-case
+# https://dj-rest-auth.readthedocs.io/en/latest/
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+    #     'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
+    # ),
+    # 'DEFAULT_PARSER_CLASSES': (
+    #     'djangorestframework_camel_case.parser.CamelCaseFormParser',
+    #     'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
+    #     'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+    # ),
+}
+
+
+# Swagger settings
+# https://github.com/tfranzel/drf-spectacular
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'PGOB API',
+    'DESCRIPTION': 'The official PGOB API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'CAMELIZE_NAMES': True,
+    'POSTPROCESSING_HOOKS': [
+        'drf_spectacular.hooks.postprocess_schema_enums',
+        # 'drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields',
+    ],
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -119,13 +160,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
 USE_TZ = True
+
+LANGUAGE_CODE = 'es'
+
+TIME_ZONE = 'America/Panama'
 
 
 # Static files (CSS, JavaScript, Images)
@@ -162,8 +203,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'fizzbazz.labs@gmail.com'
 EMAIL_HOST_PASSWORD = 'okqzitaawmjnuexy'
 DEFAULT_FROM_EMAIL = 'fizzbazz.labs.@gmail.com'
-
-USE_I18N = True
-USE_TZ = True
-LANGUAGE_CODE = 'es'
-TIME_ZONE = 'America/Panama'
