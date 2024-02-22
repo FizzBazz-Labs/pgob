@@ -93,10 +93,10 @@ class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         context['media_channels'] = MediaChannel.objects.all()
         context['blood_types'] = NationalAccreditation.BloodType.choices
 
-        # if self.request.method == 'GET':
-        #     context['sw_formset'] = SecurityWeaponFormSet
-        # else:
-        #     context['sw_formset'] = SecurityWeaponFormSet(self.request.POST)
+        if self.request.method == 'GET':
+            context['sw_formset'] = SecurityWeaponFormSet
+        else:
+            context['sw_formset'] = SecurityWeaponFormSet(self.request.POST)
 
         return context
 

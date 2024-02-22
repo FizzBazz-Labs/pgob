@@ -1,9 +1,8 @@
-from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
+from django.views import View
 from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
-from django.views import View
 from django.contrib.auth.views import LoginView, LogoutView
 
 

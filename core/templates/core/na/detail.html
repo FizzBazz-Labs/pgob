@@ -51,9 +51,13 @@
             <p><strong>Medio de Comunicación:</strong> {{ item.media_channel.name }}</p>
           {% endif %}
 
-          {% if item.authorization_letter %}
-            <p><strong>Carta de Autorización::</strong> {{ item.authorization_letter.name }}</p>
-          {% endif %}
+          {% comment %} {% if item.authorization_letter %}
+            <p>
+              <a href="{{ item.authorization_letter.name }}" target="_blank">
+                Carta de Autorización
+              </a>
+            </p>
+          {% endif %} {% endcomment %}
         </section>
 
         <section class="mb-10">
