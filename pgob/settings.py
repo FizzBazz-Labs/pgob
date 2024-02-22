@@ -162,3 +162,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'fizzbazz.labs@gmail.com'
 EMAIL_HOST_PASSWORD = 'okqzitaawmjnuexy'
 DEFAULT_FROM_EMAIL = 'fizzbazz.labs.@gmail.com'
+
+USE_I18N = True
+USE_TZ = True
+LANGUAGE_CODE = 'es'
+TIME_ZONE = 'America/Panama'

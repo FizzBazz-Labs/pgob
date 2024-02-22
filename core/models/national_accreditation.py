@@ -4,12 +4,17 @@ from django.utils.translation import gettext as _
 
 
 def image_filename(instance, filename: str):
+    fullname = f'{instance.first_name.lower()}_{instance.last_name.lower()}'
     filename = filename.lower().replace(' ', '').replace('-', '')
-    return f'nationals/{instance.first_name}_{instance.last_name}/{filename}'
+
+    return f'nationals/{fullname}/{filename}'
 
 
 def authorization_letter_filename(instance, filename: str):
-    return f'nationals/{instance.first_name}_{instance.last_name}/authorizations/{filename}'
+    fullname = f'{instance.first_name.lower()}_{instance.last_name.lower()}'
+    filename = filename.lower().replace(' ', '').replace('-', '')
+
+    return f'nationals/{fullname}/authorizations/{filename}'
 
 
 class NationalAccreditation(models.Model):
@@ -97,3 +102,6 @@ class NationalAccreditation(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name=_('Creado el'))
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Acreditación | {self.first_name} {self.last_name}'

@@ -82,16 +82,19 @@
 
           <select class="select select-bordered w-full" name="blood_type">
             <option value=""> Selecciona una opción </option>
+
             {% for type in blood_types %}
-            {% if type.0 == form.blood_type.value %}
-            <option value="{{ type.0 }}" selected> {{ type.1 }} </option>
-            {% else %}
-            <option value="{{ type.0 }}"> {{ type.1 }} </option>
-            {% endif %}
+              {% if type.0 == form.blood_type.value %}
+                <option value="{{ type.0 }}" selected> {{ type.1 }} </option>
+              {% else %}
+                <option value="{{ type.0 }}"> {{ type.1 }} </option>
+              {% endif %}
             {% endfor %}
           </select>
 
-          <small class="text-red-600"> {{ form.blood_type.errors }} </small>
+          <small class="text-red-600">
+            {{ form.blood_type.errors }}
+          </small>
         </label>
 
         <label class="form-control w-full">
