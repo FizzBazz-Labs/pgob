@@ -81,6 +81,7 @@ class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         context['types'] = InternationalAccreditation.AccreditationType.choices
         context['sub_positions'] = SubPosition.objects.all()
         context['media_channels'] = MediaChannel.objects.all()
+        context['blood_types'] = NationalAccreditation.BloodType.choices
 
         if self.request.method == 'GET':
             context['sw_formset'] = SecurityWeaponFormSet

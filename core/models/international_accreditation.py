@@ -68,10 +68,10 @@ class InternationalAccreditation(models.Model):
     blood_rh_factor = models.CharField(max_length=150, blank=True)
     age = models.PositiveIntegerField(default=18)
     diseases = models.TextField()
-    medication_1 = models.CharField(max_length=200)
-    medication_2 = models.CharField(max_length=200)
-    medication_3 = models.CharField(max_length=200)
-    medication_4 = models.CharField(max_length=200)
+    medication_1 = models.CharField(max_length=200, blank=True)
+    medication_2 = models.CharField(max_length=200, blank=True)
+    medication_3 = models.CharField(max_length=200, blank=True)
+    medication_4 = models.CharField(max_length=200, blank=True)
     allergies = models.ManyToManyField(
         'allergies.Allergy',
         related_name='international_forms',
