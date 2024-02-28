@@ -1,115 +1,121 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, DetailView
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from international_accreditation.models import InternationalAccreditation
+from national_accreditation.models import NationalAccreditation
 
-from rest_framework.generics import CreateAPIView
-
-from core.forms import *
-from core.models import *
-# from core.serializers import NationalSerializer
-
-from countries.models import Country
-from immunizations.models import Immunization
-from media_channels.models import MediaChannel
-from medical_histories.models import MedicalHistory
-from positions.models import Position, SubPosition
+class AccreditationListView(APIView):
+    def get(self, request):
+        international_accreditation = InternationalAccreditation.objects.all()
+        national_accreditation = NationalAccreditation.objects.all()
 
 
-# class NationalCreateApiView(CreateAPIView):
-#     queryset = NationalAccreditation.objects.all()
-#     serializer_class = NationalSerializer
+        international_data = [
+            {
+                "id": item.id,
+                "created_at": item.created_at.date(),
+                "type": item.type,
+                "country": item.country.name,
+            }
+            for item in international_accreditation
+        ]
+
+        national_data = [
+            {
+                "id": item.id,
+                "created_at": item.created_at.date(),
+                "type": item.type,
+                "country": "Panama",
+            }
+            for item in national_accreditation
+        ]
+
+        accreditations = international_data + national_data
+
+        return Response(accreditations, status=status.HTTP_200_OK)
 
 
-# class AccreditationList(LoginRequiredMixin, TemplateView):
-#     template_name = 'core/accreditation_list.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-
-#         # context['nationals'] = NationalAccreditation.objects.all()
-#         context['internationals'] = InternationalAccreditation.objects.all()
-
-#         return context
+#las lineas de codigo comentadas me estaban sirviendo para orientación 
 
 
-# class NationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-#     template_name = 'core/national_form.html'
-#     model = NationalAccreditation
-#     form_class = NationalAccreditationForm
-#     success_url = reverse_lazy('core:national')
-#     success_message = "Formulario creado exitosamente"
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework import status
+# from international_accreditation.models import InternationalAccreditation
+# from national_accreditation.models import NationalAccreditation
+# from .serializers import AccreditationListSerializer
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
+# class AccreditationListView(APIView):
+#     def get(self, request):
+#         international_accreditation = []
+#         national_accreditation = []
 
-#         context['positions'] = Position.objects.all()
-#         context['types'] = NationalAccreditation.AccreditationType.choices
-#         context['sub_positions'] = SubPosition.objects.all()
-#         context['media_channels'] = MediaChannel.objects.all()
-#         context['blood_types'] = NationalAccreditation.BloodType.choices
+#         for item in InternationalAccreditation.objects.all():
+#             new_item = {}
+#             new_item["id"] = item.id
+#             new_item["created_at"] = item.created_at.date()
+#             new_item["type"] = item.type
+#             new_item["country"] = item.country.name
 
-#         return context
+#             international_accreditation.append(new_item)
 
-#     def get_success_url(self) -> str:
-#         return reverse_lazy(
-#             'core:national-detail',
-#             kwargs={'pk': self.object.pk}
+#             # print(InternationalAccreditation.objects.all())
+#             # print(new_item)
+
+
+#         for item in NationalAccreditation.objects.all():
+#             new_item = {}
+#             new_item["id"] = item.id
+#             new_item["created_at"] = item.created_at.date()
+#             new_item["type"] = item.type
+#             new_item["country"] = "Panama"
+
+#             national_accreditation.append(new_item)
+
+#             #print(new_item)
+
+
+#         accreditations = international_accreditation + national_accreditation
+#         serializer = AccreditationListSerializer(data=accreditations, many=True)
+
+
+#         if serializer.is_valid():
+#             print(serializer.data)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from international_accreditation.models import InternationalAccreditation
+# from national_accreditation.models import NationalAccreditation
+# from .serializers import AccreditationListSerializer
+
+# class CombinedAccreditationView(APIView):
+#     def get(self, request, *args, **kwargs):
+        
+#         international_data = InternationalAccreditation.objects.values(
+#             'created_at', 'country__name', 'type', 'authorized_by', "id"
+#         )
+#         national_data = NationalAccreditation.objects.values(
+#             'created_at', 'type', 'authorized_by', "id"
 #         )
 
 
-# class NationalDetailView(LoginRequiredMixin, DetailView):
-# template_name = 'core/na/detail.html'
-# model = NationalAccreditation
-# context_object_name = 'item'
+#         print(international_data)
+#         combined_data = list(international_data)
+#         if len(national_data)>0:
+#             combined_data + list(national_data)
+
+        
+#         serializer = AccreditationListSerializer(combined_data, many=True)
+
+#         return Response(serializer.data)
 
 
-# class OverflightAndNonCommercialAircraftFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-#     template_name = 'core/overflight_and_non_commercial_aircraft.html'
-#     model = OverflightNonCommercialAircraft
-#     form_class = OverflightNonCommercialAircraftForm
-#     success_url = reverse_lazy('core:overflight')
-#     success_message = 'Formulario creado exitosamente'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-
-#         context['countries'] = Country.objects.all()
-#         context['jurisdictions'] = OverflightNonCommercialAircraft.Jurisdiction.choices
-#         context['positions'] = Position.objects.all()
-#         context['media_channels'] = MediaChannel.objects.all()
-
-#         return context
 
 
-# class InternationalFormView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-#     template_name = 'core/international_form.html'
-#     model = InternationalAccreditation
-#     form_class = InternationalAccreditationForm
-#     success_url = reverse_lazy('core:international')
-#     success_message = 'Formulario creado exitosamente'
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-
-#         context['countries'] = Country.objects.all()
-#         context['inmunizations'] = Immunization.objects.all()
-#         context['positions'] = Position.objects.all()
-#         context['medicals'] = MedicalHistory.objects.all()
-#         context['types'] = InternationalAccreditation.AccreditationType.choices
-#         context['sub_positions'] = SubPosition.objects.all()
-#         context['media_channels'] = MediaChannel.objects.all()
-#         context['blood_types'] = NationalAccreditation.BloodType.choices
-#         return context
-
-#     def get_success_url(self) -> str:
-#         return reverse_lazy(
-#             'core:international-detail',
-#             kwargs={'pk': self.object.pk}
-#         )
-
-
-# class InternationalAccreditationDetail(LoginRequiredMixin, DetailView):
-#     template_name = 'core/ia/detail.html'
-#     model = InternationalAccreditation
-#     context_object_name = 'item'
