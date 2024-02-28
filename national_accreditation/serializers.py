@@ -1,8 +1,21 @@
 from rest_framework import serializers
-from core.models import NationalAccreditation
+
+from national_accreditation.models import NationalAccreditation
+
+from positions.serializers import PositionSerializer, SubPositionSerializer
 
 
 class NationalSerializer(serializers.ModelSerializer):
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+    position_id = serializers.IntegerField(write_only=True)
+    position = serializers.StringRelatedField()
+    sub_position_id = serializers.IntegerField(write_only=True)
+    sub_position = serializers.StringRelatedField()
+    media_channel_id = serializers.IntegerField(write_only=True)
+    media_channel = serializers.StringRelatedField()
+
     class Meta:
         model = NationalAccreditation
         fields = [
@@ -11,8 +24,11 @@ class NationalSerializer(serializers.ModelSerializer):
             'last_name',
             'passport_id',
             'position',
+            'position_id',
             'sub_position',
+            'sub_position_id',
             'media_channel',
+            'media_channel_id',
             'authorization_letter',
             'institution',
             'address',

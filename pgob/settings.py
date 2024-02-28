@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 
+from datetime import timedelta
+
+from corsheaders.defaults import default_headers
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,12 +46,17 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'drf_spectacular',
+    'rest_framework_simplejwt',
+    # 'corsheaders',
 
     'core.apps.CoreConfig',
+    'national_accreditation.apps.NationalAccreditationConfig',
+    'overflight_non_commercial_aircraft.apps.OverflightNonCommercialAircraftConfig',
+    'international_accreditation.apps.InternationalAccreditationConfig',
+
     'media_channels.apps.MediaChannelsConfig',
     'countries.apps.CountriesConfig',
     'positions.apps.PositionsConfig',
-    'medicals.apps.MedicalsConfig',
     'pgob_auth.apps.PgobAuthConfig',
     'allergies.apps.AllergiesConfig',
     'immunizations.apps.ImmunizationsConfig',
@@ -58,6 +67,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -96,6 +106,7 @@ WSGI_APPLICATION = 'pgob.wsgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
@@ -111,6 +122,11 @@ REST_FRAMEWORK = {
 }
 
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
+}
+
 # Swagger settings
 # https://github.com/tfranzel/drf-spectacular
 
@@ -124,8 +140,28 @@ SPECTACULAR_SETTINGS = {
         'drf_spectacular.hooks.postprocess_schema_enums',
         # 'drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields',
     ],
+    # 'ENUM_NAME_OVERRIDES': {
+    #     'NationalTypesEnum': NationalAccreditation.AccreditationType.choices,
+    #     # 'InternationalTypesEnum': 'international_accreditation.InternationalAccreditation.AccreditationType.choices',
+    # }
 }
 
+
+# CORS Configuration
+# https://pypi.org/project/django-cors-headers/
+
+API_KEY_CUSTOM_HEADER = 'HTTP_X_API_KEY'
+
+# CORS_ALLOWED_ORIGINS = ['*']
+
+CORS_ALLOW_HEADERS = [
+    # *default_headers,
+    # 'X-Api-Key',
+    # 'Authorization',
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

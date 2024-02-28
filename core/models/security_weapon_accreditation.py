@@ -4,10 +4,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 class SecurityWeaponAccreditation(models.Model):
-    accreditation = models.ForeignKey(
-        'core.InternationalAccreditation',
-        on_delete=models.CASCADE,
-        related_name='sw_set')
     control_date = models.DateField(verbose_name=_('Fecha de Control'))
     control_time = models.TimeField(verbose_name=_('Hora'))
 
@@ -23,10 +19,13 @@ class SecurityWeaponAccreditation(models.Model):
 
     # Communication Data
     equipment_radio = models.CharField(max_length=150, verbose_name=_('Radio'))
-    equipment_model = models.CharField(max_length=150, verbose_name=_('Modelo'))
+    equipment_model = models.CharField(
+        max_length=150, verbose_name=_('Modelo'))
     equipment_type = models.CharField(max_length=150, verbose_name=_('Tipo'))
-    equipment_serial = models.CharField(max_length=150, verbose_name=_('Serie'))
-    equipment_frequency = models.CharField(max_length=150, verbose_name=_('Frecuencia'))
+    equipment_serial = models.CharField(
+        max_length=150, verbose_name=_('Serie'))
+    equipment_frequency = models.CharField(
+        max_length=150, verbose_name=_('Frecuencia'))
 
     observations = models.TextField(
         blank=True,
