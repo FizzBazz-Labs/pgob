@@ -49,7 +49,7 @@ class OverflightNonCommercialAircraft(models.Model):
     ground_facilities = models.TextField()
 
     date = models.DateField()
-    signature = models.CharField(max_length=150)
+    #signature = models.CharField(max_length=150, blank=True, null=True,)
 
     created_by = models.ForeignKey(
         get_user_model(),
@@ -57,3 +57,6 @@ class OverflightNonCommercialAircraft(models.Model):
         related_name='flight_forms')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.country} - {self.date} - {self.arrival_date} - {self.aircraft_type} - {self.position.name}'

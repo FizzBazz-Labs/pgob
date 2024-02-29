@@ -2,24 +2,19 @@ from rest_framework import serializers
 
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft
 
+from countries.serializers import CountrySerializer
+
+from positions.serializers import PositionSerializer, SubPositionSerializer
 
 class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
 
-    country_id = serializers.IntegerField(write_only=True)
-    country = serializers.StringRelatedField()
-    position_id = serializers.IntegerField(write_only=True)
-    position = serializers.StringRelatedField()
-    sub_position_id = serializers.IntegerField(write_only=True)
-    sub_position = serializers.StringRelatedField()
-
     class Meta:
         model = OverflightNonCommercialAircraft
         fields = [
             'country',
-            'country_id',
             'aircraft_type',
             'model',
             'jurisdiction',
@@ -30,9 +25,7 @@ class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
             'crew_members_count',
             'pmi_name',
             'position',
-            'position_id',
             'sub_position',
-            'sub_position_id',
             'passengers_count',
             'arrival_date',
             'departure_date',
@@ -43,7 +36,12 @@ class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
             'route',
             'ground_facilities',
             'date',
-            'signature',
+            #'signature',
             'created_by',
 
         ]
+
+class OverflightNonCommercialAircraftReadSerializer(OverflightNonCommercialAircraftSerializer):
+    country = CountrySerializer()
+    position = PositionSerializer()
+    sub_position = SubPositionSerializer()
