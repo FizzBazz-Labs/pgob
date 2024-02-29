@@ -34,3 +34,6 @@ class SecurityWeaponAccreditation(models.Model):
         related_name='sw_set')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.control_date} - {self.weapon} - {self.caliber} - {self.created_by}'
