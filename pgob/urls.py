@@ -30,6 +30,7 @@ urlpatterns = [
     path("api/v1/", include("national_accreditation.urls")),
     path('api/v1/', include('overflight_non_commercial_aircraft.urls')),
     path('api/v1/', include('international_accreditation.urls')),
+    path('api/v1/', include('security_accreditations.urls')),
 
 ]
 

@@ -17,15 +17,12 @@ class SecurityWeaponAccreditation(models.Model):
     chargers = models.IntegerField(verbose_name=_('Cantidad de Cargadores'))
     ammunition = models.IntegerField(verbose_name=_('Total de Municiones'))
 
-    # Communication Data
-    equipment_radio = models.CharField(max_length=150, verbose_name=_('Radio'))
-    equipment_model = models.CharField(
-        max_length=150, verbose_name=_('Modelo'))
-    equipment_type = models.CharField(max_length=150, verbose_name=_('Tipo'))
-    equipment_serial = models.CharField(
-        max_length=150, verbose_name=_('Serie'))
-    equipment_frequency = models.CharField(
-        max_length=150, verbose_name=_('Frecuencia'))
+    communication_items = models.ManyToManyField(
+        'equipments.Equipment',
+        related_name='security_weapons',
+        verbose_name=_('Elementos de Comunicación'),
+        blank=True
+    )
 
     observations = models.TextField(
         blank=True,

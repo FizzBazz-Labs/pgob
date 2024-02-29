@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'national_accreditation.apps.NationalAccreditationConfig',
     'overflight_non_commercial_aircraft.apps.OverflightNonCommercialAircraftConfig',
     'international_accreditation.apps.InternationalAccreditationConfig',
+    'security_accreditations.apps.SecurityAccreditationsConfig',
+    'equipments.apps.EquipmentsConfig',
 
     'media_channels.apps.MediaChannelsConfig',
     'countries.apps.CountriesConfig',
