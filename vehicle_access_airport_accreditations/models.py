@@ -7,6 +7,7 @@ class VehicleAccessAirportAccreditations(models.Model):
     information_responsible = models.CharField(max_length=150)
     vehicles = models.ManyToManyField(
         'vehicles.Vehicle', related_name='vehicle_access_airport_accreditations')
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
