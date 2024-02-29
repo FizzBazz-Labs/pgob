@@ -55,6 +55,10 @@ INSTALLED_APPS = [
     'international_accreditation.apps.InternationalAccreditationConfig',
     'security_accreditations.apps.SecurityAccreditationsConfig',
     'equipments.apps.EquipmentsConfig',
+    'vehicles.apps.VehiclesConfig',
+    'vehicle_access_airport_accreditations.apps.VehicleAccessAirportAccreditationsConfig',
+    'intercom_equipment_declaration.apps.IntercomEquipmentDeclarationConfig',
+    'general_vehicle_accreditation.apps.GeneralVehicleAccreditationConfig',
 
     'media_channels.apps.MediaChannelsConfig',
     'countries.apps.CountriesConfig',
