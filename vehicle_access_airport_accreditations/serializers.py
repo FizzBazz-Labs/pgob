@@ -7,7 +7,9 @@ from countries.serializers import CountrySerializer
 from vehicles.serializers import VehicleSerializer
 
 class VehicleAccessAirportAccreditationsSerializer(serializers.ModelSerializer):
-
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
     vehicles = VehicleSerializer(many=True)
 
     class Meta:
@@ -16,6 +18,7 @@ class VehicleAccessAirportAccreditationsSerializer(serializers.ModelSerializer):
             'country',
             'information_responsible',
             'vehicles',
+            'created_by',
         ]
 
     def create(self, validated_data):

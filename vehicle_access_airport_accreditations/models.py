@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 
 class VehicleAccessAirportAccreditations(models.Model):
@@ -7,6 +8,10 @@ class VehicleAccessAirportAccreditations(models.Model):
     information_responsible = models.CharField(max_length=150)
     vehicles = models.ManyToManyField(
         'vehicles.Vehicle', related_name='vehicle_access_airport_accreditations')
+    created_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        related_name='vehicle_access_airport_accreditations')
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

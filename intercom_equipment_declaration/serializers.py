@@ -7,7 +7,9 @@ from countries.serializers import CountrySerializer
 from equipments.serializers import EquipmentSerializer
 
 class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
-
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
     equipments = EquipmentSerializer(many=True)
 
     class Meta:
@@ -15,7 +17,8 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
         fields = [
             'country',
             'institution',
-            'equipments'
+            'equipments',
+            'created_by',
         ]
 
     def create(self, validated_data):
