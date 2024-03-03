@@ -36,6 +36,7 @@ urlpatterns = [
     path('api/v1/', include('general_vehicle_accreditation.urls')),
     path('api/v1/', include('vehicles.urls')),
     path('api/v1/', include('allergies.urls')),
+    path('api/v1/', include('countries.urls')),
 ]
 
 urlpatterns = urlpatterns + \
