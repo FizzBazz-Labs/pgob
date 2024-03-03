@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 
+from datetime import timedelta
+
+from corsheaders.defaults import default_headers
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,11 +44,25 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+    'drf_spectacular',
+    'rest_framework_simplejwt',
+    'corsheaders',
+
     'core.apps.CoreConfig',
+    'national_accreditation.apps.NationalAccreditationConfig',
+    'overflight_non_commercial_aircraft.apps.OverflightNonCommercialAircraftConfig',
+    'international_accreditation.apps.InternationalAccreditationConfig',
+    'security_accreditations.apps.SecurityAccreditationsConfig',
+    'equipments.apps.EquipmentsConfig',
+    'vehicles.apps.VehiclesConfig',
+    'vehicle_access_airport_accreditations.apps.VehicleAccessAirportAccreditationsConfig',
+    'intercom_equipment_declaration.apps.IntercomEquipmentDeclarationConfig',
+    'general_vehicle_accreditation.apps.GeneralVehicleAccreditationConfig',
+
     'media_channels.apps.MediaChannelsConfig',
     'countries.apps.CountriesConfig',
     'positions.apps.PositionsConfig',
-    'medicals.apps.MedicalsConfig',
     'pgob_auth.apps.PgobAuthConfig',
     'allergies.apps.AllergiesConfig',
     'immunizations.apps.ImmunizationsConfig',
@@ -55,11 +73,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'djangorestframework_camel_case.middleware.CamelCaseMiddleWare',
 ]
 
 ROOT_URLCONF = 'pgob.urls'
@@ -85,6 +105,70 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pgob.wsgi.application'
 
+# Django Rest Framework Settings
+# https://www.django-rest-framework.org/
+# https://github.com/vbabiy/djangorestframework-camel-case
+# https://dj-rest-auth.readthedocs.io/en/latest/
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_RENDERER_CLASSES': (
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'djangorestframework_camel_case.parser.CamelCaseFormParser',
+        'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+    ),
+}
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
+}
+
+# Swagger settings
+# https://github.com/tfranzel/drf-spectacular
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'PGOB API',
+    'DESCRIPTION': 'The official PGOB API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'CAMELIZE_NAMES': True,
+    'POSTPROCESSING_HOOKS': [
+        'drf_spectacular.hooks.postprocess_schema_enums',
+        'drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields',
+    ],
+    # 'ENUM_NAME_OVERRIDES': {
+    #     'NationalTypesEnum': NationalAccreditation.AccreditationType.choices,
+    #     # 'InternationalTypesEnum': 'international_accreditation.InternationalAccreditation.AccreditationType.choices',
+    # }
+}
+
+
+# CORS Configuration
+# https://pypi.org/project/django-cors-headers/
+
+# API_KEY_CUSTOM_HEADER = 'HTTP_X_API_KEY'
+
+# CORS_ALLOWED_ORIGINS = ['*']
+
+CORS_ALLOW_HEADERS = [
+    *default_headers,
+    # 'X-Api-Key',
+    # 'Authorization',
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_CREDENTIALS = True
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -119,13 +203,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
 USE_TZ = True
+
+LANGUAGE_CODE = 'es'
+
+TIME_ZONE = 'America/Panama'
 
 
 # Static files (CSS, JavaScript, Images)
@@ -162,8 +246,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'fizzbazz.labs@gmail.com'
 EMAIL_HOST_PASSWORD = 'okqzitaawmjnuexy'
 DEFAULT_FROM_EMAIL = 'fizzbazz.labs.@gmail.com'
-
-USE_I18N = True
-USE_TZ = True
-LANGUAGE_CODE = 'es'
-TIME_ZONE = 'America/Panama'
