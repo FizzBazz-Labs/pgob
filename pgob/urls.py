@@ -35,7 +35,7 @@ urlpatterns = [
     path('api/v1/', include('intercom_equipment_declaration.urls')),
     path('api/v1/', include('general_vehicle_accreditation.urls')),
     path('api/v1/', include('vehicles.urls')),
-
+    path('api/v1/', include('allergies.urls')),
 ]
 
 urlpatterns = urlpatterns + \
