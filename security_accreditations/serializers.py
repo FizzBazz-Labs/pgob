@@ -1,17 +1,11 @@
 from rest_framework import serializers
-
 from security_accreditations.models import SecurityWeaponAccreditation
-
 from equipments.serializers import EquipmentSerializer
-from equipments.models import Equipment
 
 
 class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
-
     communication_items = EquipmentSerializer(many=True)
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = SecurityWeaponAccreditation
@@ -35,16 +29,30 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        communication_items = validated_data.pop('communication_items')
-        security_accreditation = SecurityWeaponAccreditation.objects.create(
-            **validated_data)
+        communication_items_data = validated_data.pop('communication_items')
+        instance = super().create(validated_data)
+        self._update_communication_items(instance, communication_items_data)
+        return instance
 
-        for item in communication_items:
-            security_accreditation.communication_items.create(**item)
+    def update(self, instance, validated_data):
+        communication_items_data = validated_data.pop('communication_items', [])
+        instance = super().update(instance, validated_data)
+        self._update_communication_items(instance, communication_items_data)
+        return instance
 
-        return security_accreditation
+    def _update_communication_items(self, instance, communication_items_data):
+        existing_communication_item_ids = instance.communication_items.values_list('id', flat=True)
 
+        # Delete communication items not present in the updated data
+        for communication_item in instance.communication_items.all():
+            if communication_item.id not in [data.get('id') for data in communication_items_data]:
+                communication_item.delete()
 
-class SecurityWeaponAccreditationReadSerializer(SecurityWeaponAccreditationSerializer):
-    communication_items = serializers.StringRelatedField(many=True)
-    created_by = serializers.StringRelatedField()
+        # Create or update communication items
+        for communication_item_data in communication_items_data:
+            communication_item_id = communication_item_data.get('id')
+            if communication_item_id in existing_communication_item_ids:
+                communication_item = instance.communication_items.get(id=communication_item_id)
+                EquipmentSerializer().update(communication_item, communication_item_data)
+            else:
+                instance.communication_items.create(**communication_item_data)

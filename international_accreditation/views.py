@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 
 from international_accreditation.models import InternationalAccreditation
 
@@ -14,6 +14,6 @@ class InternationalListCreateApiView(ListCreateAPIView):
     serializer_class = InternationalAccreditationSerializer
     permission_classes = [IsAuthenticated]
 
-class InternationalRetrieveApiView(RetrieveAPIView):
+class InternationalRetrieveApiView(RetrieveUpdateAPIView):
     queryset = InternationalAccreditation.objects.all()
     serializer_class = InternationalAccreditationReadSerializer

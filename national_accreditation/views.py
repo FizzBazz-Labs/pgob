@@ -1,10 +1,10 @@
 from django.shortcuts import render
 
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from national_accreditation.models import NationalAccreditation
-from national_accreditation.serializers import NationalSerializer, NationalReadSerializer
+from national_accreditation.serializers import NationalSerializer, NationalReadSerializer, NationalUpdateSerializer
 
 
 class NationalListCreateApiView(ListCreateAPIView):
@@ -13,7 +13,10 @@ class NationalListCreateApiView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class NationalRetrieveApiView(RetrieveAPIView):
+class NationalRetrieveApiView(RetrieveUpdateAPIView):
     queryset = NationalAccreditation.objects.all()
-    serializer_class = NationalReadSerializer
-    # permission_classes = [IsAuthenticated]
+    def get_serializer_class(self):
+        if self.request.method == 'PUT' or self.request.method == 'PATCH':
+            return NationalUpdateSerializer
+        return NationalReadSerializer    
+    permission_classes = [IsAuthenticated]

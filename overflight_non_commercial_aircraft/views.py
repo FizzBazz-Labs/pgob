@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft
@@ -14,7 +14,10 @@ class OverflightNonCommercialAircraftCreateApiView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class OverflightNonCommercialAircraftRetrieveApiView(RetrieveAPIView):
+class OverflightNonCommercialAircraftRetrieveApiView(RetrieveUpdateAPIView):
     queryset = OverflightNonCommercialAircraft.objects.all()
-    serializer_class = OverflightNonCommercialAircraftReadSerializer
-    # permission_classes = [IsAuthenticated]
+    def get_serializer_class(self):
+        if self.request.method == 'PUT' or self.request.method == 'PATCH':
+            return OverflightNonCommercialAircraftSerializer
+        return OverflightNonCommercialAircraftReadSerializer
+    permission_classes = [IsAuthenticated]

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 
 from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
 
@@ -13,6 +13,6 @@ class IntercomEquipmentDeclarationListApiView(ListCreateAPIView):
     serializer_class = IntercomEquipmentDeclarationSerializer
     permission_classes = [IsAuthenticated]
 
-class IntercomEquipmentDeclarationRetrieveApiView(RetrieveAPIView):
+class IntercomEquipmentDeclarationRetrieveApiView(RetrieveUpdateAPIView):
     queryset = IntercomEquipmentDeclaration.objects.all()
     serializer_class = IntercomEquipmentDeclarationReadSerializer
