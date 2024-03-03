@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     'rest_framework_simplejwt',
-    # 'corsheaders',
+    'corsheaders',
 
     'core.apps.CoreConfig',
     'national_accreditation.apps.NationalAccreditationConfig',
@@ -73,7 +73,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -145,7 +145,7 @@ SPECTACULAR_SETTINGS = {
     'CAMELIZE_NAMES': True,
     'POSTPROCESSING_HOOKS': [
         'drf_spectacular.hooks.postprocess_schema_enums',
-        # 'drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields',
+        'drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields',
     ],
     # 'ENUM_NAME_OVERRIDES': {
     #     'NationalTypesEnum': NationalAccreditation.AccreditationType.choices,
@@ -157,18 +157,18 @@ SPECTACULAR_SETTINGS = {
 # CORS Configuration
 # https://pypi.org/project/django-cors-headers/
 
-API_KEY_CUSTOM_HEADER = 'HTTP_X_API_KEY'
+# API_KEY_CUSTOM_HEADER = 'HTTP_X_API_KEY'
 
 # CORS_ALLOWED_ORIGINS = ['*']
 
 CORS_ALLOW_HEADERS = [
-    # *default_headers,
+    *default_headers,
     # 'X-Api-Key',
     # 'Authorization',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_CREDENTIALS = True
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
