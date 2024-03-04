@@ -14,11 +14,20 @@ from countries.serializers import CountrySerializer
 
 from positions.serializers import PositionSerializer, SubPositionSerializer
 
+from allergies.models import Allergy
+
+from immunizations.models import Immunization
+
+from medical_histories.models import MedicalHistory
 
 class InternationalAccreditationSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
+
+    allergies = serializers.PrimaryKeyRelatedField(many=True, queryset=Allergy.objects.all())
+    immunizations = serializers.PrimaryKeyRelatedField(many=True, queryset=Immunization.objects.all())
+    medicals = serializers.PrimaryKeyRelatedField(many=True, queryset=MedicalHistory.objects.all())
 
     class Meta:
         model = InternationalAccreditation
@@ -65,10 +74,116 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'flight_departure_number',
             'flight_to',
             'type',
-            # 'authorized_by',
-            # 'authorized_by_position',
             'created_by',
         ]
+
+    def create(self, validated_data):
+        print("Before popping 'allergies':", validated_data)
+        allergies_data = validated_data.pop('allergies', [])
+        print("After popping 'allergies':", validated_data)
+        print("Extracted allergies data:", allergies_data)        
+        #allergies_data = validated_data.pop('allergies', [])
+        immunizations_data = validated_data.pop('immunizations', [])
+        medicals_data = validated_data.pop('medicals', [])
+        
+        instance = super().create(validated_data)
+        
+        instance.allergies.set(allergies_data)
+        instance.immunizations.set(immunizations_data)
+        instance.medicals.set(medicals_data)
+        
+        return instance
+    
+class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = InternationalAccreditation
+        fields = [
+            'id',
+            'country',
+            'image',
+            'first_name',
+            'last_name',
+            'passport_id',
+            'position',
+            'sub_position',
+            'media_channel',
+            'authorization_letter',
+            'institution',
+            'address',
+            'phone_number',
+            'phone_number_2',
+            'email',
+            'birthday',
+            'birthplace',
+            'blood_group',
+            'blood_rh_factor',
+            'age',
+            'diseases',
+            'medication_1',
+            'medication_2',
+            'medication_3',
+            'medication_4',
+            'allergies',
+            'immunizations',
+            'medicals',
+            'surgical',
+            'doctor_name',
+            'hotel_name',
+            'hotel_address',
+            'hotel_phone',
+            'flight_arrival_date',
+            'flight_arrival_time',
+            'flight_arrival_number',
+            'flight_from',
+            'flight_departure_date',
+            'flight_departure_time',
+            'flight_departure_number',
+            'flight_to',
+            'type',
+            'created_by',
+        ]
+        extra_kwargs = {
+            'image': {'required': False},
+            'authorization_letter': {'required': False},
+            # Add extra kwargs for many-to-many fields to make them read-only
+        }
+
+    def update(self, instance, validated_data):
+        # Update many-to-many fields
+        self.update_many_to_many(instance, 'allergies', validated_data)
+        self.update_many_to_many(instance, 'immunizations', validated_data)
+        self.update_many_to_many(instance, 'medicals', validated_data)
+
+        # Update other fields
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
+
+        instance.save()
+        return instance
+
+    def update(self, instance, validated_data):
+        # Update many-to-many fields
+        self.update_many_to_many(instance, 'allergies', validated_data)
+        self.update_many_to_many(instance, 'immunizations', validated_data)
+        self.update_many_to_many(instance, 'medicals', validated_data)
+
+        # Update other fields
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
+
+        instance.save()
+        return instance
+
+    def update_many_to_many(self, instance, field_name, validated_data):
+        field_data = validated_data.pop(field_name, None)
+        if field_data is not None:
+            # Set the many-to-many relationships
+            getattr(instance, field_name).set(field_data)
+        elif field_name in validated_data:
+            # If the field is provided but empty, clea
+            getattr(instance, field_name).clear()
 
 
 class InternationalAccreditationReadSerializer(InternationalAccreditationSerializer):

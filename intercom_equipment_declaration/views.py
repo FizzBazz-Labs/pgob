@@ -4,7 +4,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 
 from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
 
-from intercom_equipment_declaration.serializers import IntercomEquipmentDeclarationSerializer, IntercomEquipmentDeclarationReadSerializer
+from intercom_equipment_declaration.serializers import IntercomEquipmentDeclarationSerializer
 
 from rest_framework.permissions import IsAuthenticated
 
@@ -15,4 +15,5 @@ class IntercomEquipmentDeclarationListApiView(ListCreateAPIView):
 
 class IntercomEquipmentDeclarationRetrieveApiView(RetrieveUpdateAPIView):
     queryset = IntercomEquipmentDeclaration.objects.all()
-    serializer_class = IntercomEquipmentDeclarationReadSerializer
+    serializer_class = IntercomEquipmentDeclarationSerializer
+    permission_classes = [IsAuthenticated]

@@ -14,6 +14,7 @@ class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
     class Meta:
         model = OverflightNonCommercialAircraft
         fields = [
+            'pk',
             'country',
             'aircraft_type',
             'model',
