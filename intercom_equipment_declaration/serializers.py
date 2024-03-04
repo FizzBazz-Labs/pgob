@@ -12,6 +12,7 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
     class Meta:
         model = IntercomEquipmentDeclaration
         fields = [
+            'pk',
             'country',
             'institution',
             'equipments',

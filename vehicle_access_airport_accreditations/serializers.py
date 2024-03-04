@@ -14,6 +14,7 @@ class VehicleAccessAirportAccreditationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = VehicleAccessAirportAccreditations
         fields = [
+            'pk',
             'country',
             'information_responsible',
             'vehicles',

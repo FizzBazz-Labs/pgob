@@ -1,10 +1,10 @@
 from django.shortcuts import render
 
-from rest_framework.generics import ListCreateAPIView, UpdateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
 
-from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer, GeneralVehicleAccreditationReadSerializer
+from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer
 
 from rest_framework.permissions import IsAuthenticated
 
@@ -13,6 +13,7 @@ class GeneralVehicleAccreditationListApiView(ListCreateAPIView):
     serializer_class = GeneralVehicleAccreditationSerializer
     permission_classes = [IsAuthenticated]
 
-class GeneralVehicleAccreditationRetrieveApiView(UpdateAPIView):
+class GeneralVehicleAccreditationRetrieveApiView(RetrieveUpdateAPIView):
     queryset = GeneralVehicleAccreditation.objects.all()
-    serializer_class = GeneralVehicleAccreditationReadSerializer
+    serializer_class = GeneralVehicleAccreditationSerializer
+    permission_classes = [IsAuthenticated]

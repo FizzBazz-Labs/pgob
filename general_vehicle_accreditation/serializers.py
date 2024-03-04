@@ -1,36 +1,50 @@
 from rest_framework import serializers
-
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
-
 from vehicles.serializers import VehicleSerializer
 
 class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
-
     created_by = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
     vehicles = VehicleSerializer(many=True)
 
     class Meta:
-      model = GeneralVehicleAccreditation
-      fields = [
-           'mission',
-           'assigned_by',
-           'vehicles',
-           'distinctive',
-           'observations',
-           'created_by'
-      ]
+        model = GeneralVehicleAccreditation
+        fields = [
+            'pk',
+            'mission',
+            'assigned_by',
+            'vehicles',
+            'distinctive',
+            'observations',
+            'created_by'
+        ]
 
     def create(self, validated_data):
-        vehicles = validated_data.pop('vehicles')
-        general_vehicle_acreditation = GeneralVehicleAccreditation.objects.create(
-            **validated_data)
+        vehicles_data = validated_data.pop('vehicles')
+        instance = super().create(validated_data)
+        self._update_vehicles(instance, vehicles_data)
+        return instance
 
-        for item in vehicles:
-            general_vehicle_acreditation.vehicles.create(**item)
+    def update(self, instance, validated_data):
+        vehicles_data = validated_data.pop('vehicles', [])
+        instance = super().update(instance, validated_data)
+        self._update_vehicles(instance, vehicles_data)
+        return instance
 
-        return general_vehicle_acreditation
-    
-class GeneralVehicleAccreditationReadSerializer(GeneralVehicleAccreditationSerializer):
-    vehicles = VehicleSerializer(many=True)
+    def _update_vehicles(self, instance, vehicles_data):
+        existing_vehicle_ids = instance.vehicles.values_list('id', flat=True)
+
+        # Delete vehicles not present in the updated data
+        for vehicle in instance.vehicles.all():
+            if vehicle.id not in [data.get('id') for data in vehicles_data]:
+                vehicle.delete()
+
+        # Create or update vehicles
+        for vehicle_data in vehicles_data:
+            vehicle_id = vehicle_data.get('id')
+            if vehicle_id in existing_vehicle_ids:
+                vehicle = instance.vehicles.get(id=vehicle_id)
+                VehicleSerializer().update(vehicle, vehicle_data)
+            else:
+                instance.vehicles.create(**vehicle_data)
