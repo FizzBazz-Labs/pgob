@@ -5,11 +5,13 @@ from vehicle_access_airport_accreditations.models import VehicleAccessAirportAcc
 
 from vehicles.serializers import VehicleSerializer
 
+
 class VehicleAccessAirportAccreditationsSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
     vehicles = VehicleSerializer(many=True)
+    country = serializers.StringRelatedField()
 
     class Meta:
         model = VehicleAccessAirportAccreditations

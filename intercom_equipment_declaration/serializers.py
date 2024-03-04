@@ -3,11 +3,14 @@ from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
 from countries.serializers import CountrySerializer
 from equipments.serializers import EquipmentSerializer
 
+
 class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
     equipments = EquipmentSerializer(many=True)
+
+    country = serializers.StringRelatedField()
 
     class Meta:
         model = IntercomEquipmentDeclaration
@@ -32,7 +35,8 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
         return instance
 
     def _update_equipments(self, instance, equipments_data):
-        existing_equipment_ids = instance.equipments.values_list('id', flat=True)
+        existing_equipment_ids = instance.equipments.values_list(
+            'id', flat=True)
 
         # Delete equipments not present in the updated data
         for equipment in instance.equipments.all():
