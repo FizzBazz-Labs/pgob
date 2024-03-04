@@ -44,7 +44,7 @@ class NationalUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = NationalAccreditation
         fields = [
-            'pk',
+            'id',
             'image',
             'first_name',
             'last_name',
