@@ -24,17 +24,17 @@ def authorization_letter_filename(instance, filename: str):
 class NationalAccreditation(models.Model):
     class AccreditationType(models.TextChoices):
         GENERAL_COORDINATION = (
-            'coordinación_general',
+            'GENERAL_COORDINATION',
             _('Coordinación General'),
         )
-        PROTOCOL = 'protocolo', _('Protocolo')
-        SECURITY = 'seguridad', _('Seguridad')
-        TECHNICAL_STAFF = 'personal_técnico', _('Personal Técnico')
+        PROTOCOL = 'PROTOCOL', _('Protocolo')
+        SECURITY = 'SECURITY', _('Seguridad')
+        TECHNICAL_STAFF = 'TECHNICAL_STAFF', _('Personal Técnico')
         OFFICIAL_DELEGATION = 'Delegación Oficial', _('Delegación Oficial')
-        LINK = 'enlace', _('Enlace')
-        SUPPLIER = 'proveedor', _('Proveedor')
-        NEWSLETTER_COMMITTEE = 'comisión_de_prensa', _('Comisión de Prensa')
-        COMMERCIAL_NEWSLETTER = 'prensa_comercial', _('Prensa Comercial')
+        LINK = 'LINK', _('Enlace')
+        SUPPLIER = 'SUPPLIER', _('Proveedor')
+        NEWSLETTER_COMMITTEE = 'NEWSLETTER_COMMITTEE', _('Comisión de Prensa')
+        COMMERCIAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Comercial')
 
     class BloodType(models.TextChoices):
         A_POSITIVE = 'A+', _('A+')

@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'vehicle_access_airport_accreditations.apps.VehicleAccessAirportAccreditationsConfig',
     'intercom_equipment_declaration.apps.IntercomEquipmentDeclarationConfig',
     'general_vehicle_accreditation.apps.GeneralVehicleAccreditationConfig',
+    'profiles.apps.ProfilesConfig',
 
     'media_channels.apps.MediaChannelsConfig',
     'countries.apps.CountriesConfig',

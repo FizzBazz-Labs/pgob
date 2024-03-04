@@ -1,25 +1,13 @@
-from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from django.views import View
-from django.contrib.auth.models import Group
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import get_user_model
+
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 
 
-class SignInView(LoginView):
-    template_name = 'pgob_auth/login.html'
-    success_url = reverse_lazy('auth:index')
+# class UserProfile(RetrieveAPIView):
+#     queryset = get_user_model().objects.all()
+#     serializer_class = ProfileSerializer
+#     permission_classes = [IsAuthenticated]
 
-
-class SignOutView(LoginRequiredMixin, LogoutView):
-    ...
-
-
-class IndexView(LoginRequiredMixin, View):
-    def get(self, request):
-        admin_group = Group.objects.get(name='admin')
-
-        if admin_group in request.user.groups.all():
-            return redirect(reverse_lazy('core:form-list'))
-
-        return redirect(reverse_lazy('core:national'))
+#     def get_object(self):
+#         return self.request.user

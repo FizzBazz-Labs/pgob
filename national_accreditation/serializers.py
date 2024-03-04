@@ -6,6 +6,7 @@ from positions.serializers import PositionSerializer, SubPositionSerializer
 
 from media_channels.serializers import MediaChannelSerializer
 
+
 class NationalSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
@@ -34,10 +35,12 @@ class NationalSerializer(serializers.ModelSerializer):
             'created_by'
         ]
 
+
 class NationalUpdateSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
+
     class Meta:
         model = NationalAccreditation
         fields = [
@@ -64,6 +67,7 @@ class NationalUpdateSerializer(serializers.ModelSerializer):
             'image': {'required': False},
             'authorization_letter': {'required': False},
         }
+
 
 class NationalReadSerializer(NationalSerializer):
     position = PositionSerializer()

@@ -1,4 +1,0 @@
-from core.admin.communication_equipment_declaration_admin import CommunicationEquipmentDeclarationAdmin
-from core.admin.general_vehicle_accreditation_admin import GeneralVehicleAccreditationAdmin
-
-from core.admin.vehicle_access_airport_admin import VehicleAccessAirport

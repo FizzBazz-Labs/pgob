@@ -1,6 +1,0 @@
-from core.forms.communication_equipment_declaration_form import CommunicationEquipmentDeclarationForm
-from core.forms.general_vehicle_accreditation_form import GeneralVehicleAccreditationForm
-from core.forms.medical_report_form import MedicalReportForm
-from core.forms.newsletter_international_form import NewsletterInternationalForm
-from core.forms.newsletter_national_form import NewsletterNationalForm
-from core.forms.vehicle_access_airport_form import VehicleAccessAirportForm

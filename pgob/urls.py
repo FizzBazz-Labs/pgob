@@ -10,7 +10,7 @@ import rest_framework_simplejwt.views as jwt_views
 
 urlpatterns = [
     # path('', include('core.urls')),
-    path('auth/', include('pgob_auth.urls')),
+    # path('api/v1/', include('pgob_auth.urls')),
 
     path('admin/', admin.site.urls),
 
@@ -39,8 +39,9 @@ urlpatterns = [
     path('api/v1/', include('countries.urls')),
     path('api/v1/', include('immunizations.urls')),
     path('api/v1/', include('media_channels.urls')),
-    path('api/v1/', include('medical_histories.urls')),    
+    path('api/v1/', include('medical_histories.urls')),
     path('api/v1/', include('positions.urls')),
+    path('api/v1/', include('profiles.urls')),
 ]
 
 urlpatterns = urlpatterns + \
