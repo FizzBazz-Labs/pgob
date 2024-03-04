@@ -148,10 +148,9 @@ SPECTACULAR_SETTINGS = {
         'drf_spectacular.hooks.postprocess_schema_enums',
         'drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields',
     ],
-    # 'ENUM_NAME_OVERRIDES': {
-    #     'NationalTypesEnum': NationalAccreditation.AccreditationType.choices,
-    #     # 'InternationalTypesEnum': 'international_accreditation.InternationalAccreditation.AccreditationType.choices',
-    # }
+    'ENUM_NAME_OVERRIDES': {
+
+    }
 }
 
 

@@ -13,6 +13,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(source='profile.phone_number')
     group = serializers.SerializerMethodField()
     country = serializers.CharField(source='profile.country.name')
+    passport_id = serializers.CharField(source='profile.passport_id')
 
     class Meta:
         model = get_user_model()
@@ -24,7 +25,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             'email',
             'phone_number',
             'group',
-            'country'
+            'country',
+            'passport_id'
         ]
 
     def get_group(self, obj) -> str:

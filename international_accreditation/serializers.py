@@ -20,14 +20,18 @@ from immunizations.models import Immunization
 
 from medical_histories.models import MedicalHistory
 
+
 class InternationalAccreditationSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
 
-    allergies = serializers.PrimaryKeyRelatedField(many=True, queryset=Allergy.objects.all())
-    immunizations = serializers.PrimaryKeyRelatedField(many=True, queryset=Immunization.objects.all())
-    medicals = serializers.PrimaryKeyRelatedField(many=True, queryset=MedicalHistory.objects.all())
+    allergies = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Allergy.objects.all())
+    immunizations = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Immunization.objects.all())
+    medicals = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=MedicalHistory.objects.all())
 
     class Meta:
         model = InternationalAccreditation
@@ -49,9 +53,8 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'email',
             'birthday',
             'birthplace',
-            'blood_group',
+            'blood_type',
             'blood_rh_factor',
-            'age',
             'diseases',
             'medication_1',
             'medication_2',
@@ -65,12 +68,10 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'hotel_name',
             'hotel_address',
             'hotel_phone',
-            'flight_arrival_date',
-            'flight_arrival_time',
+            'flight_arrival_datetime',
             'flight_arrival_number',
             'flight_from',
-            'flight_departure_date',
-            'flight_departure_time',
+            'flight_departure_datetime',
             'flight_departure_number',
             'flight_to',
             'type',
@@ -81,21 +82,23 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
         print("Before popping 'allergies':", validated_data)
         allergies_data = validated_data.pop('allergies', [])
         print("After popping 'allergies':", validated_data)
-        print("Extracted allergies data:", allergies_data)        
-        #allergies_data = validated_data.pop('allergies', [])
+        print("Extracted allergies data:", allergies_data)
+        # allergies_data = validated_data.pop('allergies', [])
         immunizations_data = validated_data.pop('immunizations', [])
         medicals_data = validated_data.pop('medicals', [])
-        
+
         instance = super().create(validated_data)
-        
+
         instance.allergies.set(allergies_data)
         instance.immunizations.set(immunizations_data)
         instance.medicals.set(medicals_data)
-        
+
         return instance
-    
+
+
 class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
 
     class Meta:
         model = InternationalAccreditation
@@ -117,9 +120,8 @@ class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
             'email',
             'birthday',
             'birthplace',
-            'blood_group',
+            'blood_type',
             'blood_rh_factor',
-            'age',
             'diseases',
             'medication_1',
             'medication_2',
@@ -133,12 +135,10 @@ class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
             'hotel_name',
             'hotel_address',
             'hotel_phone',
-            'flight_arrival_date',
-            'flight_arrival_time',
+            'flight_arrival_datetime',
             'flight_arrival_number',
             'flight_from',
-            'flight_departure_date',
-            'flight_departure_time',
+            'flight_departure_datetime',
             'flight_departure_number',
             'flight_to',
             'type',

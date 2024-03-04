@@ -13,6 +13,7 @@ class Profile(models.Model):
         'countries.Country',
         on_delete=models.CASCADE,
         related_name='profiles')
+    passport_id = models.CharField(max_length=50)
 
     def __str__(self) -> str:
         return self.user.username

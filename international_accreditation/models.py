@@ -14,16 +14,16 @@ def authorization_letter_filename(instance, filename: str):
 
 class InternationalAccreditation(models.Model):
     class AccreditationType(models.TextChoices):
-        OFFICIAL_DELEGATION_HEAD = 'jefe_de_delegación_oficial',
+        OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD',
         _('Jefe de Delegación Oficial'),
 
-        OFFICIAL_DELEGATION = 'delegación_oficial', _('Delegación Oficial')
-        PROTOCOL = 'protocolo', _('Protocolo')
-        SECURITY = 'seguridad', _('Seguridad')
-        SUPPORT_STAFF = 'personal_de_apoyo', _('Personal de Apoyo')
-        OFFICIAL_PRESS = 'prensa_oficial', _('Prensa Oficial')
-        CREW = 'tripulación', _('Tripulación')
-        COMMERCIAL_NEWSLETTER = 'prensa_comercial', _('Prensa Comercial')
+        OFFICIAL_DELEGATION = 'OFFICIAL_DELEGATION', _('Delegación Oficial')
+        PROTOCOL = 'PROTOCOL', _('Protocolo')
+        SECURITY = 'SECURITY', _('Seguridad')
+        SUPPORT_STAFF = 'SUPPORT_STAFF', _('Personal de Apoyo')
+        OFFICIAL_NEWSLETTER = 'OFFICIAL_NEWSLETTER', _('Prensa Oficial')
+        CREW = 'CREW', _('Tripulación')
+        COMMERCIAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Comercial')
 
     country = models.ForeignKey(
         'countries.Country',
@@ -63,9 +63,9 @@ class InternationalAccreditation(models.Model):
     birthplace = models.CharField(max_length=150)
 
     # Medical Information
-    blood_group = models.CharField(max_length=150, blank=True)
+    blood_type = models.CharField(max_length=150, blank=True)
     blood_rh_factor = models.CharField(max_length=150, blank=True)
-    age = models.PositiveIntegerField(default=18)
+
     diseases = models.TextField()
     medication_1 = models.CharField(max_length=200, blank=True)
     medication_2 = models.CharField(max_length=200, blank=True)
@@ -92,16 +92,14 @@ class InternationalAccreditation(models.Model):
     hotel_phone = models.CharField(max_length=120)
 
     # Flight Information
-    flight_arrival_date = models.DateField()
-    flight_arrival_time = models.TimeField()
+    flight_arrival_datetime = models.DateTimeField()
     flight_arrival_number = models.CharField(max_length=150)
     flight_from = models.ForeignKey(
         'countries.Country',
         on_delete=models.PROTECT,
         related_name='flight_from')
 
-    flight_departure_date = models.DateField()
-    flight_departure_time = models.TimeField()
+    flight_departure_datetime = models.DateTimeField()
     flight_departure_number = models.CharField(max_length=150)
     flight_to = models.ForeignKey(
         'countries.Country',

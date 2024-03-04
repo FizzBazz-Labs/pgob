@@ -3,8 +3,6 @@ from django.db.models.signals import post_save
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
-from core.models import *
-
 
 # @receiver(post_save, sender=NationalAccreditation)
 # def post_save_national(sender, instance: NationalAccreditation, **kwargs):
