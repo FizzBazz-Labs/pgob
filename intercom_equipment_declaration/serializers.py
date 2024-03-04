@@ -1,9 +1,6 @@
 from rest_framework import serializers
-
 from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
-
 from countries.serializers import CountrySerializer
-
 from equipments.serializers import EquipmentSerializer
 
 class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
@@ -22,15 +19,30 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        equipments = validated_data.pop('equipments')
-        intercom_equipment_declaration = IntercomEquipmentDeclaration.objects.create(
-            **validated_data)
+        equipments_data = validated_data.pop('equipments')
+        instance = super().create(validated_data)
+        self._update_equipments(instance, equipments_data)
+        return instance
 
-        for item in equipments:
-            intercom_equipment_declaration.equipments.create(**item)
+    def update(self, instance, validated_data):
+        equipments_data = validated_data.pop('equipments', [])
+        instance = super().update(instance, validated_data)
+        self._update_equipments(instance, equipments_data)
+        return instance
 
-        return intercom_equipment_declaration
+    def _update_equipments(self, instance, equipments_data):
+        existing_equipment_ids = instance.equipments.values_list('id', flat=True)
 
-class IntercomEquipmentDeclarationReadSerializer(IntercomEquipmentDeclarationSerializer):
-    country = CountrySerializer()
-    equipments = EquipmentSerializer(many=True)
+        # Delete equipments not present in the updated data
+        for equipment in instance.equipments.all():
+            if equipment.id not in [data.get('id') for data in equipments_data]:
+                equipment.delete()
+
+        # Create or update equipments
+        for equipment_data in equipments_data:
+            equipment_id = equipment_data.get('id')
+            if equipment_id in existing_equipment_ids:
+                equipment = instance.equipments.get(id=equipment_id)
+                EquipmentSerializer().update(equipment, equipment_data)
+            else:
+                instance.equipments.create(**equipment_data)
