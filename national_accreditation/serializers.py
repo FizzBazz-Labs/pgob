@@ -12,8 +12,6 @@ class NationalSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
 
-    id = serializers.IntegerField(read_only=True)
-
     class Meta:
         model = NationalAccreditation
         fields = [
