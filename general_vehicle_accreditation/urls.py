@@ -5,8 +5,8 @@ from general_vehicle_accreditation.views import GeneralVehicleAccreditationListA
 app_name = 'general_vehicle_accreditation'
 
 urlpatterns = [
-    path('general_vehicle_accreditation/',
+    path('general-vehicle-accreditation/',
          GeneralVehicleAccreditationListApiView.as_view(), name='list-create'),
-    path('general_vehicle_accreditation/<int:pk>/',
+    path('general-vehicle-accreditation/<int:pk>/',
          GeneralVehicleAccreditationRetrieveApiView.as_view(), name='detail'),
 ]

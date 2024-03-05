@@ -5,8 +5,8 @@ from vehicle_access_airport_accreditations.views import VehicleAccessAirportAccr
 app_name = 'vehicle_access_airport_accreditations'
 
 urlpatterns = [
-    path('vehicle_access_airport-accreditations/',
+    path('vehicle-access-airport-accreditations/',
          VehicleAccessAirportAccreditationsListApiView.as_view(), name='list-create'),
-    path('vehicle_access_airport-accreditations/<int:pk>/',
+    path('vehicle-access-airport-accreditations/<int:pk>/',
          VehicleAccessAirportAccreditationsRetrieveApiView.as_view(), name='detail'),
 ]

@@ -75,6 +75,7 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'flight_departure_number',
             'flight_to',
             'type',
+            'status',
             'created_by',
         ]
 
