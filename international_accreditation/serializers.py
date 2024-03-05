@@ -143,6 +143,7 @@ class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
             'flight_to',
             'type',
             'created_by',
+            'status',
         ]
         extra_kwargs = {
             'image': {'required': False},

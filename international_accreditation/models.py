@@ -25,6 +25,11 @@ class InternationalAccreditation(models.Model):
         CREW = 'CREW', _('Tripulación')
         COMMERCIAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Comercial')
 
+    class STATUS(models.TextChoices):
+        PENDING = 'PENDING', _('Pendiente')
+        APPROVED = 'APPROVED', _('Aprobado')
+        REJECTED = 'REJECTED', _('Rechazado')
+
     country = models.ForeignKey(
         'countries.Country',
         on_delete=models.PROTECT,
@@ -123,6 +128,13 @@ class InternationalAccreditation(models.Model):
         get_user_model(),
         on_delete=models.PROTECT,
         related_name='international_forms')
+
+    status = models.CharField(
+        max_length=150,
+        choices=STATUS.choices,
+        default=STATUS.PENDING,
+        verbose_name=_('Estado'))
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
