@@ -39,7 +39,9 @@ class ReviewAccreditation(APIView):
             national.status = AccreditationStatus.REVIEWED
             national.save()
 
-            return Response(status=HTTP_200_OK)
+            serializer = self.serializer_class(national)
+
+            return Response(serializer.data, status=HTTP_200_OK)
 
         except NationalAccreditation.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
@@ -55,7 +57,9 @@ class ApproveAccreditation(APIView):
             national.status = AccreditationStatus.APPROVED
             national.save()
 
-            return Response(status=HTTP_200_OK)
+            serializer = self.serializer_class(national)
+
+            return Response(serializer.data, status=HTTP_200_OK)
 
         except NationalAccreditation.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
@@ -71,7 +75,9 @@ class RejectAccreditation(APIView):
             national.status = AccreditationStatus.APPROVED
             national.save()
 
-            return Response(status=HTTP_200_OK)
+            serializer = self.serializer_class(national)
+
+            return Response(serializer.data, status=HTTP_200_OK)
 
         except NationalAccreditation.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
