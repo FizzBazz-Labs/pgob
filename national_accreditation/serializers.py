@@ -32,6 +32,7 @@ class NationalSerializer(serializers.ModelSerializer):
             'birthplace',
             'blood_type',
             'type',
+            'status',
             # 'authorized_by'
             'created_by'
         ]
@@ -62,6 +63,7 @@ class NationalUpdateSerializer(serializers.ModelSerializer):
             'birthplace',
             'blood_type',
             'type',
+            'status',
             'created_by'
         ]
         # Make image and authorization_letter optional

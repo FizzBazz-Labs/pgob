@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext as _
 
+from core.models import STATUS
+
 
 def image_filename(instance, filename: str):
     fullname = f'{instance.first_name.lower()}_{instance.last_name.lower()}'
@@ -99,6 +101,13 @@ class NationalAccreditation(models.Model):
         on_delete=models.PROTECT,
         related_name='national_forms',
         verbose_name=_('Creado por'))
+
+    status = models.CharField(
+        max_length=150,
+        choices=STATUS.choices,
+        default=STATUS.PENDING,
+        verbose_name=_('Estado'))
+
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name=_('Creado el'))
     updated_at = models.DateTimeField(auto_now=True)

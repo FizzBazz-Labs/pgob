@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from core.models import STATUS
+
 
 def image_filename(instance, filename: str):
     filename = filename.lower().replace(' ', '').replace('-', '')
@@ -24,11 +26,6 @@ class InternationalAccreditation(models.Model):
         OFFICIAL_NEWSLETTER = 'OFFICIAL_NEWSLETTER', _('Prensa Oficial')
         CREW = 'CREW', _('Tripulación')
         COMMERCIAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Comercial')
-
-    class STATUS(models.TextChoices):
-        PENDING = 'PENDING', _('Pendiente')
-        APPROVED = 'APPROVED', _('Aprobado')
-        REJECTED = 'REJECTED', _('Rechazado')
 
     country = models.ForeignKey(
         'countries.Country',
