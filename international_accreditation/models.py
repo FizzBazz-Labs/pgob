@@ -57,7 +57,7 @@ class InternationalAccreditation(models.Model):
     institution = models.CharField(max_length=150)
     address = models.CharField(max_length=150)
     phone_number = models.CharField(max_length=150)
-    phone_number_2 = models.CharField(max_length=150)
+    phone_number_2 = models.CharField(max_length=150, blank=True)
     email = models.EmailField()
     birthday = models.DateField()
     birthplace = models.CharField(max_length=150)
