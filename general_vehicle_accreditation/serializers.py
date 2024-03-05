@@ -2,6 +2,7 @@ from rest_framework import serializers
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
 from vehicles.serializers import VehicleSerializer
 
+
 class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
@@ -13,7 +14,7 @@ class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
         fields = [
             'pk',
             'mission',
-            'assigned_by',
+            'assigned_to',
             'vehicles',
             'distinctive',
             'observations',

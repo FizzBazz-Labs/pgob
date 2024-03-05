@@ -58,4 +58,4 @@ class OverflightNonCommercialAircraft(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.country} - {self.date} - {self.arrival_date} - {self.aircraft_type} - {self.position.name}'
+        return f'{self.country} - {self.arrival_date} - {self.aircraft_type} - {self.position.name}'
