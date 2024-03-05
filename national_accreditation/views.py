@@ -30,7 +30,7 @@ class NationalRetrieveApiView(RetrieveUpdateAPIView):
 
 
 class ReviewAccreditation(APIView):
-    serializer_class = NationalSerializer
+    serializer_class = NationalReadSerializer
     permission_classes = [IsAuthenticated & IsReviewer]
 
     def patch(self, request: Request, pk, *args, **kwargs):
@@ -48,7 +48,7 @@ class ReviewAccreditation(APIView):
 
 
 class ApproveAccreditation(APIView):
-    serializer_class = NationalSerializer
+    serializer_class = NationalReadSerializer
     permission_classes = [IsAuthenticated & IsAccreditor]
 
     def patch(self, request: Request, pk, *args, **kwargs):
@@ -66,7 +66,7 @@ class ApproveAccreditation(APIView):
 
 
 class RejectAccreditation(APIView):
-    serializer_class = NationalSerializer
+    serializer_class = NationalReadSerializer
     permission_classes = [IsAuthenticated & (IsReviewer | IsAccreditor)]
 
     def patch(self, request: Request, pk, *args, **kwargs):
