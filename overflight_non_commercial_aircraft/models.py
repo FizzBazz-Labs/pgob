@@ -6,8 +6,8 @@ from django.utils.translation import gettext_lazy as _
 class OverflightNonCommercialAircraft(models.Model):
 
     class Jurisdiction(models.TextChoices):
-        CIVIL = 'civil', _('Civil')
-        MILITARY = 'military', _('Militar')
+        CIVIL = 'CIVIL', _('Civil')
+        MILITARY = 'MILITARY', _('Militar')
 
     country = models.ForeignKey(
         'countries.Country',
@@ -48,8 +48,8 @@ class OverflightNonCommercialAircraft(models.Model):
     route = models.CharField(max_length=150)
     ground_facilities = models.TextField()
 
-    date = models.DateField()
-    #signature = models.CharField(max_length=150, blank=True, null=True,)
+    # date = models.DateField()
+    # signature = models.CharField(max_length=150, blank=True, null=True,)
 
     created_by = models.ForeignKey(
         get_user_model(),

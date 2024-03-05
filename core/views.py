@@ -41,7 +41,14 @@ class AccreditationListView(APIView):
                 'country': item.country.name,
                 'status': 'PENDING',
                 'created_at': item.created_at,
-                'updated_at': item.updated_at
+                'updated_at': item.updated_at,
+                'created_by': {
+                    'id': item.created_by.id,
+                    'username': item.created_by.username,
+                    'first_name': item.created_by.first_name,
+                    'last_name': item.created_by.last_name,
+                    'email': item.created_by.email,
+                }
             })
 
         return data
