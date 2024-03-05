@@ -48,7 +48,6 @@ class OverflightNonCommercialAircraft(models.Model):
     route = models.CharField(max_length=150)
     ground_facilities = models.TextField()
 
-    # date = models.DateField()
     # signature = models.CharField(max_length=150, blank=True, null=True,)
 
     created_by = models.ForeignKey(
