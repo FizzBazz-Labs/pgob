@@ -27,7 +27,7 @@ urlpatterns = [
          jwt_views.TokenVerifyView.as_view(), name='token-verify'),
 
     path('api/v1/', include('core.urls')),
-    path("api/v1/", include("national_accreditation.urls")),
+    path("api/v1/national-accreditations/", include("national_accreditation.urls")),
     path('api/v1/', include('overflight_non_commercial_aircraft.urls')),
     path('api/v1/', include('international_accreditation.urls')),
     path('api/v1/', include('security_accreditations.urls')),

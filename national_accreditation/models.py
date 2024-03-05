@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models import STATUS
+from core.models import AccreditationStatus
 
 
 def image_filename(instance, filename: str):
@@ -104,9 +104,8 @@ class NationalAccreditation(models.Model):
 
     status = models.CharField(
         max_length=150,
-        choices=STATUS.choices,
-        default=STATUS.PENDING,
-        verbose_name=_('Estado'))
+        choices=AccreditationStatus.choices,
+        default=AccreditationStatus.PENDING)
 
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name=_('Creado el'))
