@@ -20,7 +20,7 @@ class AccreditationListView(APIView):
                 'last_name': item.last_name,
                 'type': 'national',
                 'country': 'Panamá',
-                'status': 'PENDING',
+                'status': item.status,
                 'created_at': item.created_at,
                 'updated_at': item.updated_at,
                 'created_by': {
@@ -39,7 +39,7 @@ class AccreditationListView(APIView):
                 'last_name': item.last_name,
                 'type': 'international',
                 'country': item.country.name,
-                'status': 'PENDING',
+                'status': item.status,
                 'created_at': item.created_at,
                 'updated_at': item.updated_at,
                 'created_by': {
