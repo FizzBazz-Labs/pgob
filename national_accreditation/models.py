@@ -92,7 +92,8 @@ class NationalAccreditation(models.Model):
     type = models.CharField(
         max_length=150,
         choices=AccreditationType.choices,
-        verbose_name=_('Tipo de Acreditación'))
+        verbose_name=_('Tipo de Acreditación'),
+        blank=True, null=True)
 
     # Todo: Move to Many to Many
     authorized_by = models.ForeignKey(

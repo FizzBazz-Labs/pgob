@@ -112,7 +112,8 @@ class InternationalAccreditation(models.Model):
     type = models.CharField(
         max_length=150,
         choices=AccreditationType.choices,
-        verbose_name=_('Tipo de Acreditación'))
+        verbose_name=_('Tipo de Acreditación'),
+        null=True, blank=True)
 
     authorized_by = models.CharField(max_length=150, blank=True)
     authorized_by_position = models.ForeignKey(
