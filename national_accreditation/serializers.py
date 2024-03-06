@@ -6,9 +6,14 @@ from positions.serializers import PositionSerializer, SubPositionSerializer
 
 from media_channels.serializers import MediaChannelSerializer
 
+from security_accreditations.serializers import SecurityWeaponAccreditationSerializer
+
 
 class NationalSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
+    # security_weapon_accreditation = SecurityWeaponAccreditationSerializer(
+    #     required=False)
 
     class Meta:
         model = NationalAccreditation
@@ -22,6 +27,7 @@ class NationalSerializer(serializers.ModelSerializer):
             'media_channel',
             'authorization_letter',
             'institution',
+            'security_weapon_accreditation',
             'address',
             'phone_number',
             'phone_number_2',

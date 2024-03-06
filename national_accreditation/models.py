@@ -69,6 +69,12 @@ class NationalAccreditation(models.Model):
         upload_to=authorization_letter_filename,
         blank=True)
 
+    security_weapon_accreditation = models.ForeignKey(
+        'security_accreditations.SecurityWeaponAccreditation',
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='national_forms')
+
     institution = models.CharField(
         max_length=150, verbose_name=_('Institución'))
     address = models.CharField(max_length=150, verbose_name=_('Dirección'))
