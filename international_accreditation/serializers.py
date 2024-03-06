@@ -53,6 +53,7 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'email',
             'birthday',
             'birthplace',
+            'security_weapon_accreditation',
             'blood_type',
             'blood_rh_factor',
             'diseases',

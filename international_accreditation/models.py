@@ -64,6 +64,12 @@ class InternationalAccreditation(models.Model):
     birthday = models.DateField()
     birthplace = models.CharField(max_length=150)
 
+    security_weapon_accreditation = models.ForeignKey(
+        'security_accreditations.SecurityWeaponAccreditation',
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='international_forms')
+
     # Medical Information
     blood_type = models.CharField(max_length=150, blank=True)
     blood_rh_factor = models.CharField(max_length=150, blank=True)
