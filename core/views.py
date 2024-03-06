@@ -12,8 +12,18 @@ class AccreditationListView(APIView):
 
     def get_accreditations(self):
         data = []
+        admin_group = self.request.user.groups.filter(name='admin').exists()
 
-        for item in NationalAccreditation.objects.all():
+        if admin_group:
+            national_accreditations = NationalAccreditation.objects.all()
+            international_accreditations = InternationalAccreditation.objects.all()
+        else:
+            national_accreditations = NationalAccreditation.objects.filter(
+                created_by=self.request.user)
+            international_accreditations = InternationalAccreditation.objects.filter(
+                created_by=self.request.user)
+
+        for item in national_accreditations:
             data.append({
                 'id': item.id,
                 'first_name': item.first_name,
@@ -32,7 +42,7 @@ class AccreditationListView(APIView):
                 }
             })
 
-        for item in InternationalAccreditation.objects.all():
+        for item in international_accreditations:
             data.append({
                 'id': item.id,
                 'first_name': item.first_name,

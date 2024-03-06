@@ -5,8 +5,8 @@ from intercom_equipment_declaration.views import IntercomEquipmentDeclarationLis
 app_name = 'intercom_equipment_declaration'
 
 urlpatterns = [
-    path('intercom_equipment_declaration/',
+    path('intercom-equipment-declaration/',
          IntercomEquipmentDeclarationListApiView.as_view(), name='list-create'),
-    path('intercom_equipment_declaration/<int:pk>/',
+    path('intercom-equipment-declaration/<int:pk>/',
          IntercomEquipmentDeclarationRetrieveApiView.as_view(), name='detail'),
 ]

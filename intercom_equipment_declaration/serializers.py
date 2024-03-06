@@ -1,6 +1,10 @@
 from rest_framework import serializers
+
 from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
+
 from countries.serializers import CountrySerializer
+from countries.models import Country
+
 from equipments.serializers import EquipmentSerializer
 
 
@@ -9,8 +13,6 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
     equipments = EquipmentSerializer(many=True)
-
-    country = serializers.StringRelatedField()
 
     class Meta:
         model = IntercomEquipmentDeclaration
@@ -51,3 +53,9 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
                 EquipmentSerializer().update(equipment, equipment_data)
             else:
                 instance.equipments.create(**equipment_data)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        representation['country'] = instance.country.name if instance.country else None
+        return representation

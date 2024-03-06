@@ -11,7 +11,6 @@ class VehicleAccessAirportAccreditationsSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
     vehicles = VehicleSerializer(many=True)
-    country = serializers.StringRelatedField()
 
     class Meta:
         model = VehicleAccessAirportAccreditations
@@ -51,3 +50,9 @@ class VehicleAccessAirportAccreditationsSerializer(serializers.ModelSerializer):
                 VehicleSerializer().update(vehicle, vehicle_data)
             else:
                 instance.vehicles.create(**vehicle_data)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        representation['country'] = instance.country.name if instance.country else None
+        return representation
