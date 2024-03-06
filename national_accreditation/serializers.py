@@ -8,9 +8,7 @@ from media_channels.serializers import MediaChannelSerializer
 
 
 class NationalSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = NationalAccreditation
