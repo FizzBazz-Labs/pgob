@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from core.models import AccreditationStatus
+
 class IntercomEquipmentDeclaration(models.Model):
     country = models.ForeignKey('countries.Country', on_delete=models.CASCADE,
                                 related_name='intercom_equipment_declarations')
@@ -11,6 +13,10 @@ class IntercomEquipmentDeclaration(models.Model):
         get_user_model(),
         on_delete=models.PROTECT,
         related_name='intercom_equipment_declarations')
-    
+    status = models.CharField(
+        max_length=150,
+        choices=AccreditationStatus.choices,
+        default=AccreditationStatus.PENDING)
+
     def __str__(self):
         return f'{self.country.name} - {self.institution}'

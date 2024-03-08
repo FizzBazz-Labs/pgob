@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from countries.serializers import CountrySerializer
 
 from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
 
@@ -56,3 +57,7 @@ class VehicleAccessAirportAccreditationsSerializer(serializers.ModelSerializer):
 
         representation['country'] = instance.country.name if instance.country else None
         return representation
+
+class VehicleAccessAirportAccreditationsReadSerializer(VehicleAccessAirportAccreditationsSerializer):
+    vehicles = VehicleSerializer(many = True)
+    country = CountrySerializer()
