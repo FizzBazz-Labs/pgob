@@ -3,6 +3,7 @@
 ## Load Data
 
 ```bash
+python manage.py loaddata fixtures/db/core.json & \
 python manage.py loaddata fixtures/db/allergies.json & \
 python manage.py loaddata fixtures/db/countries.json & \
 python manage.py loaddata fixtures/db/immunizations.json & \
