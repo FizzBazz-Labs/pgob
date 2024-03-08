@@ -65,7 +65,6 @@ INSTALLED_APPS = [
     'intercom_equipment_declaration.apps.IntercomEquipmentDeclarationConfig',
     'general_vehicle_accreditation.apps.GeneralVehicleAccreditationConfig',
     'profiles.apps.ProfilesConfig',
-
     'media_channels.apps.MediaChannelsConfig',
     'countries.apps.CountriesConfig',
     'positions.apps.PositionsConfig',

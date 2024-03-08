@@ -14,6 +14,9 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         related_name='profiles')
     passport_id = models.CharField(max_length=50)
+    accreditations = models.ManyToManyField(
+        'core.Accreditation',
+        related_name='users')
 
     def __str__(self) -> str:
         return self.user.username

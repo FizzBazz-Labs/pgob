@@ -26,7 +26,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             'phone_number',
             'group',
             'country',
-            'passport_id'
+            'passport_id',
+            'accreditations',
         ]
 
     def get_group(self, obj) -> str:
