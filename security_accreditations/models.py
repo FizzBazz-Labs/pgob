@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from core.models import AccreditationStatus
+
 
 class Weapon(models.Model):
     weapon = models.CharField(max_length=150, verbose_name=_('Arma'))
@@ -44,6 +46,10 @@ class SecurityWeaponAccreditation(models.Model):
         get_user_model(),
         on_delete=models.PROTECT,
         related_name='sw_set')
+    status = models.CharField(
+        max_length=150,
+        choices=AccreditationStatus.choices,
+        default=AccreditationStatus.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

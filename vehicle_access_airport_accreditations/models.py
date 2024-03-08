@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from core.models import AccreditationStatus
+
 
 class VehicleAccessAirportAccreditations(models.Model):
     country = models.ForeignKey('countries.Country', on_delete=models.CASCADE,
@@ -12,6 +14,10 @@ class VehicleAccessAirportAccreditations(models.Model):
         get_user_model(),
         on_delete=models.PROTECT,
         related_name='vehicle_access_airport_accreditations')
+    status = models.CharField(
+        max_length=150,
+        choices=AccreditationStatus.choices,
+        default=AccreditationStatus.PENDING)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

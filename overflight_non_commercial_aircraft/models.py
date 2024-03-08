@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from core.models import AccreditationStatus
+
 
 class OverflightNonCommercialAircraft(models.Model):
 
@@ -54,6 +56,10 @@ class OverflightNonCommercialAircraft(models.Model):
         get_user_model(),
         on_delete=models.PROTECT,
         related_name='flight_forms')
+    status = models.CharField(
+        max_length=150,
+        choices=AccreditationStatus.choices,
+        default=AccreditationStatus.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
