@@ -52,7 +52,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     accreditations = serializers.PrimaryKeyRelatedField(
         many=True,
-        queryset=Accreditation.objects.all())
+        queryset=Accreditation.objects.all(), required=False)
 
     class Meta:
         model = get_user_model()
@@ -96,8 +96,18 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         group = Group.objects.get(id=group_id)
         user.groups.add(group)
 
+    def add_accreditations(self, user, accreditations):
+
+        for accreditation in accreditations:
+            instance, _ = Accreditation.objects.get_or_create(
+                name=accreditation)
+            user.profile.accreditations.add(instance)
+
     def create(self, validated_data):
         profile_data = validated_data.pop('profile', {})
+        accreditations = validated_data.pop('accreditations', [])
+
+        self.add_accreditations(user, accreditations)
 
         groups = validated_data.pop('groups', [])
         country = profile_data.get('country')
