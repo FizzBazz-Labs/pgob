@@ -7,6 +7,8 @@ from countries.models import Country
 
 from equipments.serializers import EquipmentSerializer
 
+from core.serializers import UserSerializer
+
 
 class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
@@ -14,14 +16,17 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
     )
     equipments = EquipmentSerializer(many=True)
 
+    created_by
+
     class Meta:
         model = IntercomEquipmentDeclaration
         fields = [
-            'pk',
+            'id',
             'country',
             'institution',
             'equipments',
             'created_by',
+            'status',
         ]
 
     def create(self, validated_data):
@@ -58,4 +63,5 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
 
         representation['country'] = instance.country.name if instance.country else None
+        representation['created_by'] = UserSerializer(instance.created_by).data
         return representation

@@ -18,7 +18,7 @@ from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
 from intercom_equipment_declaration.serializers import IntercomEquipmentDeclarationSerializer
 
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft
-from overflight_non_commercial_aircraft.serializers import OverflightNonCommercialAircraftSerializer
+from overflight_non_commercial_aircraft.serializers import OverflightNonCommercialAircraftReadSerializer
 
 from security_accreditations.models import SecurityWeaponAccreditation
 from security_accreditations.serializers import SecurityWeaponAccreditationSerializer
@@ -114,7 +114,7 @@ class AccreditationListView(APIView):
         if self.has_admin_group():
             aircraft = OverflightNonCommercialAircraft.objects.all()
 
-        serializer = OverflightNonCommercialAircraftSerializer(
+        serializer = OverflightNonCommercialAircraftReadSerializer(
             aircraft, many=True)
 
         return serializer.data

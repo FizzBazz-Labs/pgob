@@ -6,6 +6,8 @@ from equipments.serializers import EquipmentSerializer
 
 from security_accreditations.models import Weapon
 
+from core.serializers import UserSerializer
+
 
 class WeaponSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,7 +44,8 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
             'observations',
             'created_by',
             'created_at',
-            'updated_at'
+            'updated_at',
+            'status'
         ]
 
     def create(self, validated_data):
@@ -96,3 +99,9 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
                 WeaponSerializer().update(weapon_item, weapon)
             else:
                 instance.weapons.create(**weapon)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['created_by'] = UserSerializer(
+            instance.created_by).data
+        return representation

@@ -6,6 +6,8 @@ from countries.serializers import CountrySerializer
 
 from positions.serializers import PositionSerializer, SubPositionSerializer
 
+from core.serializers import UserSerializer
+
 
 class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
@@ -15,7 +17,7 @@ class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
     class Meta:
         model = OverflightNonCommercialAircraft
         fields = [
-            'pk',
+            'id',
             'country',
             'aircraft_type',
             'model',
@@ -39,6 +41,7 @@ class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
             'ground_facilities',
             # 'signature',
             'created_by',
+            'status',
 
         ]
 
@@ -47,3 +50,4 @@ class OverflightNonCommercialAircraftReadSerializer(OverflightNonCommercialAircr
     country = CountrySerializer()
     position = PositionSerializer()
     sub_position = SubPositionSerializer()
+    created_by = UserSerializer()

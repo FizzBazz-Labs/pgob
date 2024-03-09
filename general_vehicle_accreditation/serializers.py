@@ -6,6 +6,8 @@ from vehicles.serializers import VehicleSerializer
 
 from countries.models import Country
 
+from core.serializers import UserSerializer
+
 
 class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
@@ -19,13 +21,14 @@ class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
     class Meta:
         model = GeneralVehicleAccreditation
         fields = [
-            'pk',
+            'id',
             'mission',
             'assigned_to',
             'vehicles',
             'distinctive',
             'observations',
-            'created_by'
+            'created_by',
+            'status',
         ]
 
     def create(self, validated_data):
@@ -61,5 +64,7 @@ class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['mission'] = Country.objects.get(
             pk=representation['mission']).name
+
+        representation['created_by'] = UserSerializer(instance.created_by).data
 
         return representation
