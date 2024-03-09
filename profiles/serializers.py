@@ -105,13 +105,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         profile_data = validated_data.pop('profile', {})
         accreditations = validated_data.pop('accreditations', [])
 
-        self.add_accreditations(user, accreditations)
-
         groups = validated_data.pop('group', '')
         country = profile_data.get('country')
         phone_number = profile_data.get('phone_number')
 
         user = get_user_model().objects.create(**validated_data)
+        self.add_accreditations(user, accreditations)
         user.set_password(user.password)
         user.save()
         user.groups.set(groups)
