@@ -5,7 +5,10 @@ from django.utils.translation import gettext as _
 from rest_framework import serializers
 
 from core.serializers import AccreditationSerializer
+from core.models import Accreditation
+
 from profiles.models import Profile
+
 from countries.models import Country
 
 
@@ -39,12 +42,17 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(source='profile.phone_number')
+    passport_id = serializers.CharField(source='profile.passport_id')
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
     groups = serializers.PrimaryKeyRelatedField(
         queryset=Group.objects.all(), many=True)
     country = serializers.PrimaryKeyRelatedField(
         source='profile.country', queryset=Country.objects.all())
+
+    accreditations = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Accreditation.objects.all())
 
     class Meta:
         model = get_user_model()
@@ -53,14 +61,17 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'username',
             'first_name',
             'last_name',
+            'passport_id',
             'email',
             'phone_number',
             'password',
             'groups',
-            'country'
+            'country',
+            'accreditations',
         ]
         extra_kwargs = {
-            'password': {'write_only': True}
+            'password': {'write_only': True},
+            'accreditations': {'required': True}
         }
 
     def validate_email(self, email: str):

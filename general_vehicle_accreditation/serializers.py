@@ -1,6 +1,10 @@
 from rest_framework import serializers
+
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
+
 from vehicles.serializers import VehicleSerializer
+
+from countries.models import Country
 
 
 class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
@@ -8,6 +12,9 @@ class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
     vehicles = VehicleSerializer(many=True)
+
+    mission = serializers.PrimaryKeyRelatedField(
+        queryset=Country.objects.all())
 
     class Meta:
         model = GeneralVehicleAccreditation
@@ -49,3 +56,10 @@ class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
                 VehicleSerializer().update(vehicle, vehicle_data)
             else:
                 instance.vehicles.create(**vehicle_data)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['mission'] = Country.objects.get(
+            pk=representation['mission']).name
+
+        return representation
