@@ -50,9 +50,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     country = serializers.PrimaryKeyRelatedField(
         source='profile.country', queryset=Country.objects.all())
 
-    accreditations = serializers.PrimaryKeyRelatedField(
-        many=True,
-        queryset=Accreditation.objects.all(), required=False)
+    accreditations = serializers.ListField(child=serializers.CharField())
 
     class Meta:
         model = get_user_model()
@@ -92,8 +90,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             country=country
         )
 
-    def add_to_group(self, user, group_id):
-        group = Group.objects.get(id=group_id)
+    def add_to_group(self, user, group_name: str):
+        group = Group.objects.get(name=group_name)
         user.groups.add(group)
 
     def add_accreditations(self, user, accreditations):
