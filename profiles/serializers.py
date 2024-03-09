@@ -4,8 +4,8 @@ from django.utils.translation import gettext as _
 
 from rest_framework import serializers
 
+from core.serializers import AccreditationSerializer
 from profiles.models import Profile
-
 from countries.models import Country
 
 
@@ -14,6 +14,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     group = serializers.SerializerMethodField()
     country = serializers.CharField(source='profile.country.name')
     passport_id = serializers.CharField(source='profile.passport_id')
+    accreditations = AccreditationSerializer(
+        many=True, read_only=True,
+        source='profile.accreditations')
 
     class Meta:
         model = get_user_model()
