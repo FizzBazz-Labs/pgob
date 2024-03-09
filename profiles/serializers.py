@@ -45,10 +45,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     passport_id = serializers.CharField(source='profile.passport_id')
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
-    groups = serializers.PrimaryKeyRelatedField(
-        queryset=Group.objects.all(), many=True)
     country = serializers.PrimaryKeyRelatedField(
         source='profile.country', queryset=Country.objects.all())
+
+    group = serializers.CharField(required=True)
 
     accreditations = serializers.ListField(child=serializers.CharField())
 
@@ -63,7 +63,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'email',
             'phone_number',
             'password',
-            'groups',
+            'group',
             'country',
             'accreditations',
         ]
@@ -107,7 +107,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         self.add_accreditations(user, accreditations)
 
-        groups = validated_data.pop('groups', [])
+        groups = validated_data.pop('group', '')
         country = profile_data.get('country')
         phone_number = profile_data.get('phone_number')
 
