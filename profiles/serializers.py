@@ -48,9 +48,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     country = serializers.PrimaryKeyRelatedField(
         source='profile.country', queryset=Country.objects.all())
 
-    group = serializers.CharField(required=True)
+    group = serializers.CharField(write_only=True, required=True)
 
-    accreditations = serializers.ListField(child=serializers.CharField())
+    accreditations = serializers.ListField(
+        child=serializers.CharField(), write_only=True)
 
     class Meta:
         model = get_user_model()
@@ -105,15 +106,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         profile_data = validated_data.pop('profile', {})
         accreditations = validated_data.pop('accreditations', [])
 
-        groups = validated_data.pop('group', '')
+        group = validated_data.pop('group', '')
         country = profile_data.get('country')
         phone_number = profile_data.get('phone_number')
 
         user = get_user_model().objects.create(**validated_data)
-        self.add_accreditations(user, accreditations)
         user.set_password(user.password)
         user.save()
-        user.groups.set(groups)
-
         self.create_profile(user, phone_number, country)
+        self.add_accreditations(user, accreditations)
+        self.add_to_group(user, group)
         return user
