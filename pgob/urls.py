@@ -28,11 +28,13 @@ urlpatterns = [
          jwt_views.TokenVerifyView.as_view(), name='token-verify'),
 
     path('api/v1/', include('core.urls')),
-    path("api/v1/national-accreditations/", include("national_accreditation.urls")),
+    path("api/v1/national-accreditations/",
+         include("national_accreditation.urls")),
     path('api/v1/', include('overflight_non_commercial_aircraft.urls')),
     path('api/v1/', include('international_accreditation.urls')),
     path('api/v1/', include('security_accreditations.urls')),
-    path('api/v1/vehicle_accesss_airport_accreditations/', include('vehicle_access_airport_accreditations.urls')),
+    path('api/v1/vehicle_accesss_airport_accreditations/',
+         include('vehicle_access_airport_accreditations.urls')),
     path('api/v1/', include('intercom_equipment_declaration.urls')),
     path('api/v1/', include('general_vehicle_accreditation.urls')),
     path('api/v1/', include('vehicles.urls')),
@@ -43,6 +45,7 @@ urlpatterns = [
     path('api/v1/', include('medical_histories.urls')),
     path('api/v1/', include('positions.urls')),
     path('api/v1/', include('profiles.urls')),
+    path('api/v1/', include('credentials.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'immunizations.apps.ImmunizationsConfig',
     'medical_histories.apps.MedicalHistoriesConfig',
     'notifications.apps.NotificationsConfig',
+    'credentials.apps.CredentialsConfig',
 ]
 
 MIDDLEWARE = [
