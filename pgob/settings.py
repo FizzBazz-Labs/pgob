@@ -1,18 +1,12 @@
-
 import os
-
 from datetime import timedelta
-
-from corsheaders.defaults import default_headers
-
 from pathlib import Path
 
 import environ
-
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 env = environ.Env(
     DEBUG=(bool, True),
@@ -26,7 +20,6 @@ if os.path.isfile(env_file):
 else:
     raise Exception('No local .env detected.')
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -37,7 +30,6 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -103,7 +95,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.context_processors.context_admin_group',
             ],
         },
     },
@@ -134,7 +125,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
@@ -157,7 +147,6 @@ SPECTACULAR_SETTINGS = {
 
     }
 }
-
 
 # CORS Configuration
 # https://pypi.org/project/django-cors-headers/
@@ -197,7 +186,6 @@ else:
         }
     }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -216,7 +204,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -228,7 +215,6 @@ LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'America/Panama'
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
@@ -237,7 +223,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'pgob', 'static'),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -249,11 +234,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOWED_HOSTS = ['*']
 
-
 LOGIN_URL = 'auth:login'
 LOGIN_REDIRECT_URL = 'auth:index'
 LOGOUT_REDIRECT_URL = 'auth:index'
-
 
 # Email settings
 
