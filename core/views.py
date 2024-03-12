@@ -1,9 +1,9 @@
-# from rest_framework.generics import
-from typing import Any
+from enum import Enum
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from core.serializers import AccreditationsSerializer, UserSerializer
+from core.serializers import AccreditationsSerializer
 
 from international_accreditation.models import InternationalAccreditation
 from national_accreditation.models import NationalAccreditation
@@ -22,6 +22,12 @@ from overflight_non_commercial_aircraft.serializers import OverflightNonCommerci
 
 from security_accreditations.models import SecurityWeaponAccreditation
 from security_accreditations.serializers import SecurityWeaponAccreditationSerializer
+
+
+class AccreditationItem(Enum):
+    NATIONAL = 'national'
+    INTERNATIONAL = 'international'
+
 
 
 class AccreditationListView(APIView):
@@ -63,10 +69,10 @@ class AccreditationListView(APIView):
 
             if isinstance(item, InternationalAccreditation):
                 new_item['country'] = item.country.name
-                new_item['type'] = 'International'
+                new_item['type'] = AccreditationItem.INTERNATIONAL.value
             else:
                 new_item['country'] = 'Panama'
-                new_item['type'] = 'National'
+                new_item['type'] = AccreditationItem.NATIONAL.value
 
             data.append(new_item)
 

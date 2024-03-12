@@ -92,7 +92,7 @@ celerybeat-schedule
 .venv
 venv/
 ENV/
-staticfiles/
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -119,3 +119,5 @@ data/
 # !**/migrations/__init__.py
 
 # migrations/
+
+.idea/
