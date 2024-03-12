@@ -8,10 +8,12 @@ from general_vehicle_accreditation.serializers import GeneralVehicleAccreditatio
 
 from rest_framework.permissions import IsAuthenticated
 
+
 class GeneralVehicleAccreditationListApiView(ListCreateAPIView):
     queryset = GeneralVehicleAccreditation.objects.all()
     serializer_class = GeneralVehicleAccreditationSerializer
     permission_classes = [IsAuthenticated]
+
 
 class GeneralVehicleAccreditationRetrieveApiView(RetrieveUpdateAPIView):
     queryset = GeneralVehicleAccreditation.objects.all()

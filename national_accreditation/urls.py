@@ -8,6 +8,7 @@ from national_accreditation.views import (
     RejectAccreditation,
 )
 
+from credentials.views import GenerateNationalCredential
 
 urlpatterns = [
     path('', NationalListCreateApiView.as_view()),
@@ -15,4 +16,6 @@ urlpatterns = [
     path('<int:pk>/review/', ReviewAccreditation.as_view()),
     path('<int:pk>/approve/', ApproveAccreditation.as_view()),
     path('<int:pk>/reject/', RejectAccreditation.as_view()),
+    path('<int:pk>/certificate/', GenerateNationalCredential.as_view(),
+         name='national-certificate'),
 ]
