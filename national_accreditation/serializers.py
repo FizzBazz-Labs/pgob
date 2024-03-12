@@ -37,7 +37,7 @@ class NationalSerializer(serializers.ModelSerializer):
             'blood_type',
             'type',
             'status',
-            # 'authorized_by'
+            'passport_id',
             'created_by'
         ]
 

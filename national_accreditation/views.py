@@ -37,10 +37,10 @@ class ReviewAccreditation(APIView):
         try:
             national = NationalAccreditation.objects.get(pk=pk)
             national.status = AccreditationStatus.REVIEWED
+            national.reviewed_by = request.user
             national.save()
 
             serializer = self.serializer_class(national)
-
             return Response(serializer.data, status=HTTP_200_OK)
 
         except NationalAccreditation.DoesNotExist:
@@ -52,13 +52,16 @@ class ApproveAccreditation(APIView):
     permission_classes = [IsAuthenticated & IsAccreditor]
 
     def patch(self, request: Request, pk, *args, **kwargs):
+        accreditation_type = request.data.get('type')
+
         try:
             national = NationalAccreditation.objects.get(pk=pk)
             national.status = AccreditationStatus.APPROVED
+            national.type = request.data.get('type')
+            national.authorized_by = request.user
             national.save()
 
             serializer = self.serializer_class(national)
-
             return Response(serializer.data, status=HTTP_200_OK)
 
         except NationalAccreditation.DoesNotExist:
@@ -72,13 +75,12 @@ class RejectAccreditation(APIView):
     def patch(self, request: Request, pk, *args, **kwargs):
         try:
             national = NationalAccreditation.objects.get(pk=pk)
-            national.status = AccreditationStatus.APPROVED
+            national.status = AccreditationStatus.REJECTED
+            national.rejected_by = request.user
             national.save()
 
             serializer = self.serializer_class(national)
-
             return Response(serializer.data, status=HTTP_200_OK)
 
         except NationalAccreditation.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
-

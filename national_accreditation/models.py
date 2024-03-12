@@ -92,22 +92,30 @@ class NationalAccreditation(models.Model):
     type = models.CharField(
         max_length=150,
         choices=AccreditationType.choices,
-        verbose_name=_('Tipo de Acreditación'),
         blank=True, null=True)
 
-    # Todo: Move to Many to Many
+    reviewed_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='national_reviewed_set')
+
     authorized_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
         blank=True, null=True,
-        related_name='national_forms_verifies',
-        verbose_name=_('Creado por'))
+        related_name='national_authorized_set')
+
+    rejected_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='national_rejected_set')
 
     created_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
-        related_name='national_forms',
-        verbose_name=_('Creado por'))
+        related_name='national_forms')
 
     status = models.CharField(
         max_length=150,
