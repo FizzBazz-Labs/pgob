@@ -1,14 +1,29 @@
+import pdfkit
+import environ
+import os
+
 from typing import Any
 
-import pdfkit
 from django.http import HttpResponse
 from django.template.loader import render_to_string
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 
 from national_accreditation.models import NationalAccreditation
+
+env = environ.Env(
+    APP_HOST=(str, 'http://localhost:8000'),
+)
+
+env_file = os.path.join(settings.BASE_DIR, '.env')
+
+if os.path.isfile(env_file):
+    env.read_env(env_file)
+else:
+    raise Exception('No local .env detected.')
 
 
 def get_accreditation_color(accreditation_type: str) -> dict[str, Any]:
@@ -37,7 +52,7 @@ def generate_pdf_response(image_url, color, type) -> HttpResponse:
     context_data = {
         'type': _(type),
         # TODO change hostname to production
-        'photo': f'http://localhost:8000{image_url}',
+        'photo': f'{env('APP_HOST')}{image_url}',
         'color': color,
     }
 
@@ -47,16 +62,6 @@ def generate_pdf_response(image_url, color, type) -> HttpResponse:
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="credential.pdf"'
     return response
-
-
-class GenerateNationalCredential(APIView):
-    def get(self, request, *args, **kwargs):
-        pk = kwargs['pk']
-        accreditation = NationalAccreditation.objects.get(pk=pk)
-        accreditation_type = accreditation.type
-        color = get_accreditation_color(accreditation_type)
-        photo = accreditation.image.url
-        return generate_pdf_response(photo, color, accreditation_type)
 
 
 class GenerateCredential(APIView):
@@ -74,50 +79,6 @@ class GenerateCredential(APIView):
 
         except self.model.DoesNotExist:
             return HttpResponse(status=HTTP_404_NOT_FOUND)
-
-
-# class GenerateCredential(APIView):
-
-#     def get_accreditation_color(self, accreditation_type: str) -> dict[str, Any]:
-#         accreditation_types = NationalAccreditation.AccreditationType
-
-#         if accreditation_type == accreditation_types.PROTOCOL:
-#             return {
-#                 'footer_color': 'footer-grey',
-#                 'arrow_color': 'arrow-grey',
-#             }
-#         elif accreditation_type == accreditation_types.SECURITY:
-#             return {
-#                 'footer_color': 'footer-red',
-#                 'arrow_color': 'arrow-red',
-#             }
-#         elif accreditation_type == accreditation_types.SUPPLIER:
-#             return {
-#                 'footer_color': 'footer-green',
-#                 'arrow_color': 'arrow-green',
-#             }
-#         else:
-#             return 'black'
-
-#     def get(self, request, *args, **kwargs):
-#         test = NationalAccreditation.objects.get(pk=kwargs['pk'])
-#         accreditation_type = test.type
-
-#         context_data = {
-#             'name': 'John Doe',
-#             'email': 'testing@gmail.com',
-#             'type': accreditation_type.upper(),
-#             'photo': f'http://localhost:8000{test.image.url}',
-#             'color': self.get_accreditation_color(accreditation_type),
-#         }
-
-#         html = render_to_string('credentials/test.html', context_data)
-
-#         pdf = pdfkit.from_string(html, False)
-
-#         response = HttpResponse(pdf, content_type='application/pdf')
-#         response['Content-Disposition'] = 'attachment; filename="credential.pdf"'
-#         return response
 
 
 class TestTemplate(TemplateView):

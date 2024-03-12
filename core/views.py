@@ -1,3 +1,5 @@
+from django.contrib.auth.models import Group
+
 from enum import Enum
 
 from rest_framework.views import APIView
@@ -29,11 +31,13 @@ class AccreditationItem(Enum):
     INTERNATIONAL = 'international'
 
 
-
 class AccreditationListView(APIView):
 
     def has_admin_group(self):
-        return self.request.user.groups.filter(name='admin').exists()
+        admin_groups = Group.objects.exclude(
+            name='User').values_list('id', flat=True)
+
+        return self.request.user.groups.filter(id__in=admin_groups).exists()
 
     def get_accreditations(self):
         data = []
