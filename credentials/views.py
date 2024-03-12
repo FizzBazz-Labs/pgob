@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
+from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 
 from national_accreditation.models import NationalAccreditation
@@ -62,13 +63,17 @@ class GenerateCredential(APIView):
     model = None
 
     def get(self, request, pk, *args, **kwargs):
-        accreditation = self.model.objects.get(pk=pk)
-        accreditation_type = accreditation.type
+        try:
+            accreditation = self.model.objects.get(pk=pk)
+            accreditation_type = accreditation.type
 
-        color = get_accreditation_color(accreditation.type)
-        photo = accreditation.image.url
+            color = get_accreditation_color(accreditation.type)
+            photo = accreditation.image.url
 
-        return generate_pdf_response(photo, color, accreditation_type)
+            return generate_pdf_response(photo, color, accreditation_type)
+
+        except self.model.DoesNotExist:
+            return HttpResponse(status=HTTP_404_NOT_FOUND)
 
 
 # class GenerateCredential(APIView):
