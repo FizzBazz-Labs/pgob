@@ -16,9 +16,7 @@ def authorization_letter_filename(instance, filename: str):
 
 class InternationalAccreditation(models.Model):
     class AccreditationType(models.TextChoices):
-        OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD',
-        _('Jefe de Delegación Oficial'),
-
+        OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD', _('Jefe de Delegación Oficial'),
         OFFICIAL_DELEGATION = 'OFFICIAL_DELEGATION', _('Delegación Oficial')
         PROTOCOL = 'PROTOCOL', _('Protocolo')
         SECURITY = 'SECURITY', _('Seguridad')
@@ -121,12 +119,23 @@ class InternationalAccreditation(models.Model):
         verbose_name=_('Tipo de Acreditación'),
         null=True, blank=True)
 
-    authorized_by = models.CharField(max_length=150, blank=True)
-    authorized_by_position = models.ForeignKey(
-        'positions.Position',
+    reviewed_by = models.ForeignKey(
+        get_user_model(),
         on_delete=models.PROTECT,
-        blank=True,
-        null=True)
+        blank=True, null=True,
+        related_name='international_reviewed_set')
+
+    authorized_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='international_authorized_set')
+
+    rejected_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='international_rejected_set')
 
     created_by = models.ForeignKey(
         get_user_model(),

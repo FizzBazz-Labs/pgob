@@ -1,13 +1,10 @@
-from django.contrib import admin
-from django.urls import path, include
+import rest_framework_simplejwt.views as jwt_views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
+from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-
-import rest_framework_simplejwt.views as jwt_views
-
 
 urlpatterns = [
     path('api/v1/', include('core.urls')),
@@ -31,7 +28,7 @@ urlpatterns = [
     path("api/v1/national-accreditations/",
          include("national_accreditation.urls")),
     path('api/v1/', include('overflight_non_commercial_aircraft.urls')),
-    path('api/v1/', include('international_accreditation.urls')),
+    path('api/v1/international-accreditations/', include('international_accreditation.urls')),
     path('api/v1/', include('security_accreditations.urls')),
     path('api/v1/vehicle_accesss_airport_accreditations/',
          include('vehicle_access_airport_accreditations.urls')),
@@ -51,4 +48,4 @@ urlpatterns = [
 urlpatterns += staticfiles_urlpatterns()
 
 urlpatterns = urlpatterns + \
-    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+              static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

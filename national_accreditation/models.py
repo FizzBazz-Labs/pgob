@@ -21,14 +21,11 @@ def authorization_letter_filename(instance, filename: str):
 
 class NationalAccreditation(models.Model):
     class AccreditationType(models.TextChoices):
-        GENERAL_COORDINATION = (
-            'GENERAL_COORDINATION',
-            _('Coordinación General'),
-        )
+        GENERAL_COORDINATION = 'GENERAL_COORDINATION', _('Coordinación General')
         PROTOCOL = 'PROTOCOL', _('Protocolo')
         SECURITY = 'SECURITY', _('Seguridad')
         TECHNICAL_STAFF = 'TECHNICAL_STAFF', _('Personal Técnico')
-        OFFICIAL_DELEGATION = 'Delegación Oficial', _('Delegación Oficial')
+        OFFICIAL_DELEGATION = 'OFFICIAL_DELEGATION', _('Delegación Oficial')
         LINK = 'LINK', _('Enlace')
         SUPPLIER = 'SUPPLIER', _('Proveedor')
         NEWSLETTER_COMMITTEE = 'NEWSLETTER_COMMITTEE', _('Comisión de Prensa')
@@ -122,8 +119,7 @@ class NationalAccreditation(models.Model):
         choices=AccreditationStatus.choices,
         default=AccreditationStatus.PENDING)
 
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name=_('Creado el'))
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

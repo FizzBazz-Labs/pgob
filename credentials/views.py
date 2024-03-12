@@ -1,15 +1,11 @@
-import pdfkit
-
 from typing import Any
 
-from django.template.loader import render_to_string
+import pdfkit
 from django.http import HttpResponse
-from django.views.generic import TemplateView
+from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
-
+from django.views.generic import TemplateView
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 
 from national_accreditation.models import NationalAccreditation
 
@@ -37,7 +33,6 @@ def get_accreditation_color(accreditation_type: str) -> dict[str, Any]:
 
 
 def generate_pdf_response(image_url, color, type) -> HttpResponse:
-
     context_data = {
         'type': _(type),
         # TODO change hostname to production
@@ -54,7 +49,6 @@ def generate_pdf_response(image_url, color, type) -> HttpResponse:
 
 
 class GenerateNationalCredential(APIView):
-
     def get(self, request, *args, **kwargs):
         pk = kwargs['pk']
         accreditation = NationalAccreditation.objects.get(pk=pk)
@@ -62,6 +56,20 @@ class GenerateNationalCredential(APIView):
         color = get_accreditation_color(accreditation_type)
         photo = accreditation.image.url
         return generate_pdf_response(photo, color, accreditation_type)
+
+
+class GenerateCredential(APIView):
+    model = None
+
+    def get(self, request, pk, *args, **kwargs):
+        accreditation = self.model.objects.get(pk=pk)
+        accreditation_type = accreditation.type
+
+        color = get_accreditation_color(accreditation.type)
+        photo = accreditation.image.url
+
+        return generate_pdf_response(photo, color, accreditation_type)
+
 
 # class GenerateCredential(APIView):
 
