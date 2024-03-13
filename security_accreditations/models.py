@@ -46,10 +46,30 @@ class SecurityWeaponAccreditation(models.Model):
         get_user_model(),
         on_delete=models.PROTECT,
         related_name='sw_set')
+
+    reviewed_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='security_reviewed_set')
+
+    authorized_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='security_authorized_set')
+
+    rejected_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='security_rejected_set')
+
     status = models.CharField(
         max_length=150,
         choices=AccreditationStatus.choices,
         default=AccreditationStatus.PENDING)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

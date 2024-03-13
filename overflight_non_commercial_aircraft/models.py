@@ -56,6 +56,25 @@ class OverflightNonCommercialAircraft(models.Model):
         get_user_model(),
         on_delete=models.PROTECT,
         related_name='flight_forms')
+
+    reviewed_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='overflight_aircraft_reviewed_set')
+
+    authorized_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='overflight_aircraft_authorized_set')
+
+    rejected_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='overflight_aircraft_rejected_set')
+
     status = models.CharField(
         max_length=150,
         choices=AccreditationStatus.choices,

@@ -11,10 +11,30 @@ class GeneralVehicleAccreditation(models.Model):
         'vehicles.Vehicle', related_name='general_vehicle_accreditations')
     distinctive = models.CharField(max_length=150, blank=True)
     observations = models.CharField(max_length=150, blank=True)
+
     created_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
         related_name='general_vehicle_accreditations')
+
+    reviewed_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='general_vehicles_reviewed_set')
+
+    authorized_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='general_vehicles_authorized_set')
+
+    rejected_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='general_vehicles_rejected_set')
+
     status = models.CharField(
         max_length=150,
         choices=AccreditationStatus.choices,
