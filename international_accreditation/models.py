@@ -16,7 +16,8 @@ def authorization_letter_filename(instance, filename: str):
 
 class InternationalAccreditation(models.Model):
     class AccreditationType(models.TextChoices):
-        OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD', _('Jefe de Delegación Oficial'),
+        OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD', _(
+            'Jefe de Delegación Oficial'),
         OFFICIAL_DELEGATION = 'OFFICIAL_DELEGATION', _('Delegación Oficial')
         PROTOCOL = 'PROTOCOL', _('Protocolo')
         SECURITY = 'SECURITY', _('Seguridad')
@@ -35,6 +36,7 @@ class InternationalAccreditation(models.Model):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     passport_id = models.CharField(max_length=150)
+    private_insurance = models.CharField(max_length=150, blank=True)
 
     position = models.ForeignKey(
         'positions.Position',
@@ -70,7 +72,6 @@ class InternationalAccreditation(models.Model):
 
     # Medical Information
     blood_type = models.CharField(max_length=150, blank=True)
-    blood_rh_factor = models.CharField(max_length=150, blank=True)
 
     diseases = models.TextField()
     medication_1 = models.CharField(max_length=200, blank=True)

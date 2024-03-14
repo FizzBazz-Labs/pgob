@@ -21,7 +21,8 @@ def authorization_letter_filename(instance, filename: str):
 
 class NationalAccreditation(models.Model):
     class AccreditationType(models.TextChoices):
-        GENERAL_COORDINATION = 'GENERAL_COORDINATION', _('Coordinación General')
+        GENERAL_COORDINATION = 'GENERAL_COORDINATION', _(
+            'Coordinación General')
         PROTOCOL = 'PROTOCOL', _('Protocolo')
         SECURITY = 'SECURITY', _('Seguridad')
         TECHNICAL_STAFF = 'TECHNICAL_STAFF', _('Personal Técnico')
@@ -46,6 +47,8 @@ class NationalAccreditation(models.Model):
     last_name = models.CharField(max_length=150, verbose_name=_('Apellido'))
     passport_id = models.CharField(
         max_length=100, verbose_name=_('Cédula /Pasaporte'))
+
+    private_insurance = models.CharField(max_length=150, blank=True)
 
     position = models.ForeignKey(
         'positions.Position',

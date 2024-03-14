@@ -28,9 +28,10 @@ urlpatterns = [
     path("api/v1/national-accreditations/",
          include("national_accreditation.urls")),
     path('api/v1/', include('overflight_non_commercial_aircraft.urls')),
-    path('api/v1/international-accreditations/', include('international_accreditation.urls')),
+    path('api/v1/international-accreditations/',
+         include('international_accreditation.urls')),
     path('api/v1/', include('security_accreditations.urls')),
-    path('api/v1/vehicle_accesss_airport_accreditations/',
+    path('api/v1/vehicle-access-airport-accreditations/',
          include('vehicle_access_airport_accreditations.urls')),
     path('api/v1/', include('intercom_equipment_declaration.urls')),
     path('api/v1/', include('general_vehicle_accreditation.urls')),
@@ -48,4 +49,4 @@ urlpatterns = [
 urlpatterns += staticfiles_urlpatterns()
 
 urlpatterns = urlpatterns + \
-              static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

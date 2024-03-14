@@ -13,6 +13,10 @@ class Equipment(models.Model):
         max_length=150, verbose_name=_('Serial No.'), blank=True)
     frequency = models.CharField(
         max_length=150, verbose_name=_('Frecuencia'), blank=True)
+
+    value = models.DecimalField(
+        decimal_places=2, max_digits=15, verbose_name=_('Valor'), blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -16,8 +16,6 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
     )
     equipments = EquipmentSerializer(many=True)
 
-    created_by
-
     class Meta:
         model = IntercomEquipmentDeclaration
         fields = [

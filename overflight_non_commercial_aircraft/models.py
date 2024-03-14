@@ -7,7 +7,7 @@ from core.models import AccreditationStatus
 
 class OverflightNonCommercialAircraft(models.Model):
 
-    class Jurisdiction(models.TextChoices):
+    class FlightType(models.TextChoices):
         CIVIL = 'CIVIL', _('Civil')
         MILITARY = 'MILITARY', _('Militar')
 
@@ -19,10 +19,10 @@ class OverflightNonCommercialAircraft(models.Model):
     # Aircraft Information
     aircraft_type = models.CharField(max_length=150)
     model = models.CharField(max_length=150)
-    jurisdiction = models.CharField(
+    flight_type = models.CharField(
         max_length=50,
-        choices=Jurisdiction.choices,
-        default=Jurisdiction.CIVIL)
+        choices=FlightType.choices,
+        default=FlightType.CIVIL)
     registration = models.CharField(max_length=150)
     color = models.CharField(max_length=150)
     call_sign = models.CharField(max_length=150)

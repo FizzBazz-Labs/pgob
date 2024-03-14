@@ -13,6 +13,7 @@ class EquipmentSerializer(serializers.ModelSerializer):
             'type',
             'serial',
             'frequency',
+            'value',
             'created_at',
             'updated_at'
         ]

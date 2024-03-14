@@ -21,7 +21,7 @@ class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
             'country',
             'aircraft_type',
             'model',
-            'jurisdiction',
+            'flight_type',
             'registration',
             'color',
             'call_sign',

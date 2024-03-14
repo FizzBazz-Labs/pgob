@@ -23,6 +23,7 @@ class NationalSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'position',
+            'private_insurance',
             'sub_position',
             'media_channel',
             'authorization_letter',
