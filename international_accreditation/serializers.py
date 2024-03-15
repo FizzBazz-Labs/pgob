@@ -111,7 +111,7 @@ class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'passport_id',
-            '   ',
+            'private_insurance',
             'position',
             'sub_position',
             'media_channel',

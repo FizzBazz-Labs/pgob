@@ -59,6 +59,7 @@ class NationalUpdateSerializer(serializers.ModelSerializer):
             'sub_position',
             'media_channel',
             'authorization_letter',
+            'private_insurance',
             'institution',
             'address',
             'phone_number',
