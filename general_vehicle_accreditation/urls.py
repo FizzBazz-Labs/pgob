@@ -11,9 +11,9 @@ from general_vehicle_accreditation.views import (
 app_name = 'general_vehicle_accreditation'
 
 urlpatterns = [
-    path('general-vehicle-accreditation/',
+    path('',
          GeneralVehicleAccreditationListApiView.as_view(), name='list-create'),
-    path('general-vehicle-accreditation/<int:pk>/',
+    path('<int:pk>/',
          GeneralVehicleAccreditationRetrieveApiView.as_view(), name='detail'),
 
     path('<int:pk>/review/', ReviewAccreditation.as_view()),

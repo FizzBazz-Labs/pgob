@@ -22,6 +22,7 @@ class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
             'aircraft_type',
             'model',
             'flight_type',
+            'fbo_attendant',
             'registration',
             'color',
             'call_sign',

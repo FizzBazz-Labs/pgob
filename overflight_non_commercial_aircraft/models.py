@@ -10,6 +10,11 @@ class OverflightNonCommercialAircraft(models.Model):
     class FlightType(models.TextChoices):
         CIVIL = 'CIVIL', _('Civil')
         MILITARY = 'MILITARY', _('Militar')
+        EMERGENCY = 'EMERGENCY', _('Emergencia')
+        AMBULANCE = 'AMBULANCE', _('Ambulancia')
+        CHARTER = 'CHARTER', _('Charter')
+        OVERFLIGHT = 'OVERFLIGHT', _('Sobrevuelo')
+        TECHNICAL_SCALE = 'TECHNICAL_SCALE', _('Escala Técnica')
 
     country = models.ForeignKey(
         'countries.Country',
@@ -23,6 +28,10 @@ class OverflightNonCommercialAircraft(models.Model):
         max_length=50,
         choices=FlightType.choices,
         default=FlightType.CIVIL)
+
+    # Fixed Base Operator (FBO) when flight_type is CHARTER
+    fbo_attendant = models.CharField(max_length=150, blank=True)
+
     registration = models.CharField(max_length=150)
     color = models.CharField(max_length=150)
     call_sign = models.CharField(max_length=150)

@@ -82,6 +82,7 @@ class InternationalAccreditation(models.Model):
         'allergies.Allergy',
         related_name='international_forms',
         blank=True)
+    allergies_description = models.TextField(blank=True)
     immunizations = models.ManyToManyField(
         'immunizations.Immunization',
         related_name='international_forms',

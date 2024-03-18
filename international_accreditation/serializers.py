@@ -130,6 +130,7 @@ class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
             'medication_3',
             'medication_4',
             'allergies',
+            'allergies_description',
             'immunizations',
             'medicals',
             'surgical',

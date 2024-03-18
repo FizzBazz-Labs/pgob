@@ -10,10 +10,10 @@ from overflight_non_commercial_aircraft.views import (
 )
 
 urlpatterns = [
-    path('overflight-non-commercial-aircraft/',
+    path('',
          OverflightNonCommercialAircraftCreateApiView.as_view(),
          name='overflight-non-commercial-aircraft-create'),
-    path('overflight-non-commercial-aircraft/<int:pk>/',
+    path('<int:pk>/',
          OverflightNonCommercialAircraftRetrieveApiView.as_view(), name='overflight-non-commercial-aircraft-detail'),
 
     path('<int:pk>/review/', ReviewAccreditation.as_view()),

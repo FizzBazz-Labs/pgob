@@ -9,9 +9,9 @@ from security_accreditations.views import (
 )
 
 urlpatterns = [
-    path('security-weapon-accreditation/', SecurityWeaponAccreditationCreateApiView.as_view(),
+    path('', SecurityWeaponAccreditationCreateApiView.as_view(),
          name='create-list-security-accreditations'),
-    path('security-weapon-accreditation/<int:pk>/', SecurityWeaponAccreditationRetrieveApiView.as_view(),
+    path('<int:pk>/', SecurityWeaponAccreditationRetrieveApiView.as_view(),
          name='retrieve-security-accreditation'),
 
     path('<int:pk>/review/', ReviewAccreditation.as_view()),
