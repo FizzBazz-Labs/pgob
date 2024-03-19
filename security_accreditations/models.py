@@ -81,10 +81,10 @@ class SecurityWeaponAccreditation(models.Model):
         default=AccreditationStatus.PENDING)
 
     flight_arrival_datetime = models.DateTimeField(blank=True,null=True)
-    flight_arrival_number = models.TextField(blank=True, null=True)
+    flight_number_arrival = models.TextField(blank=True, null=True)
     flight_arrival_airport = models.TextField(blank=True, null=True)
     flight_departure_datetime = models.DateTimeField(blank=True,null=True)
-    flight_departure_number = models.TextField(blank=True, null=True)
+    flight_number_departure = models.TextField(blank=True, null=True)
     flight_departure_airport = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
