@@ -140,6 +140,7 @@ class InternationalAccreditation(models.Model):
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='international_authorized_set')
+    authorized_comment = models.TextField(blank=True)
 
     rejected_by = models.ForeignKey(
         get_user_model(),

@@ -56,6 +56,7 @@ class ApproveAccreditation(APIView):
             item.status = AccreditationStatus.APPROVED
             item.type = request.data.get('type')
             item.authorized_by = request.user
+            item.authorized_comment = request.data.get('authorized_comment')
             item.save()
 
             serializer = self.serializer_class(item)
