@@ -51,7 +51,7 @@ class AccreditationListView(APIView):
                 'first_name': item.first_name,
                 'last_name': item.last_name,
                 'status': item.status,
-                'download': item.downloaded,
+                'downloaded': item.downloaded,
                 'created_at': item.created_at,
                 'updated_at': item.updated_at,
                 'created_by': {
