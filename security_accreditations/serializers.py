@@ -48,7 +48,7 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
             'status',
             'country',
             'name',
-            'passportNo',
+            'passport_id',
             'position',
             'dateArrival',
             'hourArrival',
