@@ -24,6 +24,16 @@ class Weapon(models.Model):
 
 
 class SecurityWeaponAccreditation(models.Model):
+    country = models.ForeignKey('countries.Country', on_delete=models.CASCADE,related_name='security_weapons', blank=True, null=True)
+    name = models.TextField(blank=True, null=True)
+    passportNo = models.TextField(blank=True, null=True)
+    position = models.ForeignKey(
+        'positions.Position',
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        related_name='security_weapons')
+
     control_datetime = models.DateTimeField(
         verbose_name=_('Fecha y hora de Control'))
 
@@ -69,6 +79,15 @@ class SecurityWeaponAccreditation(models.Model):
         max_length=150,
         choices=AccreditationStatus.choices,
         default=AccreditationStatus.PENDING)
+
+    dateArrival = models.DateField(blank=True, null=True)
+    hourArrival = models.TimeField(blank=True, null=True)
+    flightNumberArrival = models.TextField(blank=True, null=True)
+    airportArrival = models.TextField(blank=True, null=True)
+    dateDeparture = models.DateField(blank=True, null=True)
+    hourDeparture = models.TimeField(blank=True, null=True)
+    flightNumberDeparture = models.TextField(blank=True, null=True)
+    airportDeparture = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

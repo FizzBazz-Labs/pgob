@@ -52,7 +52,7 @@ def generate_pdf_response(image_url, color, type) -> HttpResponse:
     context_data = {
         'type': _(type),
         # TODO change hostname to production
-        'photo': f'{env('APP_HOST')}{image_url}',
+        'photo': f'{env("APP_HOST")}{image_url}',
         'color': color,
     }
 
