@@ -1,12 +1,12 @@
-import pdfkit
-import environ
 import os
-
+import uuid
 from typing import Any
 
+import environ
+import pdfkit
+from django.conf import settings
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 from rest_framework.status import HTTP_404_NOT_FOUND
@@ -70,6 +70,10 @@ class GenerateCredential(APIView):
     def get(self, request, pk, *args, **kwargs):
         try:
             accreditation = self.model.objects.get(pk=pk)
+            accreditation.uuid = uuid.uuid4()
+            accreditation.downloaded = True
+            accreditation.save()
+
             accreditation_type = accreditation.type
 
             color = get_accreditation_color(accreditation.type)

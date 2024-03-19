@@ -1,24 +1,15 @@
 from rest_framework import serializers
 
-from international_accreditation.models import InternationalAccreditation
-
-from allergies.serializers import AllergySerializer
-
-from immunizations.serializers import ImmunizationSerializer
-
-from medical_histories.serializers import MedicalHistorySerializer
-
-from media_channels.serializers import MediaChannelSerializer
-
-from countries.serializers import CountrySerializer
-
-from positions.serializers import PositionSerializer, SubPositionSerializer
-
 from allergies.models import Allergy
-
+from allergies.serializers import AllergySerializer
+from countries.serializers import CountrySerializer
 from immunizations.models import Immunization
-
+from immunizations.serializers import ImmunizationSerializer
+from international_accreditation.models import InternationalAccreditation
+from media_channels.serializers import MediaChannelSerializer
 from medical_histories.models import MedicalHistory
+from medical_histories.serializers import MedicalHistorySerializer
+from positions.serializers import PositionSerializer, SubPositionSerializer
 
 
 class InternationalAccreditationSerializer(serializers.ModelSerializer):
@@ -78,7 +69,14 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'type',
             'status',
             'created_by',
+            'downloaded',
+            'uuid',
         ]
+
+        extra_kwargs = {
+            'downloaded': {'read_only': True},
+            'uuid': {'read_only': True},
+        }
 
     def create(self, validated_data):
         print("Before popping 'allergies':", validated_data)

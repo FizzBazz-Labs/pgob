@@ -1,17 +1,14 @@
 from rest_framework import serializers
 
-from national_accreditation.models import NationalAccreditation
-
-from positions.serializers import PositionSerializer, SubPositionSerializer
-
 from media_channels.serializers import MediaChannelSerializer
-
-from security_accreditations.serializers import SecurityWeaponAccreditationSerializer
+from national_accreditation.models import NationalAccreditation
+from positions.serializers import PositionSerializer, SubPositionSerializer
 
 
 class NationalSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
         default=serializers.CurrentUserDefault())
+
     # security_weapon_accreditation = SecurityWeaponAccreditationSerializer(
     #     required=False)
 
@@ -39,14 +36,19 @@ class NationalSerializer(serializers.ModelSerializer):
             'type',
             'status',
             'passport_id',
-            'created_by'
+            'created_by',
+            'downloaded',
+            'uuid'
         ]
+
+        extra_kwargs = {
+            'downloaded': {'read_only': True},
+            'uuid': {'read_only': True},
+        }
 
 
 class NationalUpdateSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = NationalAccreditation
@@ -72,6 +74,7 @@ class NationalUpdateSerializer(serializers.ModelSerializer):
             'status',
             'created_by'
         ]
+
         # Make image and authorization_letter optional
         extra_kwargs = {
             'image': {'required': False},
