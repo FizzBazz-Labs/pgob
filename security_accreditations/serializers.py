@@ -58,6 +58,7 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
             'flight_departure_datetime',
             'flight_departure_number',
             'flight_departure_airport',
+            'downloaded',
         ]
 
     def create(self, validated_data):

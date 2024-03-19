@@ -91,5 +91,7 @@ class SecurityWeaponAccreditation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    downloaded = models.BooleanField(default=False)
+
     def __str__(self):
         return f'{self.control_datetime} - {self.created_by}'
