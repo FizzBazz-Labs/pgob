@@ -17,6 +17,8 @@ from rest_framework.views import APIView
 
 from national_accreditation.models import NationalAccreditation
 
+from security_accreditations.models import SecurityWeaponAccreditation
+
 
 def get_accreditation_color(accreditation_type: str) -> dict[str, Any]:
     accreditation_types = NationalAccreditation.AccreditationType
@@ -37,14 +39,19 @@ def get_accreditation_color(accreditation_type: str) -> dict[str, Any]:
             'arrow_color': 'arrow-green',
         }
     else:
-        return 'black'
+        return {
+            'footer_color': 'footer-blue',
+            'arrow_color': 'arrow-blue',
+        }
 
 
-def generate_pdf_response(image_url, color, type) -> HttpResponse:
+def generate_pdf_response(image_url, color, type, qr_code, uuid) -> HttpResponse:
     context_data = {
         'type': _(type),
+        'uuid': uuid,
+        'qr_code': f'{settings.APP_HOST}{qr_code}',
         # TODO change hostname to production
-        'photo':f'{settings.APP_HOST}{image_url}',
+        'photo': f'{settings.APP_HOST}{image_url}',
         'color': color,
     }
 
@@ -60,26 +67,56 @@ def generate_pdf_response(image_url, color, type) -> HttpResponse:
 class GenerateCredential(APIView):
     model = None
 
+    def generate_qr_code(self, instance, pk) -> Image:
+
+        if isinstance(instance, NationalAccreditation):
+            qr_data = f'{settings.FRONTEND_DETAIL_URL}/nationals/{pk}'
+        else:
+            qr_data = f'{settings.FRONTEND_DETAIL_URL}/internationals/{pk}'
+        qr_code = qrcode.make(qr_data)
+
+        # Convert QR code to an image file suitable for an ImageField
+        qr_buffer = BytesIO()
+        qr_code.save(qr_buffer, format='PNG')
+        qr_buffer.seek(0)
+
+        return qr_buffer
+
+    def set_uuid(self, instance, pk):
+        instance.uuid = uuid.uuid4()
+        instance.downloaded = True
+        instance.save()
+
+    def generate_weapon_pdf(self, pk) -> HttpResponse:
+        weapon_accreditation = (
+            SecurityWeaponAccreditation.objects
+            .prefetch_related('weapons')
+            .prefetch_related('communication_items')
+            .get(pk=pk)
+        )
+
+        context = {
+            'accreditation': weapon_accreditation,
+        }
+
+        html = render_to_string('credentials/weapon_credential.html', context)
+        pdf = pdfkit.from_string(html, False)
+
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="acreditacion_armas.pdf"'
+        return response
+
     def get(self, request, pk, *args, **kwargs):
         try:
             accreditation = self.model.objects.get(pk=pk)
 
-            accreditation.uuid = uuid.uuid4()
-            accreditation.downloaded = True
+            if isinstance(accreditation, SecurityWeaponAccreditation):
+                return self.generate_weapon_pdf(pk)
+
+            self.set_uuid(accreditation, pk)
 
             # Generate QR code
-            if isinstance(accreditation, NationalAccreditation):
-                qr_data = f'{settings.FRONTEND_DETAIL_URL}/nationals/{pk}'
-            else:
-                qr_data = f'{settings.FRONTEND_DETAIL_URL}/internationals/{pk}'
-            qr_code = qrcode.make(qr_data)
-
-            # Convert QR code to an image file suitable for an ImageField
-            qr_buffer = BytesIO()
-            qr_code.save(qr_buffer, format='PNG')
-            qr_buffer.seek(0)
-
-            # The name of the image file (e.g., 'qr_code.png')
+            qr_buffer = self.generate_qr_code(accreditation, pk)
             filename = f'qr_code_{pk}.png'
             accreditation.qr_code.save(filename, qr_buffer, save=False)
 
@@ -89,20 +126,22 @@ class GenerateCredential(APIView):
             color = get_accreditation_color(accreditation.type)
             photo = accreditation.image.url
 
-            return generate_pdf_response(photo, color, accreditation_type)
+            return generate_pdf_response(photo, color, accreditation_type, accreditation.qr_code.url, accreditation.uuid)
 
         except self.model.DoesNotExist:
             return HttpResponse(status=HTTP_404_NOT_FOUND)
 
 
 class TestTemplate(TemplateView):
-    template_name = 'credentials/test.html'
+    template_name = 'credentials/credential.html'
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context_data = {
             'name': 'John Doe',
             'email': 'testing@gmail.com',
             'photo': 'https://www.w3schools.com/w3images/avatar2.png',
+            'uuid': '12343-324324-234234-234234',
+            'qr_code': 'https://www.w3schools.com/w3images/avatar2.png',
             'color': {
                 'footer_color': 'footer-red',
                 'arrow_color': 'arrow-red',
@@ -112,4 +151,26 @@ class TestTemplate(TemplateView):
         kwargs['photo'] = context_data['photo']
         kwargs['color'] = context_data['color']
         kwargs['type'] = context_data['type']
+        kwargs['uuid'] = context_data['uuid']
+        kwargs['qr_code'] = context_data['qr_code']
         return super().get_context_data(**kwargs)
+
+
+class TestWeaponAccreditation(TemplateView):
+
+    template_name = 'credentials/weapon_credential.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        pk = SecurityWeaponAccreditation.objects.last().pk
+
+        weapon_accreditation = (
+            SecurityWeaponAccreditation.objects
+            .prefetch_related('weapons')
+            .prefetch_related('communication_items')
+            .get(pk=pk)
+        )
+
+        context['accreditation'] = weapon_accreditation
+
+        return context

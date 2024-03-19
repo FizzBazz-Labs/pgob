@@ -1,3 +1,7 @@
 from django.urls import path
 
-urlpatterns = []
+from vehicles.views import VehicleCreateView
+
+urlpatterns = [
+    path('vehicles/', VehicleCreateView.as_view(), name='vehicles'),
+]

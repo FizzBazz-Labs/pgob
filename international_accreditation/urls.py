@@ -1,7 +1,9 @@
 from django.urls import path
 
 from credentials.views import GenerateCredential
+
 from international_accreditation.models import InternationalAccreditation
+
 from international_accreditation.views import (
     InternationalListCreateApiView, InternationalRetrieveApiView,
     ReviewAccreditation,

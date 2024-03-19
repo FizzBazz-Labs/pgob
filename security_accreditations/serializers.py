@@ -8,6 +8,8 @@ from security_accreditations.models import Weapon
 
 from core.serializers import UserSerializer
 
+from positions.serializers import PositionSerializer
+
 
 class WeaponSerializer(serializers.ModelSerializer):
     class Meta:
@@ -114,4 +116,7 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['created_by'] = UserSerializer(
             instance.created_by).data
+
+        representation['position'] = PositionSerializer(
+            instance.position).data
         return representation
