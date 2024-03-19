@@ -14,6 +14,13 @@ def authorization_letter_filename(instance, filename: str):
     return f'internationals/{instance.first_name}_{instance.last_name}/authorizations/{filename}'
 
 
+def qr_filename(instance, filename: str):
+    fullname = f'{instance.first_name.lower()}_{instance.last_name.lower()}'
+    filename = filename.lower().replace(' ', '').replace('-', '')
+
+    return f'nationals/{fullname}/qr/{filename}'
+
+
 class InternationalAccreditation(models.Model):
     class AccreditationType(models.TextChoices):
         OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD', _(
@@ -154,6 +161,7 @@ class InternationalAccreditation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     uuid = models.TextField(blank=True)
+    qr_code = models.ImageField(upload_to=qr_filename, blank=True)
 
     def __str__(self):
         return f'{self.first_name} - {self.last_name} - {self.country.name}'

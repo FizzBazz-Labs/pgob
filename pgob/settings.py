@@ -246,3 +246,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'fizzbazz.labs@gmail.com'
 EMAIL_HOST_PASSWORD = 'okqzitaawmjnuexy'
 DEFAULT_FROM_EMAIL = 'fizzbazz.labs.@gmail.com'
+
+# App Envs
+APP_HOST = env('APP_HOST')
+FRONTEND_DETAIL_URL = env('FRONTEND_DETAIL_URL')
