@@ -51,11 +51,10 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
             'passport_id',
             'position',
             'flight_arrival_datetime',
-            'flightNumberArrival',
-            'flight_arrival_number',
+            'flight_number_arrival',
             'flight_arrival_airport',
             'flight_departure_datetime',
-            'flight_departure_number',
+            'flight_number_departure',
             'flight_departure_airport',
         ]
 
