@@ -1,29 +1,22 @@
-from django.contrib.auth.models import Group
-
 from enum import Enum
 
-from rest_framework.views import APIView
+from django.contrib.auth.models import Group
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from core.serializers import AccreditationsSerializer
-
-from international_accreditation.models import InternationalAccreditation
-from national_accreditation.models import NationalAccreditation
-
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
 from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer
-
-from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
-from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer
-
 from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
 from intercom_equipment_declaration.serializers import IntercomEquipmentDeclarationSerializer
-
+from international_accreditation.models import InternationalAccreditation
+from national_accreditation.models import NationalAccreditation
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft
 from overflight_non_commercial_aircraft.serializers import OverflightNonCommercialAircraftReadSerializer
-
 from security_accreditations.models import SecurityWeaponAccreditation
 from security_accreditations.serializers import SecurityWeaponAccreditationSerializer
+from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
+from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer
 
 
 class AccreditationItem(Enum):
@@ -32,7 +25,6 @@ class AccreditationItem(Enum):
 
 
 class AccreditationListView(APIView):
-
     def has_admin_group(self):
         admin_groups = Group.objects.exclude(
             name='User').values_list('id', flat=True)
@@ -41,6 +33,7 @@ class AccreditationListView(APIView):
 
     def get_accreditations(self):
         data = []
+
         national_accreditations = NationalAccreditation.objects.filter(
             created_by=self.request.user)
         international_accreditations = InternationalAccreditation.objects.filter(
@@ -50,16 +43,15 @@ class AccreditationListView(APIView):
             national_accreditations = NationalAccreditation.objects.all()
             international_accreditations = InternationalAccreditation.objects.all()
 
-        accreditation_list = list(national_accreditations) + \
-            list(international_accreditations)
+        accreditation_list = list(national_accreditations) + list(international_accreditations)
 
         for item in accreditation_list:
             new_item = {
                 'id': item.id,
                 'first_name': item.first_name,
                 'last_name': item.last_name,
-
                 'status': item.status,
+                'download': item.downloaded,
                 'created_at': item.created_at,
                 'updated_at': item.updated_at,
                 'created_by': {
