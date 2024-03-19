@@ -19,6 +19,13 @@ def authorization_letter_filename(instance, filename: str):
     return f'nationals/{fullname}/authorizations/{filename}'
 
 
+def qr_filename(instance, filename: str):
+    fullname = f'{instance.first_name.lower()}_{instance.last_name.lower()}'
+    filename = filename.lower().replace(' ', '').replace('-', '')
+
+    return f'nationals/{fullname}/qr/{filename}'
+
+
 class NationalAccreditation(models.Model):
     class AccreditationType(models.TextChoices):
         GENERAL_COORDINATION = 'GENERAL_COORDINATION', _(
@@ -86,7 +93,9 @@ class NationalAccreditation(models.Model):
     birthplace = models.CharField(
         max_length=250, verbose_name=_('Lugar de Nacimiento'))
     blood_type = models.CharField(
-        max_length=150, choices=BloodType.choices, verbose_name=_('Tipo de Sangre'))
+        max_length=150,
+        choices=BloodType.choices,
+        verbose_name=_('Tipo de Sangre'))
 
     # Accreditation Type
     type = models.CharField(
@@ -127,6 +136,7 @@ class NationalAccreditation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     uuid = models.TextField(blank=True)
+    qr_code = models.ImageField(upload_to=qr_filename, blank=True)
 
     def __str__(self):
         return f'Acreditación | {self.first_name} {self.last_name}'
