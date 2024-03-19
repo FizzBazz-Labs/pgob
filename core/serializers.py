@@ -2,9 +2,6 @@ from rest_framework import serializers
 
 from core.models import Accreditation
 
-from international_accreditation.models import InternationalAccreditation
-from national_accreditation.models import NationalAccreditation
-
 
 class UserSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -24,6 +21,7 @@ class AccreditationsSerializer(serializers.Serializer):
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
     created_by = UserSerializer(read_only=True)
+    downloaded = serializers.BooleanField()
 
 
 class AccreditationSerializer(serializers.ModelSerializer):
