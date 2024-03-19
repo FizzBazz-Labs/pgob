@@ -24,7 +24,8 @@ class Weapon(models.Model):
 
 
 class SecurityWeaponAccreditation(models.Model):
-    country = models.ForeignKey('countries.Country', on_delete=models.CASCADE,related_name='security_weapons', blank=True, null=True)
+    country = models.ForeignKey('countries.Country', on_delete=models.CASCADE, related_name='security_weapons',
+                                blank=True, null=True)
     name = models.TextField(blank=True, null=True)
     passport_id = models.TextField(blank=True, null=True)
     position = models.ForeignKey(
@@ -80,11 +81,11 @@ class SecurityWeaponAccreditation(models.Model):
         choices=AccreditationStatus.choices,
         default=AccreditationStatus.PENDING)
 
-    flight_arrival_datetime = models.DateTimeField(blank=True,null=True)
-    flight_number_arrival = models.TextField(blank=True, null=True)
+    flight_arrival_datetime = models.DateTimeField(blank=True, null=True)
+    flight_arrival_number = models.TextField(blank=True, null=True)
     flight_arrival_airport = models.TextField(blank=True, null=True)
-    flight_departure_datetime = models.DateTimeField(blank=True,null=True)
-    flight_number_departure = models.TextField(blank=True, null=True)
+    flight_departure_datetime = models.DateTimeField(blank=True, null=True)
+    flight_departure_number = models.TextField(blank=True, null=True)
     flight_departure_airport = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
