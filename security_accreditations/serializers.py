@@ -50,14 +50,13 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
             'name',
             'passport_id',
             'position',
-            'dateArrival',
-            'hourArrival',
+            'flight_arrival_datetime',
             'flightNumberArrival',
-            'airportArrival',
-            'dateDeparture',
-            'hourDeparture',
-            'flightNumberDeparture',
-            'airportDeparture',
+            'flight_arrival_number',
+            'flight_arrival_airport',
+            'flight_departure_datetime',
+            'flight_departure_number',
+            'flight_departure_airport',
         ]
 
     def create(self, validated_data):
