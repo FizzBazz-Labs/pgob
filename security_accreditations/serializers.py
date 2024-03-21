@@ -21,20 +21,22 @@ class WeaponSerializer(serializers.ModelSerializer):
             'model',
             'type',
             'serial',
-            'caliber',
             'chargers',
             'ammunition',
             'created_at',
-            'updated_at'
+            'updated_at',
+            'caliber',
         ]
+
+        extra_kwargs = {
+            'caliber': {'read_only': True},
+        }
 
 
 class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
     communication_items = EquipmentSerializer(many=True)
     weapons = WeaponSerializer(many=True)
-
-    created_by = serializers.HiddenField(
-        default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = SecurityWeaponAccreditation
@@ -59,6 +61,7 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
             'flight_departure_number',
             'flight_departure_airport',
             'downloaded',
+            'permit_number',
         ]
 
     def create(self, validated_data):

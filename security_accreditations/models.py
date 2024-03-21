@@ -12,7 +12,7 @@ class Weapon(models.Model):
     type = models.CharField(max_length=150, verbose_name=_('Tipo de Arma'))
 
     serial = models.CharField(max_length=150, verbose_name=_('Serial No.'))
-    caliber = models.CharField(max_length=150, verbose_name=_('Calibre'))
+    caliber = models.CharField(max_length=150, default='9mm', blank=True)
     chargers = models.IntegerField(verbose_name=_('Cantidad de Cargadores'))
     ammunition = models.IntegerField(verbose_name=_('Total de Municiones'))
 
@@ -24,8 +24,12 @@ class Weapon(models.Model):
 
 
 class SecurityWeaponAccreditation(models.Model):
-    country = models.ForeignKey('countries.Country', on_delete=models.CASCADE, related_name='security_weapons',
-                                blank=True, null=True)
+    country = models.ForeignKey(
+        'countries.Country',
+        on_delete=models.CASCADE,
+        related_name='security_weapons',
+        blank=True, null=True)
+
     name = models.TextField(blank=True, null=True)
     passport_id = models.TextField(blank=True, null=True)
     position = models.ForeignKey(
@@ -40,7 +44,9 @@ class SecurityWeaponAccreditation(models.Model):
 
     # Weapon data
     weapons = models.ManyToManyField(
-        'security_accreditations.Weapon', related_name='security_weapons', blank=True)
+        'security_accreditations.Weapon',
+        related_name='security_weapons',
+        blank=True)
 
     communication_items = models.ManyToManyField(
         'equipments.Equipment',
@@ -92,6 +98,7 @@ class SecurityWeaponAccreditation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     downloaded = models.BooleanField(default=False)
+    permit_number = models.CharField(max_length=250, blank=True)
 
     def __str__(self):
         return f'{self.control_datetime} - {self.created_by}'
