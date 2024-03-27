@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
-from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer
+from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer, GeneralVehicleAccreditationReadSerializer
 
 from core.models import AccreditationStatus
 
@@ -25,6 +25,11 @@ class GeneralVehicleAccreditationRetrieveApiView(RetrieveUpdateAPIView):
     queryset = GeneralVehicleAccreditation.objects.all()
     serializer_class = GeneralVehicleAccreditationSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return GeneralVehicleAccreditationReadSerializer
+        return GeneralVehicleAccreditationSerializer
 
 
 class ReviewAccreditation(APIView):

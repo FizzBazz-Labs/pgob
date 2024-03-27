@@ -26,6 +26,11 @@ class VehicleAccessAirportAccreditationsRetrieveApiView(RetrieveUpdateAPIView):
     serializer_class = VehicleAccessAirportAccreditationsSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return VehicleAccessAirportAccreditationsReadSerializer
+        return VehicleAccessAirportAccreditationsSerializer
+
 
 class ReviewAccreditation(APIView):
     serializer_class = VehicleAccessAirportAccreditationsReadSerializer
