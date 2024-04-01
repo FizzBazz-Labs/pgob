@@ -72,7 +72,8 @@ class NationalUpdateSerializer(serializers.ModelSerializer):
             'blood_type',
             'type',
             'status',
-            'created_by'
+            'created_by',
+            'security_weapon_accreditation',
         ]
 
         # Make image and authorization_letter optional
