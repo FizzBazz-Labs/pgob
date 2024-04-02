@@ -1,20 +1,30 @@
 from enum import Enum
 
 from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 
-from core.serializers import AccreditationsSerializer
+from core.serializers import AccreditationsSerializer, UserSerializer
+
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
 from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer
+
 from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
 from intercom_equipment_declaration.serializers import IntercomEquipmentDeclarationSerializer
+
 from international_accreditation.models import InternationalAccreditation
+
 from national_accreditation.models import NationalAccreditation
+
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft
 from overflight_non_commercial_aircraft.serializers import OverflightNonCommercialAircraftReadSerializer
+
 from security_accreditations.models import SecurityWeaponAccreditation
 from security_accreditations.serializers import SecurityWeaponAccreditationSerializer
+
 from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
 from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer
 
@@ -43,7 +53,8 @@ class AccreditationListView(APIView):
             national_accreditations = NationalAccreditation.objects.all()
             international_accreditations = InternationalAccreditation.objects.all()
 
-        accreditation_list = list(national_accreditations) + list(international_accreditations)
+        accreditation_list = list(
+            national_accreditations) + list(international_accreditations)
 
         for item in accreditation_list:
             new_item = {
