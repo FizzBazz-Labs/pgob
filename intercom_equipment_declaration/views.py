@@ -1,7 +1,5 @@
-from django.shortcuts import render
-
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -25,7 +23,12 @@ class IntercomEquipmentDeclarationListApiView(ListCreateAPIView):
 class IntercomEquipmentDeclarationRetrieveApiView(RetrieveUpdateAPIView):
     queryset = IntercomEquipmentDeclaration.objects.all()
     serializer_class = IntercomEquipmentDeclarationSerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+
+        return [IsAuthenticated()]
 
 
 class ReviewAccreditation(APIView):
