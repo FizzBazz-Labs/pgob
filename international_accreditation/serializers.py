@@ -71,6 +71,8 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'created_by',
             'downloaded',
             'uuid',
+            'security_weapon_accreditation',
+            'allergies_description',
         ]
 
         extra_kwargs = {
@@ -145,6 +147,7 @@ class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
             'type',
             'created_by',
             'status',
+            'allergies_description',
         ]
         extra_kwargs = {
             'image': {'required': False},
