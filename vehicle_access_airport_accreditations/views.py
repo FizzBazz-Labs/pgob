@@ -6,6 +6,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 from rest_framework.permissions import IsAuthenticated
 
 from core.models import AccreditationStatus
+from core.views import ReviewAccreditationBase
 
 from pgob_auth.permissions import IsAccreditor, IsReviewer
 
@@ -32,22 +33,9 @@ class VehicleAccessAirportAccreditationsRetrieveApiView(RetrieveUpdateAPIView):
         return VehicleAccessAirportAccreditationsSerializer
 
 
-class ReviewAccreditation(APIView):
+class ReviewAccreditation(ReviewAccreditationBase):
+    model = VehicleAccessAirportAccreditations
     serializer_class = VehicleAccessAirportAccreditationsReadSerializer
-    permission_classes = [IsAuthenticated & IsReviewer]
-
-    def patch(self, request: Request, pk, *args, **kwargs):
-        try:
-            item = VehicleAccessAirportAccreditations.objects.get(pk=pk)
-            item.status = AccreditationStatus.REVIEWED
-            item.reviewed_by = request.user
-            item.save()
-
-            serializer = self.serializer_class(item)
-            return Response(serializer.data, status=HTTP_200_OK)
-
-        except VehicleAccessAirportAccreditations.DoesNotExist:
-            return Response(status=HTTP_404_NOT_FOUND)
 
 
 class ApproveAccreditation(APIView):

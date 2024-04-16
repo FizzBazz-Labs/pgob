@@ -1,4 +1,3 @@
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.request import Request
 from rest_framework.views import APIView
@@ -10,6 +9,7 @@ from security_accreditations.models import SecurityWeaponAccreditation
 from security_accreditations.serializers import SecurityWeaponAccreditationSerializer
 
 from core.models import AccreditationStatus
+from core.views import ReviewAccreditationBase
 
 from pgob_auth.permissions import IsReviewer, IsAccreditor
 
@@ -26,22 +26,9 @@ class SecurityWeaponAccreditationRetrieveApiView(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class ReviewAccreditation(APIView):
+class ReviewAccreditation(ReviewAccreditationBase):
+    model = SecurityWeaponAccreditation
     serializer_class = SecurityWeaponAccreditationSerializer
-    permission_classes = [IsAuthenticated & IsReviewer]
-
-    def patch(self, request: Request, pk, *args, **kwargs):
-        try:
-            item = SecurityWeaponAccreditation.objects.get(pk=pk)
-            item.status = AccreditationStatus.REVIEWED
-            item.reviewed_by = request.user
-            item.save()
-
-            serializer = self.serializer_class(item)
-            return Response(serializer.data, status=HTTP_200_OK)
-
-        except SecurityWeaponAccreditation.DoesNotExist:
-            return Response(status=HTTP_404_NOT_FOUND)
 
 
 class ApproveAccreditation(APIView):

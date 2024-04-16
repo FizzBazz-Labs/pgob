@@ -7,7 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft
-from overflight_non_commercial_aircraft.serializers import OverflightNonCommercialAircraftSerializer, OverflightNonCommercialAircraftReadSerializer
+from overflight_non_commercial_aircraft.serializers import OverflightNonCommercialAircraftSerializer, \
+    OverflightNonCommercialAircraftReadSerializer
 
 from core.models import AccreditationStatus
 
@@ -27,6 +28,7 @@ class OverflightNonCommercialAircraftRetrieveApiView(RetrieveUpdateAPIView):
         if self.request.method == 'PUT' or self.request.method == 'PATCH':
             return OverflightNonCommercialAircraftSerializer
         return OverflightNonCommercialAircraftReadSerializer
+
     permission_classes = [IsAuthenticated]
 
 
@@ -39,6 +41,7 @@ class ReviewAccreditation(APIView):
             item = OverflightNonCommercialAircraft.objects.get(pk=pk)
             item.status = AccreditationStatus.REVIEWED
             item.reviewed_by = request.user
+            item.reviewed_comment = request.data.get('reviewed_comment')
             item.save()
 
             serializer = self.serializer_class(item)

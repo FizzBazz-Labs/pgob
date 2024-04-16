@@ -108,6 +108,7 @@ class NationalAccreditation(models.Model):
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='national_reviewed_set')
+    reviewed_comment = models.TextField(blank=True)
 
     downloaded = models.BooleanField(default=False)
     authorized_by = models.ForeignKey(

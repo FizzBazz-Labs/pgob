@@ -69,6 +69,7 @@ class SecurityWeaponAccreditation(models.Model):
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='security_reviewed_set')
+    reviewed_comment = models.TextField(blank=True)
 
     authorized_by = models.ForeignKey(
         get_user_model(),

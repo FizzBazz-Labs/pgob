@@ -1,8 +1,12 @@
-from django.contrib.auth import get_user_model
-
 from rest_framework import serializers
 
-from core.models import Accreditation
+from core.models import SiteConfiguration, Accreditation
+
+
+class SiteConfigurationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SiteConfiguration
+        fields = '__all__'
 
 
 class UserSerializer(serializers.Serializer):
