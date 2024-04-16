@@ -1,5 +1,5 @@
-from django.contrib.auth import get_user_model
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 from core.models import AccreditationStatus
@@ -79,7 +79,6 @@ class InternationalAccreditation(models.Model):
 
     # Medical Information
     blood_type = models.CharField(max_length=150, blank=True)
-
     diseases = models.TextField()
     medication_1 = models.CharField(max_length=200, blank=True)
     medication_2 = models.CharField(max_length=200, blank=True)

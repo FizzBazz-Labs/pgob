@@ -1,5 +1,5 @@
-from django.contrib.auth import get_user_model
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 
 from core.models import AccreditationStatus
@@ -38,16 +38,6 @@ class NationalAccreditation(models.Model):
         SUPPLIER = 'SUPPLIER', _('Proveedor')
         NEWSLETTER_COMMITTEE = 'NEWSLETTER_COMMITTEE', _('Comisión de Prensa')
         COMMERCIAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Comercial')
-
-    class BloodType(models.TextChoices):
-        A_POSITIVE = 'A+', _('A+')
-        A_NEGATIVE = 'A-', _('A-')
-        B_POSITIVE = 'B+', _('B+')
-        B_NEGATIVE = 'B-', _('B-')
-        O_POSITIVE = 'O+', _('O+')
-        O_NEGATIVE = 'O-', _('O-')
-        AB_POSITIVE = 'AB+', _('AB+')
-        AB_NEGATIVE = 'AB-', _('AB-')
 
     image = models.ImageField(upload_to=image_filename)
     first_name = models.CharField(max_length=150, verbose_name=_('Nombre'))
@@ -92,10 +82,26 @@ class NationalAccreditation(models.Model):
     birthday = models.DateField(verbose_name=_('Fecha de Nacimiento'))
     birthplace = models.CharField(
         max_length=250, verbose_name=_('Lugar de Nacimiento'))
-    blood_type = models.CharField(
-        max_length=150,
-        choices=BloodType.choices,
-        verbose_name=_('Tipo de Sangre'))
+
+    # Medical Information
+    blood_type = models.CharField(max_length=150, blank=True)
+    diseases = models.TextField(blank=True)
+    medication_1 = models.CharField(max_length=200, blank=True)
+    medication_2 = models.CharField(max_length=200, blank=True)
+    medication_3 = models.CharField(max_length=200, blank=True)
+    medication_4 = models.CharField(max_length=200, blank=True)
+    allergies = models.ManyToManyField(
+        'allergies.Allergy',
+        blank=True)
+    allergies_description = models.TextField(blank=True)
+    immunizations = models.ManyToManyField(
+        'immunizations.Immunization',
+        blank=True)
+    medicals = models.ManyToManyField(
+        'medical_histories.MedicalHistory',
+        blank=True)
+    surgical = models.CharField(max_length=150, blank=True)
+    doctor_name = models.CharField(max_length=100, blank=True)
 
     # Accreditation Type
     type = models.CharField(

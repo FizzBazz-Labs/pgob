@@ -13,9 +13,7 @@ from positions.serializers import PositionSerializer, SubPositionSerializer
 
 
 class InternationalAccreditationSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     allergies = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Allergy.objects.all())
@@ -46,6 +44,8 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'birthday',
             'birthplace',
             'security_weapon_accreditation',
+
+            # Medical Information
             'blood_type',
             'diseases',
             'medication_1',
@@ -53,10 +53,12 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'medication_3',
             'medication_4',
             'allergies',
+            'allergies_description',
             'immunizations',
             'medicals',
             'surgical',
             'doctor_name',
+
             'hotel_name',
             'hotel_address',
             'hotel_phone',
@@ -82,11 +84,7 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        print("Before popping 'allergies':", validated_data)
         allergies_data = validated_data.pop('allergies', [])
-        print("After popping 'allergies':", validated_data)
-        print("Extracted allergies data:", allergies_data)
-        # allergies_data = validated_data.pop('allergies', [])
         immunizations_data = validated_data.pop('immunizations', [])
         medicals_data = validated_data.pop('medicals', [])
 
@@ -100,8 +98,7 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
 
 
 class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(
-        default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = InternationalAccreditation
@@ -155,19 +152,6 @@ class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
             'authorization_letter': {'required': False},
             # Add extra kwargs for many-to-many fields to make them read-only
         }
-
-    def update(self, instance, validated_data):
-        # Update many-to-many fields
-        self.update_many_to_many(instance, 'allergies', validated_data)
-        self.update_many_to_many(instance, 'immunizations', validated_data)
-        self.update_many_to_many(instance, 'medicals', validated_data)
-
-        # Update other fields
-        for field, value in validated_data.items():
-            setattr(instance, field, value)
-
-        instance.save()
-        return instance
 
     def update(self, instance, validated_data):
         # Update many-to-many fields

@@ -4,17 +4,6 @@ from vehicles.models import Vehicle
 
 
 class VehicleSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Vehicle
-        fields = [
-            'id',
-            'type',
-            'brand',
-            'color',
-            'plate',
-            'driver_name',
-            'driver_id',
-            "phone",
-            'driver_license',
-        ]
+        fields = '__all__'
