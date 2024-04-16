@@ -73,6 +73,7 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'uuid',
             'security_weapon_accreditation',
             'allergies_description',
+            'reviewed_comment',
         ]
 
         extra_kwargs = {

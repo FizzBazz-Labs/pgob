@@ -6,11 +6,7 @@ from positions.serializers import PositionSerializer, SubPositionSerializer
 
 
 class NationalSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(
-        default=serializers.CurrentUserDefault())
-
-    # security_weapon_accreditation = SecurityWeaponAccreditationSerializer(
-    #     required=False)
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = NationalAccreditation
@@ -38,7 +34,8 @@ class NationalSerializer(serializers.ModelSerializer):
             'passport_id',
             'created_by',
             'downloaded',
-            'uuid'
+            'uuid',
+            'reviewed_comment',
         ]
 
         extra_kwargs = {

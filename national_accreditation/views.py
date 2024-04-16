@@ -6,8 +6,11 @@ from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 
 from core.models import AccreditationStatus
+from core.views import ReviewAccreditationBase
+
 from national_accreditation.models import NationalAccreditation
 from national_accreditation.serializers import NationalSerializer, NationalReadSerializer, NationalUpdateSerializer
+
 from pgob_auth.permissions import IsReviewer, IsAccreditor
 
 
@@ -33,23 +36,9 @@ class NationalRetrieveApiView(RetrieveUpdateAPIView):
         return [IsAuthenticated()]
 
 
-class ReviewAccreditation(APIView):
+class ReviewAccreditation(ReviewAccreditationBase):
+    model = NationalAccreditation
     serializer_class = NationalReadSerializer
-    permission_classes = [IsAuthenticated & IsReviewer]
-
-    def patch(self, request: Request, pk, *args, **kwargs):
-        try:
-            item = NationalAccreditation.objects.get(pk=pk)
-            item.status = AccreditationStatus.REVIEWED
-            item.reviewed_by = request.user
-            item.reviewed_comment = request.data.get('reviewed_comment')
-            item.save()
-
-            serializer = self.serializer_class(item)
-            return Response(serializer.data, status=HTTP_200_OK)
-
-        except NationalAccreditation.DoesNotExist:
-            return Response(status=HTTP_404_NOT_FOUND)
 
 
 class ApproveAccreditation(APIView):
