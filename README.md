@@ -1,5 +1,11 @@
 # Pgob
 
+## Dump data
+
+```bash
+python manage.py dumpdata core -o fixtures/db/core.json
+```
+
 ## Load Data
 
 ```bash

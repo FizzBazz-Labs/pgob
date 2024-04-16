@@ -5,11 +5,12 @@ from django.contrib.auth.models import Group
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
-from core.models import AccreditationStatus
-from core.serializers import AccreditationsSerializer
+from core.models import SiteConfiguration, AccreditationStatus
+from core.serializers import SiteConfigurationSerializer, AccreditationsSerializer
 
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
 from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer
@@ -30,7 +31,20 @@ from security_accreditations.serializers import SecurityWeaponAccreditationSeria
 from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
 from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer
 
-from pgob_auth.permissions import IsReviewer
+from pgob_auth.permissions import IsAdmin, IsReviewer
+
+
+class SiteConfigurationView(RetrieveUpdateAPIView):
+    serializer_class = SiteConfigurationSerializer
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+
+        return [IsAdmin()]
+
+    def get_object(self):
+        return SiteConfiguration.objects.first()
 
 
 class AccreditationItem(Enum):
