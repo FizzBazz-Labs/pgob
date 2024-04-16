@@ -1,13 +1,13 @@
 from enum import Enum
 
 from django.contrib.auth.models import Group
-from django.contrib.auth import get_user_model
+from collections import OrderedDict
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.pagination import PageNumberPagination
 
-from core.serializers import AccreditationsSerializer, UserSerializer
+from core.serializers import AccreditationsSerializer
 
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
 from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer
@@ -29,12 +29,39 @@ from vehicle_access_airport_accreditations.models import VehicleAccessAirportAcc
 from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer
 
 
+class StandardPagination(PageNumberPagination):
+    page_size = 10
+    # max_page_size = 1000
+
+
 class AccreditationItem(Enum):
     NATIONAL = 'national'
     INTERNATIONAL = 'international'
 
 
 class AccreditationListView(APIView):
+
+    def paginate_querysets(self, querysets, request):
+        paginated_response = {}
+        paginator = StandardPagination()
+
+        for key, queryset in querysets.items():
+
+            try:
+                page = paginator.paginate_queryset(queryset, request)
+
+                if page is not None:
+                    paginated_response[key] = paginator.get_paginated_response(
+                        page).data
+
+                else:
+                    paginated_response[key] = queryset
+            except:
+                paginated_response[key] = paginator.get_paginated_response(
+                    []).data
+
+        return paginated_response
+
     def has_admin_group(self):
         admin_groups = Group.objects.exclude(
             name='User').values_list('id', flat=True)
@@ -145,11 +172,15 @@ class AccreditationListView(APIView):
         return serializer.data
 
     def get(self, request):
-        return Response({
+        querysets = {
             'accreditations': self.get_accreditations(),
             'generalVehicles': self.get_general_vehicles(),
             'accessVehicles': self.get_airport_access_vehicles(),
             'equipments': self.get_communication_equipments(),
             'aircrafts': self.get_aircrafts(),
             'securities': self.get_securities(),
-        })
+        }
+
+        pagination_querysets = self.paginate_querysets(querysets, request)
+
+        return Response(pagination_querysets)
