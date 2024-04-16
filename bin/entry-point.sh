@@ -15,6 +15,7 @@ python manage.py collectstatic --noinput
 
 
 echo "Populate the Database at startup of project"
+python manage.py loaddata fixtures/db/core.json
 python manage.py loaddata fixtures/db/allergies.json
 python manage.py loaddata fixtures/db/countries.json
 python manage.py loaddata fixtures/db/immunizations.json
