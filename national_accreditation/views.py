@@ -42,6 +42,7 @@ class ReviewAccreditation(APIView):
             item = NationalAccreditation.objects.get(pk=pk)
             item.status = AccreditationStatus.REVIEWED
             item.reviewed_by = request.user
+            item.reviewed_comment = request.data.get('reviewed_comment')
             item.save()
 
             serializer = self.serializer_class(item)

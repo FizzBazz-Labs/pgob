@@ -6,7 +6,6 @@ from core.models import AccreditationStatus
 
 
 class OverflightNonCommercialAircraft(models.Model):
-
     class FlightType(models.TextChoices):
         CIVIL = 'CIVIL', _('Civil')
         MILITARY = 'MILITARY', _('Militar')
@@ -71,6 +70,7 @@ class OverflightNonCommercialAircraft(models.Model):
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='overflight_aircraft_reviewed_set')
+    reviewed_comment = models.TextField(blank=True)
 
     authorized_by = models.ForeignKey(
         get_user_model(),

@@ -6,9 +6,14 @@ from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 
 from core.models import AccreditationStatus
+from core.views import ReviewAccreditationBase
+
 from international_accreditation.models import InternationalAccreditation
-from international_accreditation.serializers import InternationalAccreditationSerializer, \
-    InternationalAccreditationReadSerializer, InternationalAccreditationUpdateSerializer
+from international_accreditation.serializers import (
+    InternationalAccreditationSerializer,
+    InternationalAccreditationReadSerializer,
+    InternationalAccreditationUpdateSerializer)
+
 from pgob_auth.permissions import IsReviewer, IsAccreditor
 
 
@@ -34,22 +39,9 @@ class InternationalRetrieveApiView(RetrieveUpdateAPIView):
         return [IsAuthenticated()]
 
 
-class ReviewAccreditation(APIView):
+class ReviewAccreditation(ReviewAccreditationBase):
+    model = InternationalAccreditation
     serializer_class = InternationalAccreditationReadSerializer
-    permission_classes = [IsAuthenticated & IsReviewer]
-
-    def patch(self, request: Request, pk, *args, **kwargs):
-        try:
-            item = InternationalAccreditation.objects.get(pk=pk)
-            item.status = AccreditationStatus.REVIEWED
-            item.reviewed_by = request.user
-            item.save()
-
-            serializer = self.serializer_class(item)
-            return Response(serializer.data, status=HTTP_200_OK)
-
-        except InternationalAccreditation.DoesNotExist:
-            return Response(status=HTTP_404_NOT_FOUND)
 
 
 class ApproveAccreditation(APIView):

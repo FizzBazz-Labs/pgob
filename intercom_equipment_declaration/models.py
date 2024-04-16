@@ -5,8 +5,10 @@ from core.models import AccreditationStatus
 
 
 class IntercomEquipmentDeclaration(models.Model):
-    country = models.ForeignKey('countries.Country', on_delete=models.CASCADE,
-                                related_name='intercom_equipment_declarations')
+    country = models.ForeignKey(
+        'countries.Country',
+        on_delete=models.CASCADE,
+        related_name='intercom_equipment_declarations')
     institution = models.CharField(max_length=150)
     equipments = models.ManyToManyField(
         'equipments.Equipment', related_name='intercom_equipment_declarations', blank=True)
@@ -20,6 +22,7 @@ class IntercomEquipmentDeclaration(models.Model):
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='communication_equipment_reviewed_set')
+    reviewed_comment = models.TextField(blank=True)
 
     authorized_by = models.ForeignKey(
         get_user_model(),

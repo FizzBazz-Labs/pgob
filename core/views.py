@@ -1,13 +1,15 @@
 from enum import Enum
 
 from django.contrib.auth.models import Group
-from django.contrib.auth import get_user_model
 
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
-from core.serializers import AccreditationsSerializer, UserSerializer
+from core.models import AccreditationStatus
+from core.serializers import AccreditationsSerializer
 
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
 from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer
@@ -27,6 +29,8 @@ from security_accreditations.serializers import SecurityWeaponAccreditationSeria
 
 from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
 from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer
+
+from pgob_auth.permissions import IsReviewer
 
 
 class AccreditationItem(Enum):
@@ -153,3 +157,23 @@ class AccreditationListView(APIView):
             'aircrafts': self.get_aircrafts(),
             'securities': self.get_securities(),
         })
+
+
+class ReviewAccreditationBase(APIView):
+    model = None
+    serializer_class = None
+    permission_classes = [IsAuthenticated & IsReviewer]
+
+    def patch(self, request: Request, pk, *args, **kwargs):
+        try:
+            item = self.model.objects.get(pk=pk)
+            item.status = AccreditationStatus.REVIEWED
+            item.reviewed_by = request.user
+            item.reviewed_comment = request.data.get('reviewed_comment')
+            item.save()
+
+            serializer = self.serializer_class(item)
+            return Response(serializer.data, status=HTTP_200_OK)
+
+        except self.model.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)
