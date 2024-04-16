@@ -8,6 +8,8 @@ from security_accreditations.models import Weapon
 
 from core.serializers import UserSerializer
 
+from positions.serializers import PositionSerializer
+
 
 class WeaponSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,20 +21,22 @@ class WeaponSerializer(serializers.ModelSerializer):
             'model',
             'type',
             'serial',
-            'caliber',
             'chargers',
             'ammunition',
             'created_at',
-            'updated_at'
+            'updated_at',
+            'caliber',
         ]
+
+        extra_kwargs = {
+            'caliber': {'read_only': True},
+        }
 
 
 class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
     communication_items = EquipmentSerializer(many=True)
     weapons = WeaponSerializer(many=True)
-
-    created_by = serializers.HiddenField(
-        default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = SecurityWeaponAccreditation
@@ -45,7 +49,19 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
             'created_by',
             'created_at',
             'updated_at',
-            'status'
+            'status',
+            'country',
+            'name',
+            'passport_id',
+            'position',
+            'flight_arrival_datetime',
+            'flight_arrival_number',
+            'flight_arrival_airport',
+            'flight_departure_datetime',
+            'flight_departure_number',
+            'flight_departure_airport',
+            'downloaded',
+            'permit_number',
         ]
 
     def create(self, validated_data):
@@ -57,11 +73,14 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        communication_items_data = validated_data.pop(
-            'communication_items', [])
+        weapons = validated_data.pop('weapons', [])
+        equipments = validated_data.pop('communication_items', [])
+
         instance = super().update(instance, validated_data)
-        self._update_communication_items(instance, communication_items_data)
-        self._update_weapons(instance, validated_data.get('weapons', []))
+
+        self._update_communication_items(instance, equipments)
+        self._update_weapons(instance, weapons)
+
         return instance
 
     def _update_communication_items(self, instance, communication_items_data):
@@ -104,4 +123,7 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['created_by'] = UserSerializer(
             instance.created_by).data
+
+        representation['position'] = PositionSerializer(
+            instance.position).data
         return representation

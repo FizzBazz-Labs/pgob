@@ -2,11 +2,12 @@ from rest_framework import serializers
 
 from vehicles.models import Vehicle
 
+
 class VehicleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vehicle
-        fields=[
+        fields = [
             'id',
             'type',
             'brand',
@@ -15,4 +16,5 @@ class VehicleSerializer(serializers.ModelSerializer):
             'driver_name',
             'driver_id',
             "phone",
+            'driver_license',
         ]

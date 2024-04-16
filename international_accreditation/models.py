@@ -14,11 +14,17 @@ def authorization_letter_filename(instance, filename: str):
     return f'internationals/{instance.first_name}_{instance.last_name}/authorizations/{filename}'
 
 
+def qr_filename(instance, filename: str):
+    fullname = f'{instance.first_name.lower()}_{instance.last_name.lower()}'
+    filename = filename.lower().replace(' ', '').replace('-', '')
+
+    return f'nationals/{fullname}/qr/{filename}'
+
+
 class InternationalAccreditation(models.Model):
     class AccreditationType(models.TextChoices):
-        OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD',
-        _('Jefe de Delegación Oficial'),
-
+        OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD', _(
+            'Jefe de Delegación Oficial'),
         OFFICIAL_DELEGATION = 'OFFICIAL_DELEGATION', _('Delegación Oficial')
         PROTOCOL = 'PROTOCOL', _('Protocolo')
         SECURITY = 'SECURITY', _('Seguridad')
@@ -37,6 +43,7 @@ class InternationalAccreditation(models.Model):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     passport_id = models.CharField(max_length=150)
+    private_insurance = models.CharField(max_length=150, blank=True)
 
     position = models.ForeignKey(
         'positions.Position',
@@ -72,7 +79,6 @@ class InternationalAccreditation(models.Model):
 
     # Medical Information
     blood_type = models.CharField(max_length=150, blank=True)
-    blood_rh_factor = models.CharField(max_length=150, blank=True)
 
     diseases = models.TextField()
     medication_1 = models.CharField(max_length=200, blank=True)
@@ -83,6 +89,7 @@ class InternationalAccreditation(models.Model):
         'allergies.Allergy',
         related_name='international_forms',
         blank=True)
+    allergies_description = models.TextField(blank=True)
     immunizations = models.ManyToManyField(
         'immunizations.Immunization',
         related_name='international_forms',
@@ -121,12 +128,26 @@ class InternationalAccreditation(models.Model):
         verbose_name=_('Tipo de Acreditación'),
         null=True, blank=True)
 
-    authorized_by = models.CharField(max_length=150, blank=True)
-    authorized_by_position = models.ForeignKey(
-        'positions.Position',
+    reviewed_by = models.ForeignKey(
+        get_user_model(),
         on_delete=models.PROTECT,
-        blank=True,
-        null=True)
+        blank=True, null=True,
+        related_name='international_reviewed_set')
+    reviewed_comment = models.TextField(blank=True)
+
+    downloaded = models.BooleanField(default=False)
+    authorized_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='international_authorized_set')
+    authorized_comment = models.TextField(blank=True)
+
+    rejected_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='international_rejected_set')
 
     created_by = models.ForeignKey(
         get_user_model(),
@@ -140,6 +161,9 @@ class InternationalAccreditation(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    uuid = models.TextField(blank=True)
+    qr_code = models.ImageField(upload_to=qr_filename, blank=True)
 
     def __str__(self):
         return f'{self.first_name} - {self.last_name} - {self.country.name}'

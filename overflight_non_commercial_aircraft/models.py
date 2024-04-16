@@ -6,10 +6,14 @@ from core.models import AccreditationStatus
 
 
 class OverflightNonCommercialAircraft(models.Model):
-
-    class Jurisdiction(models.TextChoices):
+    class FlightType(models.TextChoices):
         CIVIL = 'CIVIL', _('Civil')
         MILITARY = 'MILITARY', _('Militar')
+        EMERGENCY = 'EMERGENCY', _('Emergencia')
+        AMBULANCE = 'AMBULANCE', _('Ambulancia')
+        CHARTER = 'CHARTER', _('Charter')
+        OVERFLIGHT = 'OVERFLIGHT', _('Sobrevuelo')
+        TECHNICAL_SCALE = 'TECHNICAL_SCALE', _('Escala Técnica')
 
     country = models.ForeignKey(
         'countries.Country',
@@ -19,10 +23,14 @@ class OverflightNonCommercialAircraft(models.Model):
     # Aircraft Information
     aircraft_type = models.CharField(max_length=150)
     model = models.CharField(max_length=150)
-    jurisdiction = models.CharField(
+    flight_type = models.CharField(
         max_length=50,
-        choices=Jurisdiction.choices,
-        default=Jurisdiction.CIVIL)
+        choices=FlightType.choices,
+        default=FlightType.CIVIL)
+
+    # Fixed Base Operator (FBO) when flight_type is CHARTER
+    fbo_attendant = models.CharField(max_length=150, blank=True)
+
     registration = models.CharField(max_length=150)
     color = models.CharField(max_length=150)
     call_sign = models.CharField(max_length=150)
@@ -56,6 +64,26 @@ class OverflightNonCommercialAircraft(models.Model):
         get_user_model(),
         on_delete=models.PROTECT,
         related_name='flight_forms')
+
+    reviewed_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='overflight_aircraft_reviewed_set')
+    reviewed_comment = models.TextField(blank=True)
+
+    authorized_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='overflight_aircraft_authorized_set')
+
+    rejected_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='overflight_aircraft_rejected_set')
+
     status = models.CharField(
         max_length=150,
         choices=AccreditationStatus.choices,

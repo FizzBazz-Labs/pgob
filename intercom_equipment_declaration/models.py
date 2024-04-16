@@ -3,9 +3,12 @@ from django.contrib.auth import get_user_model
 
 from core.models import AccreditationStatus
 
+
 class IntercomEquipmentDeclaration(models.Model):
-    country = models.ForeignKey('countries.Country', on_delete=models.CASCADE,
-                                related_name='intercom_equipment_declarations')
+    country = models.ForeignKey(
+        'countries.Country',
+        on_delete=models.CASCADE,
+        related_name='intercom_equipment_declarations')
     institution = models.CharField(max_length=150)
     equipments = models.ManyToManyField(
         'equipments.Equipment', related_name='intercom_equipment_declarations', blank=True)
@@ -13,6 +16,26 @@ class IntercomEquipmentDeclaration(models.Model):
         get_user_model(),
         on_delete=models.PROTECT,
         related_name='intercom_equipment_declarations')
+
+    reviewed_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='communication_equipment_reviewed_set')
+    reviewed_comment = models.TextField(blank=True)
+
+    authorized_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='communication_equipment_authorized_set')
+
+    rejected_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='communication_equipment_rejected_set')
+
     status = models.CharField(
         max_length=150,
         choices=AccreditationStatus.choices,

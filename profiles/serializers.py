@@ -6,6 +6,7 @@ from rest_framework import serializers
 
 from core.serializers import AccreditationSerializer
 from core.models import Accreditation
+from countries.serializers import CountrySerializer
 
 from profiles.models import Profile
 
@@ -15,11 +16,14 @@ from countries.models import Country
 class ProfileSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(source='profile.phone_number')
     group = serializers.SerializerMethodField()
-    country = serializers.CharField(source='profile.country.name')
     passport_id = serializers.CharField(source='profile.passport_id')
     accreditations = AccreditationSerializer(
         many=True, read_only=True,
         source='profile.accreditations')
+
+    country = serializers.PrimaryKeyRelatedField(
+        source='profile.country',
+        read_only=True)
 
     class Meta:
         model = get_user_model()
@@ -74,8 +78,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         }
 
     def validate_email(self, email: str):
-        already_user_email = get_user_model().objects\
-            .filter(email__exact=email.strip())\
+        already_user_email = get_user_model().objects \
+            .filter(email__exact=email.strip()) \
             .exists()
 
         if already_user_email:
@@ -117,3 +121,36 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         self.add_accreditations(user, accreditations)
         self.add_to_group(user, group)
         return user
+
+
+class UserSerializer(serializers.ModelSerializer):
+    country = serializers.CharField(source='profile.country.name')
+
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'username', 'first_name',
+                  'last_name', 'email', 'groups', 'country')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['groups'] = instance.groups.values_list('name', flat=True).first()
+        return data
+
+
+class UserReadSerializer(serializers.ModelSerializer):
+    country = serializers.CharField(source='profile.country.name')
+    group = serializers.SerializerMethodField()
+    passport_id = serializers.CharField(source='profile.passport_id')
+    phone_number = serializers.CharField(source='profile.phone_number')
+    accreditations = AccreditationSerializer(
+        many=True, read_only=True,
+        source='profile.accreditations')
+
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'username', 'first_name', 'passport_id',
+                  'last_name', 'email', 'country', 'group', 'phone_number',
+                  'accreditations')
+
+    def get_group(self, obj) -> str:
+        return obj.groups.first().name if obj.groups.first() else None

@@ -1,5 +1,7 @@
 from django.urls import path
 
+from credentials.views import GenerateCredential
+
 from national_accreditation.views import (
     NationalListCreateApiView,
     NationalRetrieveApiView,
@@ -8,6 +10,7 @@ from national_accreditation.views import (
     RejectAccreditation,
 )
 
+from national_accreditation.models import NationalAccreditation
 
 urlpatterns = [
     path('', NationalListCreateApiView.as_view()),
@@ -15,4 +18,6 @@ urlpatterns = [
     path('<int:pk>/review/', ReviewAccreditation.as_view()),
     path('<int:pk>/approve/', ApproveAccreditation.as_view()),
     path('<int:pk>/reject/', RejectAccreditation.as_view()),
+    path('<int:pk>/certificate/',
+         GenerateCredential.as_view(model=NationalAccreditation)),
 ]

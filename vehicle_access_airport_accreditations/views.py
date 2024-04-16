@@ -1,50 +1,41 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
-from core.models import AccreditationStatus
-from pgob_auth.permissions import IsAccreditor, IsReviewer
 from rest_framework.request import Request
 from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
-from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
-from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer, VehicleAccessAirportAccreditationsReadSerializer
 from rest_framework.permissions import IsAuthenticated
+
+from core.models import AccreditationStatus
+from core.views import ReviewAccreditationBase
+
+from pgob_auth.permissions import IsAccreditor, IsReviewer
+
+from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
+from vehicle_access_airport_accreditations.serializers import (
+    VehicleAccessAirportAccreditationsSerializer,
+    VehicleAccessAirportAccreditationsReadSerializer)
+
 
 class VehicleAccessAirportAccreditationsListCreateApiView(ListCreateAPIView):
     queryset = VehicleAccessAirportAccreditations.objects.all()
     serializer_class = VehicleAccessAirportAccreditationsSerializer
     permission_classes = [IsAuthenticated]
 
+
 class VehicleAccessAirportAccreditationsRetrieveApiView(RetrieveUpdateAPIView):
     queryset = VehicleAccessAirportAccreditations.objects.all()
     serializer_class = VehicleAccessAirportAccreditationsSerializer
     permission_classes = [IsAuthenticated]
 
-# class VehicleAccessAirportAccreditationsRetrieveApiView(RetrieveUpdateAPIView):
-#     queryset = VehicleAccessAirportAccreditations.objects.all()
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return VehicleAccessAirportAccreditationsReadSerializer
+        return VehicleAccessAirportAccreditationsSerializer
 
-#     def get_serializer_class(self):
-#         if self.request.method == 'PUT' or self.request.method == 'PATCH':
-#             return VehicleAccessAirportAccreditationsSerializer
-#         return VehicleAccessAirportAccreditationsReadSerializer
 
-#     permission_classes = [IsAuthenticated]
-
-class ReviewAccreditation(APIView):
+class ReviewAccreditation(ReviewAccreditationBase):
+    model = VehicleAccessAirportAccreditations
     serializer_class = VehicleAccessAirportAccreditationsReadSerializer
-    permission_classes = [IsAuthenticated & IsReviewer]
-
-    def patch(self, request: Request, pk, *args, **kwargs):
-        try:
-            vehicleAccessAirportAccreditation = VehicleAccessAirportAccreditations.objects.get(pk=pk)
-            vehicleAccessAirportAccreditation.status = AccreditationStatus.REVIEWED
-            vehicleAccessAirportAccreditation.save()
-
-            serializer = self.serializer_class(vehicleAccessAirportAccreditation)
-
-            return Response(serializer.data, status=HTTP_200_OK)
-
-        except VehicleAccessAirportAccreditations.DoesNotExist:
-            return Response(status=HTTP_404_NOT_FOUND)
 
 
 class ApproveAccreditation(APIView):
@@ -53,12 +44,12 @@ class ApproveAccreditation(APIView):
 
     def patch(self, request: Request, pk, *args, **kwargs):
         try:
-            vehicleAccessAirportAccreditation = VehicleAccessAirportAccreditations.objects.get(pk=pk)
-            vehicleAccessAirportAccreditation.status = AccreditationStatus.APPROVED
-            vehicleAccessAirportAccreditation.save()
+            item = VehicleAccessAirportAccreditations.objects.get(pk=pk)
+            item.status = AccreditationStatus.APPROVED
+            item.authorized_by = request.user
+            item.save()
 
-            serializer = self.serializer_class(vehicleAccessAirportAccreditation)
-
+            serializer = self.serializer_class(item)
             return Response(serializer.data, status=HTTP_200_OK)
 
         except VehicleAccessAirportAccreditations.DoesNotExist:
@@ -71,12 +62,12 @@ class RejectAccreditation(APIView):
 
     def patch(self, request: Request, pk, *args, **kwargs):
         try:
-            vehicleAccessAirportAccreditation = VehicleAccessAirportAccreditations.objects.get(pk=pk)
-            vehicleAccessAirportAccreditation.status = AccreditationStatus.APPROVED
-            vehicleAccessAirportAccreditation.save()
+            item = VehicleAccessAirportAccreditations.objects.get(pk=pk)
+            item.status = AccreditationStatus.REJECTED
+            item.rejected_by = request.user
+            item.save()
 
-            serializer = self.serializer_class(vehicleAccessAirportAccreditation)
-
+            serializer = self.serializer_class(item)
             return Response(serializer.data, status=HTTP_200_OK)
 
         except VehicleAccessAirportAccreditations.DoesNotExist:

@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from core.models import Accreditation
+from core.models import SiteConfiguration, Accreditation
+
+
+@admin.register(SiteConfiguration)
+class SiteConfigurationAdmin(admin.ModelAdmin):
+    ...
 
 
 @admin.register(Accreditation)

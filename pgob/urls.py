@@ -1,13 +1,10 @@
-from django.contrib import admin
-from django.urls import path, include
+import rest_framework_simplejwt.views as jwt_views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
+from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-
-import rest_framework_simplejwt.views as jwt_views
-
 
 urlpatterns = [
     path('api/v1/', include('core.urls')),
@@ -28,13 +25,20 @@ urlpatterns = [
          jwt_views.TokenVerifyView.as_view(), name='token-verify'),
 
     path('api/v1/', include('core.urls')),
-    path("api/v1/national-accreditations/", include("national_accreditation.urls")),
-    path('api/v1/', include('overflight_non_commercial_aircraft.urls')),
-    path('api/v1/', include('international_accreditation.urls')),
-    path('api/v1/', include('security_accreditations.urls')),
-    path('api/v1/vehicle_accesss_airport_accreditations/', include('vehicle_access_airport_accreditations.urls')),
-    path('api/v1/', include('intercom_equipment_declaration.urls')),
-    path('api/v1/', include('general_vehicle_accreditation.urls')),
+    path("api/v1/national-accreditations/",
+         include("national_accreditation.urls")),
+    path('api/v1/overflight-non-commercial-aircraft/',
+         include('overflight_non_commercial_aircraft.urls')),
+    path('api/v1/international-accreditations/',
+         include('international_accreditation.urls')),
+    path('api/v1/security-weapon-accreditation/',
+         include('security_accreditations.urls')),
+    path('api/v1/vehicle-access-airport-accreditations/',
+         include('vehicle_access_airport_accreditations.urls')),
+    path('api/v1/intercom-equipment-declaration/',
+         include('intercom_equipment_declaration.urls')),
+    path('api/v1/general-vehicle-accreditation/',
+         include('general_vehicle_accreditation.urls')),
     path('api/v1/', include('vehicles.urls')),
     path('api/v1/', include('allergies.urls')),
     path('api/v1/', include('countries.urls')),
@@ -43,6 +47,7 @@ urlpatterns = [
     path('api/v1/', include('medical_histories.urls')),
     path('api/v1/', include('positions.urls')),
     path('api/v1/', include('profiles.urls')),
+    path('api/v1/', include('credentials.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

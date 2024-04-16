@@ -1,21 +1,26 @@
-# from rest_framework.generics import
-from typing import Any
-from rest_framework.views import APIView
+from enum import Enum
+
+from django.contrib.auth.models import Group
+
+from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
-from core.serializers import AccreditationsSerializer, UserSerializer
-
-from international_accreditation.models import InternationalAccreditation
-from national_accreditation.models import NationalAccreditation
+from core.models import SiteConfiguration, AccreditationStatus
+from core.serializers import SiteConfigurationSerializer, AccreditationsSerializer
 
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
 from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer
 
-from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
-from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer
-
 from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
 from intercom_equipment_declaration.serializers import IntercomEquipmentDeclarationSerializer
+
+from international_accreditation.models import InternationalAccreditation
+
+from national_accreditation.models import NationalAccreditation
 
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft
 from overflight_non_commercial_aircraft.serializers import OverflightNonCommercialAircraftReadSerializer
@@ -23,14 +28,40 @@ from overflight_non_commercial_aircraft.serializers import OverflightNonCommerci
 from security_accreditations.models import SecurityWeaponAccreditation
 from security_accreditations.serializers import SecurityWeaponAccreditationSerializer
 
+from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
+from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer
+
+from pgob_auth.permissions import IsAdmin, IsReviewer
+
+
+class SiteConfigurationView(RetrieveUpdateAPIView):
+    serializer_class = SiteConfigurationSerializer
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+
+        return [IsAdmin()]
+
+    def get_object(self):
+        return SiteConfiguration.objects.first()
+
+
+class AccreditationItem(Enum):
+    NATIONAL = 'national'
+    INTERNATIONAL = 'international'
+
 
 class AccreditationListView(APIView):
-
     def has_admin_group(self):
-        return self.request.user.groups.filter(name='admin').exists()
+        admin_groups = Group.objects.exclude(
+            name='User').values_list('id', flat=True)
+
+        return self.request.user.groups.filter(id__in=admin_groups).exists()
 
     def get_accreditations(self):
         data = []
+
         national_accreditations = NationalAccreditation.objects.filter(
             created_by=self.request.user)
         international_accreditations = InternationalAccreditation.objects.filter(
@@ -40,16 +71,16 @@ class AccreditationListView(APIView):
             national_accreditations = NationalAccreditation.objects.all()
             international_accreditations = InternationalAccreditation.objects.all()
 
-        accreditation_list = list(national_accreditations) + \
-            list(international_accreditations)
+        accreditation_list = list(
+            national_accreditations) + list(international_accreditations)
 
         for item in accreditation_list:
             new_item = {
                 'id': item.id,
                 'first_name': item.first_name,
                 'last_name': item.last_name,
-
                 'status': item.status,
+                'downloaded': item.downloaded,
                 'created_at': item.created_at,
                 'updated_at': item.updated_at,
                 'created_by': {
@@ -63,10 +94,10 @@ class AccreditationListView(APIView):
 
             if isinstance(item, InternationalAccreditation):
                 new_item['country'] = item.country.name
-                new_item['type'] = 'International'
+                new_item['type'] = AccreditationItem.INTERNATIONAL.value
             else:
                 new_item['country'] = 'Panama'
-                new_item['type'] = 'National'
+                new_item['type'] = AccreditationItem.NATIONAL.value
 
             data.append(new_item)
 
@@ -140,3 +171,23 @@ class AccreditationListView(APIView):
             'aircrafts': self.get_aircrafts(),
             'securities': self.get_securities(),
         })
+
+
+class ReviewAccreditationBase(APIView):
+    model = None
+    serializer_class = None
+    permission_classes = [IsAuthenticated & IsReviewer]
+
+    def patch(self, request: Request, pk, *args, **kwargs):
+        try:
+            item = self.model.objects.get(pk=pk)
+            item.status = AccreditationStatus.REVIEWED
+            item.reviewed_by = request.user
+            item.reviewed_comment = request.data.get('reviewed_comment')
+            item.save()
+
+            serializer = self.serializer_class(item)
+            return Response(serializer.data, status=HTTP_200_OK)
+
+        except self.model.DoesNotExist:
+            return Response(status=HTTP_404_NOT_FOUND)

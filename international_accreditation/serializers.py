@@ -1,24 +1,15 @@
 from rest_framework import serializers
 
-from international_accreditation.models import InternationalAccreditation
-
-from allergies.serializers import AllergySerializer
-
-from immunizations.serializers import ImmunizationSerializer
-
-from medical_histories.serializers import MedicalHistorySerializer
-
-from media_channels.serializers import MediaChannelSerializer
-
-from countries.serializers import CountrySerializer
-
-from positions.serializers import PositionSerializer, SubPositionSerializer
-
 from allergies.models import Allergy
-
+from allergies.serializers import AllergySerializer
+from countries.serializers import CountrySerializer
 from immunizations.models import Immunization
-
+from immunizations.serializers import ImmunizationSerializer
+from international_accreditation.models import InternationalAccreditation
+from media_channels.serializers import MediaChannelSerializer
 from medical_histories.models import MedicalHistory
+from medical_histories.serializers import MedicalHistorySerializer
+from positions.serializers import PositionSerializer, SubPositionSerializer
 
 
 class InternationalAccreditationSerializer(serializers.ModelSerializer):
@@ -42,6 +33,7 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'passport_id',
+            'private_insurance',
             'position',
             'sub_position',
             'media_channel',
@@ -55,7 +47,6 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'birthplace',
             'security_weapon_accreditation',
             'blood_type',
-            'blood_rh_factor',
             'diseases',
             'medication_1',
             'medication_2',
@@ -78,7 +69,16 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'type',
             'status',
             'created_by',
+            'downloaded',
+            'uuid',
+            'security_weapon_accreditation',
+            'allergies_description',
         ]
+
+        extra_kwargs = {
+            'downloaded': {'read_only': True},
+            'uuid': {'read_only': True},
+        }
 
     def create(self, validated_data):
         print("Before popping 'allergies':", validated_data)
@@ -111,6 +111,7 @@ class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'passport_id',
+            'private_insurance',
             'position',
             'sub_position',
             'media_channel',
@@ -123,13 +124,13 @@ class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
             'birthday',
             'birthplace',
             'blood_type',
-            'blood_rh_factor',
             'diseases',
             'medication_1',
             'medication_2',
             'medication_3',
             'medication_4',
             'allergies',
+            'allergies_description',
             'immunizations',
             'medicals',
             'surgical',
@@ -146,6 +147,7 @@ class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
             'type',
             'created_by',
             'status',
+            'allergies_description',
         ]
         extra_kwargs = {
             'image': {'required': False},

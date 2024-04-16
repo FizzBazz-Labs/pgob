@@ -19,16 +19,21 @@ def authorization_letter_filename(instance, filename: str):
     return f'nationals/{fullname}/authorizations/{filename}'
 
 
+def qr_filename(instance, filename: str):
+    fullname = f'{instance.first_name.lower()}_{instance.last_name.lower()}'
+    filename = filename.lower().replace(' ', '').replace('-', '')
+
+    return f'nationals/{fullname}/qr/{filename}'
+
+
 class NationalAccreditation(models.Model):
     class AccreditationType(models.TextChoices):
-        GENERAL_COORDINATION = (
-            'GENERAL_COORDINATION',
-            _('Coordinación General'),
-        )
+        GENERAL_COORDINATION = 'GENERAL_COORDINATION', _(
+            'Coordinación General')
         PROTOCOL = 'PROTOCOL', _('Protocolo')
         SECURITY = 'SECURITY', _('Seguridad')
         TECHNICAL_STAFF = 'TECHNICAL_STAFF', _('Personal Técnico')
-        OFFICIAL_DELEGATION = 'Delegación Oficial', _('Delegación Oficial')
+        OFFICIAL_DELEGATION = 'OFFICIAL_DELEGATION', _('Delegación Oficial')
         LINK = 'LINK', _('Enlace')
         SUPPLIER = 'SUPPLIER', _('Proveedor')
         NEWSLETTER_COMMITTEE = 'NEWSLETTER_COMMITTEE', _('Comisión de Prensa')
@@ -49,6 +54,8 @@ class NationalAccreditation(models.Model):
     last_name = models.CharField(max_length=150, verbose_name=_('Apellido'))
     passport_id = models.CharField(
         max_length=100, verbose_name=_('Cédula /Pasaporte'))
+
+    private_insurance = models.CharField(max_length=150, blank=True)
 
     position = models.ForeignKey(
         'positions.Position',
@@ -86,37 +93,52 @@ class NationalAccreditation(models.Model):
     birthplace = models.CharField(
         max_length=250, verbose_name=_('Lugar de Nacimiento'))
     blood_type = models.CharField(
-        max_length=150, choices=BloodType.choices, verbose_name=_('Tipo de Sangre'))
+        max_length=150,
+        choices=BloodType.choices,
+        verbose_name=_('Tipo de Sangre'))
 
     # Accreditation Type
     type = models.CharField(
         max_length=150,
         choices=AccreditationType.choices,
-        verbose_name=_('Tipo de Acreditación'),
         blank=True, null=True)
 
-    # Todo: Move to Many to Many
+    reviewed_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='national_reviewed_set')
+    reviewed_comment = models.TextField(blank=True)
+
+    downloaded = models.BooleanField(default=False)
     authorized_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
         blank=True, null=True,
-        related_name='national_forms_verifies',
-        verbose_name=_('Creado por'))
+        related_name='national_authorized_set')
+    authorized_comment = models.TextField(blank=True)
+
+    rejected_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.PROTECT,
+        blank=True, null=True,
+        related_name='national_rejected_set')
 
     created_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
-        related_name='national_forms',
-        verbose_name=_('Creado por'))
+        related_name='national_forms')
 
     status = models.CharField(
         max_length=150,
         choices=AccreditationStatus.choices,
         default=AccreditationStatus.PENDING)
 
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name=_('Creado el'))
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    uuid = models.TextField(blank=True)
+    qr_code = models.ImageField(upload_to=qr_filename, blank=True)
 
     def __str__(self):
         return f'Acreditación | {self.first_name} {self.last_name}'
