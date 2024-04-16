@@ -5,10 +5,12 @@ from django.contrib.auth.models import Group
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
+from core.serializers import AccreditationsSerializer
 from core.models import SiteConfiguration, AccreditationStatus
 from core.serializers import SiteConfigurationSerializer, AccreditationsSerializer
 
@@ -47,12 +49,39 @@ class SiteConfigurationView(RetrieveUpdateAPIView):
         return SiteConfiguration.objects.first()
 
 
+class StandardPagination(PageNumberPagination):
+    page_size = 10
+    # max_page_size = 1000
+
+
 class AccreditationItem(Enum):
     NATIONAL = 'national'
     INTERNATIONAL = 'international'
 
 
 class AccreditationListView(APIView):
+
+    def paginate_querysets(self, querysets, request):
+        paginated_response = {}
+        paginator = StandardPagination()
+
+        for key, queryset in querysets.items():
+
+            try:
+                page = paginator.paginate_queryset(queryset, request)
+
+                if page is not None:
+                    paginated_response[key] = paginator.get_paginated_response(
+                        page).data
+
+                else:
+                    paginated_response[key] = queryset
+            except:
+                paginated_response[key] = paginator.get_paginated_response(
+                    []).data
+
+        return paginated_response
+
     def has_admin_group(self):
         admin_groups = Group.objects.exclude(
             name='User').values_list('id', flat=True)
@@ -163,14 +192,18 @@ class AccreditationListView(APIView):
         return serializer.data
 
     def get(self, request):
-        return Response({
+        querysets = {
             'accreditations': self.get_accreditations(),
             'generalVehicles': self.get_general_vehicles(),
             'accessVehicles': self.get_airport_access_vehicles(),
             'equipments': self.get_communication_equipments(),
             'aircrafts': self.get_aircrafts(),
             'securities': self.get_securities(),
-        })
+        }
+
+        pagination_querysets = self.paginate_querysets(querysets, request)
+
+        return Response(pagination_querysets)
 
 
 class ReviewAccreditationBase(APIView):
@@ -191,3 +224,4 @@ class ReviewAccreditationBase(APIView):
 
         except self.model.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
+
