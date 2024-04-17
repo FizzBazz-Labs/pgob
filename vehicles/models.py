@@ -6,6 +6,11 @@ def driver_license_filename(instance, filename: str):
     return f'driver_licenses/{instance.driver_id}/{filename}'
 
 
+def tpv_filename(instance, filename: str):
+    filename = filename.lower().replace(' ', '').replace('-', '')
+    return f'circulation_cards/{instance.driver_id}/{filename}'
+
+
 class Vehicle(models.Model):
     type = models.CharField(max_length=150)
     brand = models.CharField(max_length=150)
@@ -15,7 +20,11 @@ class Vehicle(models.Model):
     driver_id = models.CharField(max_length=50)
     phone = models.CharField(max_length=50, blank=True)
     driver_license = models.FileField(
-        upload_to=driver_license_filename, blank=True, null=True)
+        upload_to=driver_license_filename,
+        blank=True, null=True)
+    tpv = models.FileField(
+        upload_to=tpv_filename,
+        blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
