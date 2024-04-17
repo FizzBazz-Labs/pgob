@@ -6,6 +6,6 @@ drf-spectacular==0.27.1
 django-cors-headers==4.1.0
 djangorestframework-camel-case==1.4.2
 django-environ
-gunicorn==21.2.0
+gunicorn==22.0.0
 pdfkit==1.0.0
 qrcode==7.4.2
