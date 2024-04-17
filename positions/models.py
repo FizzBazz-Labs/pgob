@@ -6,7 +6,8 @@ class Position(models.Model):
     name = models.CharField(max_length=250)
     sub_positions = models.ManyToManyField(
         'positions.SubPosition',
-        related_name='positions')
+        related_name='positions',
+        blank=True)
 
     def __str__(self) -> str:
         return self.name
