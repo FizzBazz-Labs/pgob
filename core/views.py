@@ -10,7 +10,6 @@ from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
-from core.serializers import AccreditationsSerializer
 from core.models import SiteConfiguration, AccreditationStatus
 from core.serializers import SiteConfigurationSerializer, AccreditationsSerializer
 
@@ -224,4 +223,3 @@ class ReviewAccreditationBase(APIView):
 
         except self.model.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
-

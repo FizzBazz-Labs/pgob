@@ -10,19 +10,15 @@ from core.serializers import UserSerializer
 
 
 class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
-    # vehicles = VehicleSerializer(many=True, read_only=True)
-
-    mission = serializers.PrimaryKeyRelatedField(
-        queryset=Country.objects.all())
+    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    country = serializers.PrimaryKeyRelatedField(queryset=Country.objects.all())
 
     class Meta:
         model = GeneralVehicleAccreditation
         fields = [
+            'accreditation_type',
             'id',
-            'mission',
+            'country',
             'assigned_to',
             'vehicles',
             'distinctive',

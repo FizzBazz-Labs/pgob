@@ -23,12 +23,12 @@ class GeneralVehicleAccreditationListApiView(ListCreateAPIView):
 
 class GeneralVehicleAccreditationRetrieveApiView(RetrieveUpdateAPIView):
     queryset = GeneralVehicleAccreditation.objects.all()
-    serializer_class = GeneralVehicleAccreditationSerializer
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return GeneralVehicleAccreditationReadSerializer
+
         return GeneralVehicleAccreditationSerializer
 
 
