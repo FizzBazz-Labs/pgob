@@ -13,6 +13,7 @@ def tpv_filename(instance, filename: str):
 
 class Vehicle(models.Model):
     type = models.CharField(max_length=150)
+    type_other = models.CharField(max_length=150, blank=True)
     brand = models.CharField(max_length=150)
     color = models.CharField(max_length=150)
     plate = models.CharField(max_length=50)
