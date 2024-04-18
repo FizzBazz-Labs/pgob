@@ -12,7 +12,8 @@ from positions.serializers import PositionSerializer, SubPositionSerializer
 
 
 class NationalSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
 
     allergies = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Allergy.objects.all())
@@ -26,6 +27,7 @@ class NationalSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'image',
+            'country',
             'first_name',
             'last_name',
             'position',
@@ -85,7 +87,8 @@ class NationalSerializer(serializers.ModelSerializer):
 
 
 class NationalUpdateSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
 
     class Meta:
         model = NationalAccreditation
@@ -93,6 +96,7 @@ class NationalUpdateSerializer(serializers.ModelSerializer):
             'id',
             'image',
             'first_name',
+            'country',
             'last_name',
             'position',
             'sub_position',
@@ -154,6 +158,7 @@ class NationalUpdateSerializer(serializers.ModelSerializer):
 
 
 class NationalReadSerializer(NationalSerializer):
+    country = serializers.StringRelatedField()
     position = PositionSerializer()
     sub_position = SubPositionSerializer()
     media_channel = MediaChannelSerializer()

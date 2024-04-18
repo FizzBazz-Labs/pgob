@@ -4,6 +4,8 @@ from django.utils.translation import gettext as _
 
 from core.models import AccreditationStatus
 
+from countries.models import Country
+
 
 def image_filename(instance, filename: str):
     fullname = f'{instance.first_name.lower()}_{instance.last_name.lower()}'
@@ -41,6 +43,10 @@ class NationalAccreditation(models.Model):
 
     image = models.ImageField(upload_to=image_filename)
     first_name = models.CharField(max_length=150, verbose_name=_('Nombre'))
+
+    country = models.ForeignKey(
+        Country, on_delete=models.PROTECT)
+
     last_name = models.CharField(max_length=150, verbose_name=_('Apellido'))
     passport_id = models.CharField(
         max_length=100, verbose_name=_('Cédula /Pasaporte'))

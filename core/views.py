@@ -81,6 +81,38 @@ class AccreditationListView(APIView):
 
         return paginated_response
 
+    def filter_queryset(self, querysets, request):
+
+        filtered_querysets = {}
+        country = request.query_params.get('country', None)
+        status = request.query_params.get('status', None)
+        type = request.query_params.get('type', None)
+
+        for key, queryset in querysets.items():
+
+            if type is not None:
+
+                if type == AccreditationItem.NATIONAL.value:
+                    queryset = [
+                        item for item in queryset if item.get('type', None) == AccreditationItem.NATIONAL.value]
+                elif type == AccreditationItem.INTERNATIONAL.value:
+                    queryset = [
+                        item for item in queryset if item.get('type', None) == AccreditationItem.INTERNATIONAL.value]
+                else:
+                    if key == type:
+                        queryset = queryset
+                    else:
+                        queryset = []
+
+            if status is not None:
+                filter_dict = [
+                    item for item in queryset if item['status'] == status]
+                filtered_querysets[key] = filter_dict
+            else:
+                filtered_querysets[key] = queryset
+
+        return filtered_querysets
+
     def has_admin_group(self):
         admin_groups = Group.objects.exclude(
             name='User').values_list('id', flat=True)
@@ -191,6 +223,7 @@ class AccreditationListView(APIView):
         return serializer.data
 
     def get(self, request):
+
         querysets = {
             'accreditations': self.get_accreditations(),
             'generalVehicles': self.get_general_vehicles(),
@@ -200,7 +233,8 @@ class AccreditationListView(APIView):
             'securities': self.get_securities(),
         }
 
-        pagination_querysets = self.paginate_querysets(querysets, request)
+        filtered_data = self.filter_queryset(querysets, request)
+        pagination_querysets = self.paginate_querysets(filtered_data, request)
 
         return Response(pagination_querysets)
 
