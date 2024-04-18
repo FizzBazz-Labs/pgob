@@ -86,25 +86,29 @@ class AccreditationListView(APIView):
         filtered_querysets = {}
         country = request.query_params.get('country', None)
         status = request.query_params.get('status', None)
-        type = request.query_params.get('type', None)
+        accreditation_type = request.query_params.get('type', None)
+
+        print(accreditation_type, 'tipo a ver', status, country)
+        print(accreditation_type == "''", 'type')
+        print(accreditation_type == '')
 
         for key, queryset in querysets.items():
 
-            if type is not None:
+            if accreditation_type is not None and accreditation_type != "''" and accreditation_type != '':
 
-                if type == AccreditationItem.NATIONAL.value:
+                if accreditation_type == AccreditationItem.NATIONAL.value:
                     queryset = [
                         item for item in queryset if item.get('type', None) == AccreditationItem.NATIONAL.value]
-                elif type == AccreditationItem.INTERNATIONAL.value:
+                elif accreditation_type == AccreditationItem.INTERNATIONAL.value:
                     queryset = [
                         item for item in queryset if item.get('type', None) == AccreditationItem.INTERNATIONAL.value]
                 else:
-                    if key == type:
+                    if key == accreditation_type:
                         queryset = queryset
                     else:
                         queryset = []
 
-            if status is not None:
+            if status is not None and status != "''" and status != '':
                 filter_dict = [
                     item for item in queryset if item['status'] == status]
                 filtered_querysets[key] = filter_dict
