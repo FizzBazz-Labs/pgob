@@ -1,22 +1,21 @@
-FROM python:3.12-alpine
+FROM python:3.12-bullseye
 
-RUN apk add --no-cache --update unixodbc-dev \
-    gcc \
-    unixodbc \
-    musl-dev \
-    libffi-dev \
-    g++ \
-    build-base \
-    mariadb-dev \
-    jpeg-dev \
-    zlib-dev \
-    freetype-dev \
-    lcms2-dev \
-    openjpeg-dev \
-    tiff-dev \
-    tk-dev \
-    tcl-dev \
-    libpq-dev
+
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y \
+  wkhtmltopdf \
+  libmemcached-dev \
+  build-essential \
+  libsqlite3-mod-spatialite binutils libproj-dev gdal-bin libgdal28 libgeoip1 \
+  default-libmysqlclient-dev default-mysql-client \
+  libpq-dev \
+  unzip libaio1 \
+  libenchant-2-2 \
+  gettext \
+  wget \
+  git \
+  pkg-config \
+  && apt-get clean
 
 RUN pip install --upgrade pip
 RUN pip install psycopg2
