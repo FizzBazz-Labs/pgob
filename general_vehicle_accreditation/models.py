@@ -33,6 +33,7 @@ class GeneralVehicleAccreditation(models.Model):
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='general_vehicles_reviewed_set')
+
     reviewed_comment = models.TextField(blank=True)
 
     authorized_by = models.ForeignKey(

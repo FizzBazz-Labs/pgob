@@ -83,7 +83,10 @@ class GenerateCredential(APIView):
         return qr_buffer
 
     def set_uuid(self, instance, pk):
-        instance.uuid = uuid.uuid4()
+        new_uuid = str(uuid.uuid4())
+        new_uuid = new_uuid.split('-')[0]
+
+        instance.uuid = new_uuid
         instance.downloaded = True
         instance.save()
 

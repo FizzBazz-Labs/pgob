@@ -13,7 +13,8 @@ from positions.serializers import PositionSerializer, SubPositionSerializer
 
 
 class InternationalAccreditationSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
 
     allergies = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Allergy.objects.all())
@@ -37,6 +38,7 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'media_channel',
             'authorization_letter',
             'institution',
+            'authorized_comment',
             'address',
             'phone_number',
             'phone_number_2',
@@ -83,6 +85,17 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'uuid': {'read_only': True},
         }
 
+    def validate(self, data):
+        passport_id = data.get('passport_id')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+
+        if InternationalAccreditation.objects.filter(passport_id=passport_id, first_name=first_name, last_name=last_name).exists():
+            raise serializers.ValidationError(
+                {'error': 'There is already an accreditation with this passport id, first name or last name.'})
+
+        return data
+
     def create(self, validated_data):
         allergies_data = validated_data.pop('allergies', [])
         immunizations_data = validated_data.pop('immunizations', [])
@@ -98,7 +111,8 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
 
 
 class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
 
     class Meta:
         model = InternationalAccreditation
@@ -113,6 +127,7 @@ class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
             'position',
             'sub_position',
             'media_channel',
+            'authorized_comment',
             'authorization_letter',
             'institution',
             'address',

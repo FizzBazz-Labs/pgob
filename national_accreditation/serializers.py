@@ -22,6 +22,17 @@ class NationalSerializer(serializers.ModelSerializer):
     medicals = serializers.PrimaryKeyRelatedField(
         many=True, queryset=MedicalHistory.objects.all())
 
+    def validate(self, data):
+        passport_id = data.get('passport_id')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+
+        if NationalAccreditation.objects.filter(passport_id=passport_id, first_name=first_name, last_name=last_name).exists():
+            raise serializers.ValidationError(
+                {'error': 'There is already an accreditation with this passport id, first name or last name.'})
+
+        return data
+
     class Meta:
         model = NationalAccreditation
         fields = [
@@ -31,6 +42,7 @@ class NationalSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'position',
+            'authorized_comment',
             'private_insurance',
             'sub_position',
             'media_channel',

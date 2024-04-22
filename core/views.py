@@ -50,6 +50,7 @@ class SiteConfigurationView(RetrieveUpdateAPIView):
 
 class StandardPagination(PageNumberPagination):
     page_size = 10
+    page_size_query_param = 'page_size'
     # max_page_size = 1000
 
 
@@ -87,10 +88,7 @@ class AccreditationListView(APIView):
         country = request.query_params.get('country', None)
         status = request.query_params.get('status', None)
         accreditation_type = request.query_params.get('type', None)
-
-        print(accreditation_type, 'tipo a ver', status, country)
-        print(accreditation_type == "''", 'type')
-        print(accreditation_type == '')
+        print(accreditation_type)
 
         for key, queryset in querysets.items():
 
@@ -100,6 +98,7 @@ class AccreditationListView(APIView):
                     queryset = [
                         item for item in queryset if item.get('type', None) == AccreditationItem.NATIONAL.value]
                 elif accreditation_type == AccreditationItem.INTERNATIONAL.value:
+                    print(accreditation_type)
                     queryset = [
                         item for item in queryset if item.get('type', None) == AccreditationItem.INTERNATIONAL.value]
                 else:
