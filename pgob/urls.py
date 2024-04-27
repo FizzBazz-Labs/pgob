@@ -48,9 +48,12 @@ urlpatterns = [
     path('api/v1/', include('positions.urls')),
     path('api/v1/', include('profiles.urls')),
     path('api/v1/', include('credentials.urls')),
+
+    path('api/v1/housing', include('housing.urls')),
+    path('api/v1/commerce/', include('commerce.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
 
 urlpatterns = urlpatterns + \
-    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+              static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

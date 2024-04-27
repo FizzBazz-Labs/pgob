@@ -67,6 +67,8 @@ INSTALLED_APPS = [
     'medical_histories.apps.MedicalHistoriesConfig',
     'notifications.apps.NotificationsConfig',
     'credentials.apps.CredentialsConfig',
+    'housing.apps.HousingConfig',
+    'commerce.apps.CommerceConfig',
 ]
 
 MIDDLEWARE = [
