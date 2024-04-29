@@ -1,7 +1,9 @@
 from enum import Enum
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group
 
+from rest_framework import decorators, status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,6 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
+from rest_framework.viewsets import ModelViewSet
 
 from core.models import SiteConfiguration, AccreditationStatus
 from core.serializers import SiteConfigurationSerializer, AccreditationsSerializer
@@ -260,3 +263,59 @@ class ReviewAccreditationBase(APIView):
 
         except self.model.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
+
+
+class AccreditationViewSet(ModelViewSet):
+    def get_permissions(self):
+        match self.action:
+            case 'retrieve':
+                permissions = [AllowAny]
+
+            case _:
+                permissions = [IsAuthenticated]
+
+        return [permission() for permission in permissions]
+
+    @decorators.action(detail=True, methods=['patch'])
+    def approve(self, request, pk: None, *args, **kwargs):
+        try:
+            item = self.get_queryset().get(pk=pk)
+            item.status = AccreditationStatus.APPROVED
+            item.authorized_by = request.user
+            item.authorized_comment = request.data.get('authorized_comment')
+            item.save()
+
+            serializer = self.get_serializer_class(item)
+            return Response(serializer.data, status=HTTP_200_OK)
+
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    @decorators.action(detail=True, methods=['patch'])
+    def review(self, request, pk=None, *args, **kwargs):
+        try:
+            item = self.get_queryset().get(pk=pk)
+            item.status = AccreditationStatus.REVIEWED
+            item.reviewed_by = request.user
+            item.reviewed_comment = request.data.get('reviewed_comment')
+            item.save()
+
+            serializer = self.get_serializer_class(item)
+            return Response(serializer.data, status=HTTP_200_OK)
+
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    @decorators.action(detail=True, methods=['patch'])
+    def reject(self, request, pk=None, *args, **kwargs):
+        try:
+            item = self.get_queryset().get(pk=pk)
+            item.status = AccreditationStatus.REJECTED
+            item.rejected_by = request.user
+            item.save()
+
+            serializer = self.get_serializer_class(item)
+            return Response(serializer.data, status=HTTP_200_OK)
+
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)

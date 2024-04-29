@@ -1,16 +1,9 @@
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from core.views import AccreditationViewSet
 
 from housing.models import Housing
 from housing.serializers import HousingSerializer
 
 
-class HousingViewSet(ModelViewSet):
+class HousingViewSet(AccreditationViewSet):
     queryset = Housing.objects.all()
     serializer_class = HousingSerializer
-
-    def get_permissions(self):
-        if self.action == 'retrieve':
-            return [AllowAny()]
-
-        return [IsAuthenticated()]
