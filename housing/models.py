@@ -78,3 +78,6 @@ class Housing(models.Model):
 
     uuid = models.TextField(blank=True)
     qr_code = models.ImageField(upload_to=qr_filename, blank=True)
+
+    class Meta:
+        ordering = ['-updated_at']
