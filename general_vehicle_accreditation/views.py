@@ -6,13 +6,25 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
+from general_vehicle_accreditation.models import GeneralVehicleAccreditation as GeneralVehicle
 from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer, \
     GeneralVehicleAccreditationReadSerializer
 
 from core.models import AccreditationStatus
-from core.views import ReviewAccreditationBase
+from core.views import ReviewAccreditationBase, AccreditationViewSet
 
 from pgob_auth.permissions import IsReviewer, IsAccreditor
+
+
+class GeneralVehicleViewSet(AccreditationViewSet):
+    queryset = GeneralVehicle.objects.all()
+    filterset_fields = ['status', 'country']
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return GeneralVehicleAccreditationReadSerializer
+
+        return GeneralVehicleAccreditationSerializer
 
 
 class GeneralVehicleAccreditationListApiView(ListCreateAPIView):

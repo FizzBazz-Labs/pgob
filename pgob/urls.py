@@ -1,10 +1,24 @@
-import rest_framework_simplejwt.views as jwt_views
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf import settings
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+from rest_framework.routers import DefaultRouter
+
+import rest_framework_simplejwt.views as jwt_views
+
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+from housing.views import HousingViewSet
+from commerce.views import CommerceViewSet
+from general_vehicle_accreditation.views import GeneralVehicleViewSet
+
+router = DefaultRouter()
+
+router.register(r'housings', HousingViewSet)
+router.register(r'commerces', CommerceViewSet)
+router.register(r'general-vehicles', GeneralVehicleViewSet)
 
 urlpatterns = [
     path('api/v1/', include('core.urls')),
@@ -49,8 +63,7 @@ urlpatterns = [
     path('api/v1/', include('profiles.urls')),
     path('api/v1/', include('credentials.urls')),
 
-    path('api/v1/housing', include('housing.urls')),
-    path('api/v1/commerce/', include('commerce.urls')),
+    path('api/v1/', include(router.urls))
 ]
 
 urlpatterns += staticfiles_urlpatterns()

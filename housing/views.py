@@ -7,3 +7,4 @@ from housing.serializers import HousingSerializer
 class HousingViewSet(AccreditationViewSet):
     queryset = Housing.objects.all()
     serializer_class = HousingSerializer
+    filterset_fields = ['status', 'country']
