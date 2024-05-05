@@ -285,6 +285,10 @@ class AccreditationViewSet(ModelViewSet):
             item.status = AccreditationStatus.APPROVED
             item.authorized_by = request.user
             item.authorized_comment = request.data.get('authorized_comment')
+
+            if 'type' in request.data:
+                item.type = request.data.get('type')
+
             item.save()
 
             serializer = self.get_serializer_class(item)
