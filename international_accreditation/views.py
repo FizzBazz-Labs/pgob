@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
@@ -7,6 +9,7 @@ from rest_framework.views import APIView
 
 from core.models import AccreditationStatus
 from core.views import ReviewAccreditationBase
+from core.views import AccreditationViewSet
 
 from international_accreditation.models import InternationalAccreditation
 from international_accreditation.serializers import (
@@ -14,7 +17,24 @@ from international_accreditation.serializers import (
     InternationalAccreditationReadSerializer,
     InternationalAccreditationUpdateSerializer)
 
-from pgob_auth.permissions import IsReviewer, IsAccreditor
+from pgob_auth.permissions import IsReviewer, IsAccreditor, IsNewsletters
+
+
+class InternationalViewSet(AccreditationViewSet):
+    serializer_class = InternationalAccreditationSerializer
+    filterset_fields = ['status', 'country']
+
+    def get_queryset(self):
+        is_newsletters = IsNewsletters().has_permission(self.request, self)
+        if not is_newsletters:
+            return InternationalAccreditation.objects.all()
+
+        choices = InternationalAccreditation.AccreditationType
+
+        return InternationalAccreditation.objects.filter(
+            Q(type=choices.OFFICIAL_NEWSLETTER) |
+            Q(type=choices.COMMERCIAL_NEWSLETTER)
+        )
 
 
 class InternationalListCreateApiView(ListCreateAPIView):

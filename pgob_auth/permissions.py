@@ -21,6 +21,11 @@ class IsUser(permissions.BasePermission):
         return request.user.groups.filter(name='User').exists()
 
 
+class IsNewsletters(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.groups.filter(name='Newsletters').exists()
+
+
 class HasNational(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.accreditations.filter(name='National').exists()

@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
@@ -6,12 +8,29 @@ from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 
 from core.models import AccreditationStatus
-from core.views import ReviewAccreditationBase
+from core.views import ReviewAccreditationBase, AccreditationViewSet
 
 from national_accreditation.models import NationalAccreditation
 from national_accreditation.serializers import NationalSerializer, NationalReadSerializer, NationalUpdateSerializer
 
-from pgob_auth.permissions import IsReviewer, IsAccreditor
+from pgob_auth.permissions import IsReviewer, IsAccreditor, IsNewsletters
+
+
+class NationalViewSet(AccreditationViewSet):
+    serializer_class = NationalSerializer
+    filterset_fields = ['status', 'country']
+
+    def get_queryset(self):
+        is_newsletters = IsNewsletters().has_permission(self.request, self)
+        if not is_newsletters:
+            return NationalAccreditation.objects.all()
+
+        choices = NationalAccreditation.AccreditationType
+
+        return NationalAccreditation.objects.filter(
+            Q(type=choices.NEWSLETTER_COMMITTEE) |
+            Q(type=choices.COMMERCIAL_NEWSLETTER)
+        )
 
 
 class NationalListCreateApiView(ListCreateAPIView):
