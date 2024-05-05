@@ -9,9 +9,15 @@ from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
 from intercom_equipment_declaration.serializers import IntercomEquipmentDeclarationSerializer
 
 from core.models import AccreditationStatus
-from core.views import ReviewAccreditationBase
+from core.views import ReviewAccreditationBase, AccreditationViewSet
 
 from pgob_auth.permissions import IsReviewer, IsAccreditor
+
+
+class IntercomEquipmentDeclarationViewSet(AccreditationViewSet):
+    queryset = IntercomEquipmentDeclaration.objects.all()
+    serializer_class = IntercomEquipmentDeclarationSerializer
+    filterset_fields = ['status', 'country']
 
 
 class IntercomEquipmentDeclarationListApiView(ListCreateAPIView):

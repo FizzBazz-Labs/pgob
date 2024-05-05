@@ -43,8 +43,14 @@ class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
             # 'signature',
             'created_by',
             'status',
-
         ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        representation['created_by'] = UserSerializer(instance.created_by).data
+
+        return representation
 
 
 class OverflightNonCommercialAircraftReadSerializer(OverflightNonCommercialAircraftSerializer):

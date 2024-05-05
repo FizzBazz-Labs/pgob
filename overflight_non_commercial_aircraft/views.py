@@ -2,6 +2,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.request import Request
 from rest_framework.views import APIView
+from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
@@ -11,8 +14,23 @@ from overflight_non_commercial_aircraft.serializers import OverflightNonCommerci
     OverflightNonCommercialAircraftReadSerializer
 
 from core.models import AccreditationStatus
+from core.views import ReviewAccreditationBase, AccreditationViewSet
 
 from pgob_auth.permissions import IsReviewer, IsAccreditor
+
+
+class OverflightNonCommercialAircraftViewSet(AccreditationViewSet):
+    queryset = OverflightNonCommercialAircraft.objects.all()
+    filterset_fields = ['status', 'country']
+    filter_backends = [SearchFilter, DjangoFilterBackend]
+    # search_fields = ['created_by__firstname']
+    # se
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return OverflightNonCommercialAircraftReadSerializer
+
+        return OverflightNonCommercialAircraftSerializer
 
 
 class OverflightNonCommercialAircraftCreateApiView(ListCreateAPIView):

@@ -9,9 +9,15 @@ from security_accreditations.models import SecurityWeaponAccreditation
 from security_accreditations.serializers import SecurityWeaponAccreditationSerializer
 
 from core.models import AccreditationStatus
-from core.views import ReviewAccreditationBase
+from core.views import ReviewAccreditationBase, AccreditationViewSet
 
 from pgob_auth.permissions import IsReviewer, IsAccreditor
+
+
+class SecurityWeaponViewSet(AccreditationViewSet):
+    queryset = SecurityWeaponAccreditation.objects.all()
+    serializer_class = SecurityWeaponAccreditationSerializer
+    filterset_fields = ['status', 'country']
 
 
 class SecurityWeaponAccreditationCreateApiView(ListCreateAPIView):

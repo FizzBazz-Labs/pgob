@@ -11,7 +11,8 @@ from core.serializers import UserSerializer
 
 
 class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
     equipments = EquipmentSerializer(many=True)
 
     class Meta:
@@ -58,7 +59,7 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
-        representation['country'] = CountrySerializer(instance.country).data
+        # representation['country'] = CountrySerializer(instance.country).data
         representation['created_by'] = UserSerializer(instance.created_by).data
 
         return representation

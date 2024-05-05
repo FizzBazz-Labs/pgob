@@ -93,3 +93,7 @@ class OverflightNonCommercialAircraft(models.Model):
 
     def __str__(self):
         return f'{self.country} - {self.arrival_date} - {self.aircraft_type} - {self.position.name}'
+
+    @property
+    def fullname(self):
+        return f'{self.created_by.firstname} {self.created_by.lastname}'.lower()

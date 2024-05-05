@@ -6,7 +6,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 from rest_framework.permissions import IsAuthenticated
 
 from core.models import AccreditationStatus
-from core.views import ReviewAccreditationBase
+from core.views import ReviewAccreditationBase, AccreditationViewSet
 
 from pgob_auth.permissions import IsAccreditor, IsReviewer
 
@@ -14,6 +14,17 @@ from vehicle_access_airport_accreditations.models import VehicleAccessAirportAcc
 from vehicle_access_airport_accreditations.serializers import (
     VehicleAccessAirportAccreditationsSerializer,
     VehicleAccessAirportAccreditationsReadSerializer)
+
+
+class AirportVehicleAccessViewSet(AccreditationViewSet):
+    queryset = VehicleAccessAirportAccreditations.objects.all()
+    filterset_fields = ['status', 'country']
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return VehicleAccessAirportAccreditationsReadSerializer
+
+        return VehicleAccessAirportAccreditationsSerializer
 
 
 class VehicleAccessAirportAccreditationsListCreateApiView(ListCreateAPIView):
