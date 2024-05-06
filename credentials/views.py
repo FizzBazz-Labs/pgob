@@ -179,7 +179,8 @@ class TestWeaponAccreditation(TemplateView):
         return context
 
 
-from PIL import Image, ImageDraw
+import qrcode
+from PIL import Image, ImageDraw, ImageFont
 
 from django.conf import settings
 
@@ -187,18 +188,93 @@ from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from national_accreditation.models import NationalAccreditation as National
+
 
 class GenerateAccreditationView(APIView):
     def get(self, request: Request, *args, **kwargs) -> Response:
-        path = settings.BASE_DIR / 'credentials' / 'static' / 'credentials' / 'images'
+        item: National = National.objects.first()
 
-        image = Image.open(path / 'credentials.jpeg')
+        path = settings.BASE_DIR / 'credentials' / 'static' / 'credentials'
 
-        draw = ImageDraw.Draw(image)
-        draw.text((10, 10), 'Hello World', fill='black')
+        image = Image.open(path / 'base.png')
+        image_draw = ImageDraw.Draw(image)
 
-        image.save(path / 'credentials_edited.jpeg')
+        # Draw title
+        title = u'Javier Ordoñez'
+        title_font = ImageFont.load_default(30)
+        image_draw.text(
+            ((image.width - image_draw.textlength(title, title_font)) / 2, 165),
+            title,
+            fill='#002757',
+            font=title_font,
+            stroke_width=1,
+            stroke_fill='#002757'
+        )
 
+        # Draw text
+        date = u'1 de julio de 2024'
+        date_font = ImageFont.load_default(20)
+        image_draw.text(
+            ((image.width - image_draw.textlength(date, date_font)) / 2, 235),
+            date,
+            fill='#002757',
+            font=date_font,
+            stroke_width=1,
+            stroke_fill='#002757'
+        )
+
+        # Draw Profile
+        profile_image = Image.open(item.image)
+        profile_image = profile_image.resize((280, 280))
+        image.paste(profile_image, (
+            int((image.width - 280) / 2),
+            280,
+        ))
+
+        profile_fullname = f'{item.first_name} {item.last_name}'
+        profile_fullname_font = ImageFont.load_default(45)
+        profile_fullname_position = image.width - image_draw.textlength(profile_fullname, profile_fullname_font)
+        image_draw.text(
+            (profile_fullname_position / 2, 580),
+            profile_fullname,
+            fill='#002757',
+            font=profile_fullname_font,
+            stroke_width=1,
+            stroke_fill='#002757'
+        )
+
+        # Draw QR code
+        qr_code = qrcode.make('Hello World!')
+        qr_buffer = BytesIO()
+        qr_code.save(qr_buffer, format='PNG')
+        qr_buffer.seek(0)
+
+        qr_code_image = Image.open(qr_buffer)
+        qr_code_image = qr_code_image.resize((175, 175))
+
+        image.paste(qr_code_image, (
+            int((image.width - 175) / 2),
+            780,
+        ))
+
+        # Draw type box and title
+        type_box = Image.new('RGBA', (image.width - 29, 100), "black")
+        type_box_draw = ImageDraw.Draw(type_box)
+        type_title = u'ACREDITACIÓN DE SEGURIDAD'
+        type_title_font = ImageFont.load_default(30)
+        type_title_with = type_box.width - type_box_draw.textlength(type_title, type_title_font)
+
+        type_box_draw.text(
+            (type_title_with / 2, 30),
+            type_title,
+            fill='white',
+            font=type_title_font,
+        )
+
+        image.paste(type_box, (19, image.height - 118))
+
+        image.save(path / 'edited.png')
         return Response(status=status.HTTP_202_ACCEPTED)
 
 # Save to mission folder
