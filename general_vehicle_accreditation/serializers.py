@@ -17,7 +17,7 @@ class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
         required=False, read_only=True)
 
     country = serializers.PrimaryKeyRelatedField(
-        queryset=Country.objects.all())
+        queryset=Country.objects.all(), default=Country.objects.get(name='Panamá').pk)
 
     fullname = serializers.SerializerMethodField()
 
@@ -47,7 +47,7 @@ class GeneralVehicleAccreditationSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['created_by'] = UserSerializer(instance.created_by).data
-        representation['accreditation_type'] = instance.get_accreditation_type_display()
+        # representation['accreditation_type'] = instance.get_accreditation_type_display()
 
         return representation
 

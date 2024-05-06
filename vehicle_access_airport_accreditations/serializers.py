@@ -56,8 +56,6 @@ class VehicleAccessAirportAccreditationsSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-
-        representation['country'] = instance.country.name if instance.country else None
         representation['created_by'] = UserSerializer(instance.created_by).data
         return representation
 

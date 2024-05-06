@@ -6,6 +6,8 @@ from allergies.models import Allergy
 
 from allergies.serializers import AllergySerializer
 
+
 class AllergiesListApiView(ListAPIView):
     queryset = Allergy.objects.all()
     serializer_class = AllergySerializer
+    pagination_class = None

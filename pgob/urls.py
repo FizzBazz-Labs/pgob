@@ -23,7 +23,7 @@ router = DefaultRouter()
 router.register(r'housings', HousingViewSet)
 router.register(r'commerces', CommerceViewSet)
 router.register(r'general-vehicles', GeneralVehicleViewSet)
-router.register(r'overflight-non-commercial-aircrafts',
+router.register(r'aircrafts',
                 OverflightNonCommercialAircraftViewSet)
 router.register(r'airport-vehicle-access', AirportVehicleAccessViewSet)
 router.register(r'intercommunication-equipments',
@@ -51,18 +51,7 @@ urlpatterns = [
     path('api/v1/', include('core.urls')),
     path("api/v1/national-accreditations/",
          include("national_accreditation.urls")),
-    path('api/v1/overflight-non-commercial-aircraft/',
-         include('overflight_non_commercial_aircraft.urls')),
-    path('api/v1/international-accreditations/',
-         include('international_accreditation.urls')),
-    path('api/v1/security-weapon-accreditation/',
-         include('security_accreditations.urls')),
-    path('api/v1/vehicle-access-airport-accreditations/',
-         include('vehicle_access_airport_accreditations.urls')),
-    path('api/v1/intercom-equipment-declaration/',
-         include('intercom_equipment_declaration.urls')),
-    path('api/v1/general-vehicle-accreditation/',
-         include('general_vehicle_accreditation.urls')),
+
     path('api/v1/', include('vehicles.urls')),
     path('api/v1/', include('allergies.urls')),
     path('api/v1/', include('countries.urls')),

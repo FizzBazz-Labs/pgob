@@ -59,7 +59,7 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
-        # representation['country'] = CountrySerializer(instance.country).data
+        representation['country'] = CountrySerializer(instance.country).data
         representation['created_by'] = UserSerializer(instance.created_by).data
 
         return representation
