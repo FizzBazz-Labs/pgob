@@ -9,7 +9,8 @@ python manage.py dumpdata core -o fixtures/db/core.json
 ## Load Data
 
 ```bash
-python manage.py loaddata fixtures/db/core.json & \
+python manage.py loaddata fixtures/db/groups.json & \
+python manage.py loaddata fixtures/db/accreditations.json & \
 python manage.py loaddata fixtures/db/allergies.json & \
 python manage.py loaddata fixtures/db/countries.json & \
 python manage.py loaddata fixtures/db/immunizations.json & \
