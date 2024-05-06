@@ -15,19 +15,22 @@ from national_accreditation.serializers import NationalSerializer, NationalReadS
 
 from pgob_auth.permissions import IsReviewer, IsAccreditor, IsNewsletters
 
+from .models import NationalAccreditation as National
+
 
 class NationalViewSet(AccreditationViewSet):
+    queryset = National.objects.all()
     serializer_class = NationalSerializer
-    filterset_fields = ['status', 'country']
+    filterset_fields = ['status', 'country', 'downloaded']
 
     def get_queryset(self):
         is_newsletters = IsNewsletters().has_permission(self.request, self)
         if not is_newsletters:
-            return NationalAccreditation.objects.all()
+            return National.objects.all()
 
-        choices = NationalAccreditation.AccreditationType
+        choices = National.AccreditationType
 
-        return NationalAccreditation.objects.filter(
+        return National.objects.filter(
             Q(type=choices.NEWSLETTER_COMMITTEE) |
             Q(type=choices.COMMERCIAL_NEWSLETTER)
         )

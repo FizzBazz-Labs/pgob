@@ -4,31 +4,11 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-from rest_framework.routers import DefaultRouter
-
 import rest_framework_simplejwt.views as jwt_views
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-from housing.views import HousingViewSet
-from commerce.views import CommerceViewSet
-from general_vehicle_accreditation.views import GeneralVehicleViewSet
-from overflight_non_commercial_aircraft.views import OverflightNonCommercialAircraftViewSet
-from vehicle_access_airport_accreditations.views import AirportVehicleAccessViewSet
-from intercom_equipment_declaration.views import IntercomEquipmentDeclarationViewSet
-from security_accreditations.views import SecurityWeaponViewSet
-
-router = DefaultRouter()
-
-router.register(r'housings', HousingViewSet)
-router.register(r'commerces', CommerceViewSet)
-router.register(r'general-vehicles', GeneralVehicleViewSet)
-router.register(r'aircrafts',
-                OverflightNonCommercialAircraftViewSet)
-router.register(r'airport-vehicle-access', AirportVehicleAccessViewSet)
-router.register(r'intercommunication-equipments',
-                IntercomEquipmentDeclarationViewSet)
-router.register(r'security-weapons', SecurityWeaponViewSet)
+from pgob.router import router
 
 urlpatterns = [
     path('api/v1/', include('core.urls')),
@@ -68,4 +48,4 @@ urlpatterns = [
 urlpatterns += staticfiles_urlpatterns()
 
 urlpatterns = urlpatterns + \
-    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+              static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

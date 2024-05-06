@@ -19,19 +19,22 @@ from international_accreditation.serializers import (
 
 from pgob_auth.permissions import IsReviewer, IsAccreditor, IsNewsletters
 
+from .models import InternationalAccreditation as International
+
 
 class InternationalViewSet(AccreditationViewSet):
+    queryset = International.objects.all()
     serializer_class = InternationalAccreditationSerializer
-    filterset_fields = ['status', 'country']
+    filterset_fields = ['status', 'country', 'downloaded']
 
     def get_queryset(self):
         is_newsletters = IsNewsletters().has_permission(self.request, self)
         if not is_newsletters:
-            return InternationalAccreditation.objects.all()
+            return International.objects.all()
 
-        choices = InternationalAccreditation.AccreditationType
+        choices = International.AccreditationType
 
-        return InternationalAccreditation.objects.filter(
+        return International.objects.filter(
             Q(type=choices.OFFICIAL_NEWSLETTER) |
             Q(type=choices.COMMERCIAL_NEWSLETTER)
         )
