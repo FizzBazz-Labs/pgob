@@ -20,6 +20,10 @@ class SiteConfiguration(models.Model):
     unavailable_color = models.CharField(max_length=15, blank=True, default='#000000')
     unavailable_background = models.ImageField(upload_to='site/backgrounds', null=True, blank=True)
 
+    # President
+    president = models.CharField(max_length=255, default='Nombre del Presidente/a')
+    term_date = models.DateField(default='2024-12-31')
+
     def __str__(self) -> str:
         return self.name
 
@@ -36,3 +40,35 @@ class Accreditation(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+
+class Certification(models.Model):
+    class AccreditationType(models.TextChoices):
+        GENERAL_COORDINATION = 'GENERAL_COORDINATION', _('Coordinación General')
+        PROTOCOL = 'PROTOCOL', _('Protocolo')
+        SECURITY = 'SECURITY', _('Seguridad')
+        TECHNICAL_STAFF = 'TECHNICAL_STAFF', _('Personal Técnico')
+        OFFICIAL_DELEGATION = 'OFFICIAL_DELEGATION', _('Delegación Oficial')
+        LINK = 'LINK', _('Enlace')
+        SUPPLIER = 'SUPPLIER', _('Proveedor')
+        NEWSLETTER_COMMITTEE = 'NEWSLETTER_COMMITTEE', _('Comisión de Prensa')
+        COMMERCIAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Comercial')
+        OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD', _('Jefe de Delegación Oficial'),
+        SUPPORT_STAFF = 'SUPPORT_STAFF', _('Personal de Apoyo')
+        OFFICIAL_NEWSLETTER = 'OFFICIAL_NEWSLETTER', _('Prensa Oficial')
+        CREW = 'CREW', _('Tripulación')
+
+    accreditation_type = models.CharField(
+        max_length=150,
+        choices=AccreditationType.choices,
+        default=AccreditationType.GENERAL_COORDINATION)
+    color = models.CharField(max_length=150)
+    text_color = models.CharField(max_length=150, default='#FFFFFF')
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        accreditation_type = self.AccreditationType(self.accreditation_type)
+
+        return str(accreditation_type.label)

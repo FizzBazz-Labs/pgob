@@ -1,10 +1,14 @@
+import locale
 import uuid
+
+from uuid import uuid4
 from typing import Any
 from io import BytesIO
-from PIL import Image
 
 import pdfkit
 import qrcode
+
+from PIL import Image
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -12,12 +16,22 @@ from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
+from rest_framework import status
 from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
+from rest_framework.request import Request
+from rest_framework.response import Response
+
+from core.models import SiteConfiguration, Certification, AccreditationStatus
 
 from national_accreditation.models import NationalAccreditation
+from national_accreditation.models import NationalAccreditation as National
+
+from international_accreditation.models import InternationalAccreditation as International
 
 from security_accreditations.models import SecurityWeaponAccreditation
+
+from .utils import get_certification
 
 
 def get_accreditation_color(accreditation_type: str) -> dict[str, Any]:
@@ -179,108 +193,82 @@ class TestWeaponAccreditation(TemplateView):
         return context
 
 
-import qrcode
-from PIL import Image, ImageDraw, ImageFont
+class CertificateView(APIView):
+    def get(self, request: Request, accreditation: str, *args, **kwargs) -> Response:
+        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 
-from django.conf import settings
+        configuration = SiteConfiguration.objects.filter(available=True).first()
+        if not configuration:
+            return Response(
+                {"error": "Site not available."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-from rest_framework import status
-from rest_framework.request import Request
-from rest_framework.response import Response
+        match accreditation:
+            case 'nationals':
+                model = National
+            case 'internationals':
+                model = International
+            case _:
+                return Response(
+                    {"error": "Invalid accreditation type."},
+                    status=status.HTTP_400_BAD_REQUEST)
 
-from national_accreditation.models import NationalAccreditation as National
+        items = model.objects.filter(
+            status=AccreditationStatus.APPROVED,
+            downloaded=False)
 
+        country = request.query_params.get('country')
+        if country is not None:
+            items = items.filter(country=country)
 
-class GenerateAccreditationView(APIView):
-    def get(self, request: Request, *args, **kwargs) -> Response:
-        item: National = National.objects.first()
+        if not items.exists():
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         path = settings.BASE_DIR / 'credentials' / 'static' / 'credentials'
 
-        image = Image.open(path / 'base.png')
-        image_draw = ImageDraw.Draw(image)
+        for item in items:
+            try:
+                certification = Certification.objects.get(accreditation_type=item.type)
+            except Certification.DoesNotExist:
+                return Response(
+                    {"error": "Certification config not found."},
+                    status=status.HTTP_400_BAD_REQUEST)
 
-        # Draw title
-        title = u'Javier Ordoñez'
-        title_font = ImageFont.load_default(30)
-        image_draw.text(
-            ((image.width - image_draw.textlength(title, title_font)) / 2, 165),
-            title,
-            fill='#002757',
-            font=title_font,
-            stroke_width=1,
-            stroke_fill='#002757'
+            accreditation_uuid = str(uuid4()).split('-')[0].upper()
+            accreditation_type = str(Certification.AccreditationType(item.type).label)
+
+            image = get_certification({
+                'president': configuration.president,
+                'term_date': configuration.term_date.strftime('%d de %B de %Y'),
+                'accreditation': accreditation,
+                'type': accreditation_type,
+                'color': certification.color,
+                'text_color': certification.text_color,
+                'fullname': f'{item.first_name} {item.last_name}',
+                'profile': item.image,
+                'pk': item.pk,
+                'uuid': accreditation_uuid,
+            })
+
+            accreditation_type = accreditation_type.lower().replace(' ', '_')
+
+            save_path = path / accreditation / accreditation_type
+            if accreditation == 'internationals':
+                save_path /= item.country.name.lower()
+
+            if not save_path.exists():
+                save_path.mkdir(parents=True)
+
+            filename = f'{accreditation_type}_{item.first_name}_{item.last_name}'.lower()
+            image.save(save_path / f'{filename}.png')
+
+            item.uuid = accreditation_uuid
+            item.downloaded = True
+            item.save()
+
+        locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
+
+        return Response(
+            {"message": "Accepted"},
+            status=status.HTTP_202_ACCEPTED,
         )
-
-        # Draw text
-        date = u'1 de julio de 2024'
-        date_font = ImageFont.load_default(20)
-        image_draw.text(
-            ((image.width - image_draw.textlength(date, date_font)) / 2, 235),
-            date,
-            fill='#002757',
-            font=date_font,
-            stroke_width=1,
-            stroke_fill='#002757'
-        )
-
-        # Draw Profile
-        profile_image = Image.open(item.image)
-        profile_image = profile_image.resize((280, 280))
-        image.paste(profile_image, (
-            int((image.width - 280) / 2),
-            280,
-        ))
-
-        profile_fullname = f'{item.first_name} {item.last_name}'
-        profile_fullname_font = ImageFont.load_default(45)
-        profile_fullname_position = image.width - image_draw.textlength(profile_fullname, profile_fullname_font)
-        image_draw.text(
-            (profile_fullname_position / 2, 580),
-            profile_fullname,
-            fill='#002757',
-            font=profile_fullname_font,
-            stroke_width=1,
-            stroke_fill='#002757'
-        )
-
-        # Draw QR code
-        qr_code = qrcode.make('Hello World!')
-        qr_buffer = BytesIO()
-        qr_code.save(qr_buffer, format='PNG')
-        qr_buffer.seek(0)
-
-        qr_code_image = Image.open(qr_buffer)
-        qr_code_image = qr_code_image.resize((175, 175))
-
-        image.paste(qr_code_image, (
-            int((image.width - 175) / 2),
-            780,
-        ))
-
-        # Draw type box and title
-        type_box = Image.new('RGBA', (image.width - 29, 100), "black")
-        type_box_draw = ImageDraw.Draw(type_box)
-        type_title = u'ACREDITACIÓN DE SEGURIDAD'
-        type_title_font = ImageFont.load_default(30)
-        type_title_with = type_box.width - type_box_draw.textlength(type_title, type_title_font)
-
-        type_box_draw.text(
-            (type_title_with / 2, 30),
-            type_title,
-            fill='white',
-            font=type_title_font,
-        )
-
-        image.paste(type_box, (19, image.height - 118))
-
-        image.save(path / 'edited.png')
-        return Response(status=status.HTTP_202_ACCEPTED)
-
-# Save to mission folder
-
-# Add menu action to generate accreditation
-# Show modal and options
-# Generate accreditation
-
-# Add re-accreditate button only works with Accreditator, individual
