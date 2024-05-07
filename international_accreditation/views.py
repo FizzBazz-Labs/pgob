@@ -25,7 +25,7 @@ from .models import InternationalAccreditation as International
 class InternationalViewSet(AccreditationViewSet):
     queryset = International.objects.all()
     serializer_class = InternationalAccreditationSerializer
-    filterset_fields = ['status', 'country', 'downloaded']
+    filterset_fields = ['status', 'country', 'certificated']
 
     def get_queryset(self):
         is_newsletters = IsNewsletters().has_permission(self.request, self)

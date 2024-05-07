@@ -122,7 +122,6 @@ class NationalAccreditation(models.Model):
         related_name='national_reviewed_set')
     reviewed_comment = models.TextField(blank=True)
 
-    downloaded = models.BooleanField(default=False)
     authorized_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
@@ -150,7 +149,9 @@ class NationalAccreditation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     uuid = models.TextField(blank=True)
-    qr_code = models.ImageField(upload_to=qr_filename, blank=True)
+
+    certificated = models.BooleanField(default=False)
+    certification = models.ImageField(upload_to=qr_filename, blank=True)
 
     def __str__(self):
         return f'Acreditación | {self.first_name} {self.last_name}'

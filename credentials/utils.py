@@ -1,3 +1,5 @@
+import locale
+from uuid import uuid4
 from typing import Any
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
@@ -5,6 +7,36 @@ from PIL import Image, ImageDraw, ImageFont
 import qrcode
 
 from django.conf import settings
+
+from core.models import SiteConfiguration, Certification
+
+from national_accreditation.models import NationalAccreditation as National
+from international_accreditation.models import InternationalAccreditation as International
+
+
+def get_certification_data(
+    configuration: SiteConfiguration,
+    certification: Certification,
+    accreditation: str,
+    item: National | International,
+) -> dict[str, Any]:
+    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+
+    accreditation_uuid = str(uuid4()).split('-')[0].upper()
+    accreditation_type = str(Certification.AccreditationType(item.type).label)
+
+    return {
+        'president': configuration.president,
+        'term_date': configuration.term_date.strftime('%d de %B de %Y'),
+        'accreditation': accreditation,
+        'type': accreditation_type,
+        'color': certification.color,
+        'text_color': certification.text_color,
+        'fullname': f'{item.first_name} {item.last_name}',
+        'profile': item.image,
+        'pk': item.pk,
+        'uuid': accreditation_uuid,
+    }
 
 
 def get_certification(data: dict[str, Any]) -> Image:
@@ -89,3 +121,39 @@ def get_certification(data: dict[str, Any]) -> Image:
     image.paste(type_box, (19, image.height - 118))
 
     return image
+
+
+def certificate_accreditation(
+    configuration: SiteConfiguration,
+    accreditation: str,
+    item: National | International,
+):
+    certification = Certification.objects.get(accreditation_type=item.type)
+
+    data = get_certification_data(configuration, certification, accreditation, item)
+    image = get_certification(data)
+
+    save_path = (
+        settings.BASE_DIR /
+        'certifications' /
+        accreditation /
+        str(data['type']).replace(' ', '_').lower() /
+        (item.country.name.lower() if accreditation == 'international' else '')
+    )
+
+    if not save_path.exists():
+        save_path.mkdir(parents=True)
+
+    filename = f'{data['type']} {data['fullname']}.png'.replace(' ', '_').lower()
+    image.save(save_path / filename)
+
+    item.uuid = data['uuid']
+    item.certificated = True
+
+    image_bytes = BytesIO()
+    image.save(image_bytes, format='PNG')
+    image_bytes.seek(0)
+
+    item.certification.save(filename, image_bytes, save=False)
+
+    item.save()

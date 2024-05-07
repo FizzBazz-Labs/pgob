@@ -1,7 +1,5 @@
-import locale
 import uuid
 
-from uuid import uuid4
 from typing import Any
 from io import BytesIO
 
@@ -31,7 +29,7 @@ from international_accreditation.models import InternationalAccreditation as Int
 
 from security_accreditations.models import SecurityWeaponAccreditation
 
-from .utils import get_certification
+from .utils import certificate_accreditation
 
 
 def get_accreditation_color(accreditation_type: str) -> dict[str, Any]:
@@ -195,13 +193,12 @@ class TestWeaponAccreditation(TemplateView):
 
 class CertificateView(APIView):
     def get(self, request: Request, accreditation: str, *args, **kwargs) -> Response:
-        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
-
         configuration = SiteConfiguration.objects.filter(available=True).first()
         if not configuration:
             return Response(
                 {"error": "Site not available."},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
         match accreditation:
             case 'nationals':
@@ -215,7 +212,7 @@ class CertificateView(APIView):
 
         items = model.objects.filter(
             status=AccreditationStatus.APPROVED,
-            downloaded=False)
+            certificated=False)
 
         country = request.query_params.get('country')
         if country is not None:
@@ -224,50 +221,16 @@ class CertificateView(APIView):
         if not items.exists():
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        path = settings.BASE_DIR / 'credentials' / 'static' / 'credentials'
-
         for item in items:
             try:
-                certification = Certification.objects.get(accreditation_type=item.type)
+                certificate_accreditation(configuration, accreditation, item)
             except Certification.DoesNotExist:
                 return Response(
                     {"error": "Certification config not found."},
-                    status=status.HTTP_400_BAD_REQUEST)
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
-            accreditation_uuid = str(uuid4()).split('-')[0].upper()
-            accreditation_type = str(Certification.AccreditationType(item.type).label)
-
-            image = get_certification({
-                'president': configuration.president,
-                'term_date': configuration.term_date.strftime('%d de %B de %Y'),
-                'accreditation': accreditation,
-                'type': accreditation_type,
-                'color': certification.color,
-                'text_color': certification.text_color,
-                'fullname': f'{item.first_name} {item.last_name}',
-                'profile': item.image,
-                'pk': item.pk,
-                'uuid': accreditation_uuid,
-            })
-
-            accreditation_type = accreditation_type.lower().replace(' ', '_')
-
-            save_path = path / accreditation / accreditation_type
-            if accreditation == 'internationals':
-                save_path /= item.country.name.lower()
-
-            if not save_path.exists():
-                save_path.mkdir(parents=True)
-
-            filename = f'{accreditation_type}_{item.first_name}_{item.last_name}'.lower()
-            image.save(save_path / f'{filename}.png')
-
-            item.uuid = accreditation_uuid
-            item.downloaded = True
-            item.save()
-
-        locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
-
+        # locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
         return Response(
             {"message": "Accepted"},
             status=status.HTTP_202_ACCEPTED,

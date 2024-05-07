@@ -13,8 +13,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet
 
-from django_filters.rest_framework import DjangoFilterBackend
-
 from core.models import SiteConfiguration, AccreditationStatus
 from core.serializers import SiteConfigurationSerializer, AccreditationsSerializer
 
@@ -148,7 +146,7 @@ class AccreditationListView(APIView):
                 'first_name': item.first_name,
                 'last_name': item.last_name,
                 'status': item.status,
-                'downloaded': item.downloaded,
+                'downloaded': item.certificated,
                 'created_at': item.created_at,
                 'updated_at': item.updated_at,
                 'created_by': {
@@ -314,8 +312,10 @@ class AccreditationViewSet(ModelViewSet):
 
     @decorators.action(detail=True, methods=['patch'])
     def reject(self, request, pk=None, *args, **kwargs):
+        qs = self.get_queryset()
+
         try:
-            item = self.get_queryset().get(pk=pk)
+            item = qs.get(pk=pk)
             item.status = AccreditationStatus.REJECTED
             item.rejected_by = request.user
             item.save()
@@ -323,5 +323,5 @@ class AccreditationViewSet(ModelViewSet):
             serializer = self.get_serializer_class(item)
             return Response(serializer.data, status=HTTP_200_OK)
 
-        except ObjectDoesNotExist:
+        except qs.model.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)

@@ -27,7 +27,8 @@ class NationalSerializer(serializers.ModelSerializer):
         first_name = data.get('first_name')
         last_name = data.get('last_name')
 
-        if NationalAccreditation.objects.filter(passport_id=passport_id, first_name=first_name, last_name=last_name).exists():
+        if NationalAccreditation.objects.filter(passport_id=passport_id, first_name=first_name,
+                                                last_name=last_name).exists():
             raise serializers.ValidationError(
                 {'error': 'There is already an accreditation with this passport id, first name or last name.'})
 
@@ -74,13 +75,13 @@ class NationalSerializer(serializers.ModelSerializer):
             'status',
             'passport_id',
             'created_by',
-            'downloaded',
+            'certificated',
             'uuid',
             'reviewed_comment',
         ]
 
         extra_kwargs = {
-            'downloaded': {'read_only': True},
+            'certificated': {'read_only': True},
             'uuid': {'read_only': True},
         }
 

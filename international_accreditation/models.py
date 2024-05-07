@@ -134,7 +134,6 @@ class InternationalAccreditation(models.Model):
         related_name='international_reviewed_set')
     reviewed_comment = models.TextField(blank=True)
 
-    downloaded = models.BooleanField(default=False)
     authorized_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
@@ -162,7 +161,8 @@ class InternationalAccreditation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     uuid = models.TextField(blank=True)
-    qr_code = models.ImageField(upload_to=qr_filename, blank=True)
+    certificated = models.BooleanField(default=False)
+    certification = models.ImageField(upload_to=qr_filename, blank=True)
 
     def __str__(self):
         return f'{self.first_name} - {self.last_name} - {self.country.name}'

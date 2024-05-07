@@ -73,7 +73,7 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'type',
             'status',
             'created_by',
-            'downloaded',
+            'certificated',
             'uuid',
             'security_weapon_accreditation',
             'allergies_description',
@@ -81,7 +81,7 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
         ]
 
         extra_kwargs = {
-            'downloaded': {'read_only': True},
+            'certificated': {'read_only': True},
             'uuid': {'read_only': True},
         }
 
@@ -90,7 +90,8 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
         first_name = data.get('first_name')
         last_name = data.get('last_name')
 
-        if InternationalAccreditation.objects.filter(passport_id=passport_id, first_name=first_name, last_name=last_name).exists():
+        if InternationalAccreditation.objects.filter(passport_id=passport_id, first_name=first_name,
+                                                     last_name=last_name).exists():
             raise serializers.ValidationError(
                 {'error': 'There is already an accreditation with this passport id, first name or last name.'})
 
