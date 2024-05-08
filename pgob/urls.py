@@ -32,6 +32,9 @@ urlpatterns = [
     path("api/v1/national-accreditations/",
          include("national_accreditation.urls")),
 
+    path("api/v1/international-accreditations/",
+         include("international_accreditation.urls")),
+
     path('api/v1/', include('vehicles.urls')),
     path('api/v1/', include('allergies.urls')),
     path('api/v1/', include('countries.urls')),
@@ -48,4 +51,4 @@ urlpatterns = [
 urlpatterns += staticfiles_urlpatterns()
 
 urlpatterns = urlpatterns + \
-              static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
