@@ -1,7 +1,4 @@
 from enum import Enum
-from io import BytesIO
-
-from django.http import HttpResponse
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group
@@ -16,9 +13,16 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet
 
-from core import utils
-from core.models import SiteConfiguration, Certification, AccreditationStatus
+from core.models import SiteConfiguration, AccreditationStatus
 from core.serializers import SiteConfigurationSerializer, AccreditationsSerializer
+from core.mixins import (
+    ApproveMixin,
+    ReviewMixin,
+    RejectMixin,
+    CertificateMixin,
+    ExportDataMixin,
+    ImportDataMixin,
+)
 
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation
 from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer
@@ -40,8 +44,6 @@ from vehicle_access_airport_accreditations.models import VehicleAccessAirportAcc
 from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer
 
 from pgob_auth.permissions import IsAdmin, IsReviewer, IsNewsletters
-
-from credentials.utils import certificate_accreditation
 
 
 class SiteConfigurationView(RetrieveUpdateAPIView):
@@ -271,10 +273,10 @@ class ReviewAccreditationBase(APIView):
             return Response(status=HTTP_404_NOT_FOUND)
 
 
-class AccreditationViewSet(ModelViewSet):
+class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet):
     def get_permissions(self):
         match self.action:
-            case 'retrieve' | 'export':
+            case 'retrieve':
                 permissions = [AllowAny]
 
             case _:
@@ -282,58 +284,11 @@ class AccreditationViewSet(ModelViewSet):
 
         return [permission() for permission in permissions]
 
-    @decorators.action(detail=True, methods=['patch'])
-    def approve(self, request, pk: None, *args, **kwargs):
-        try:
-            item = self.get_queryset().get(pk=pk)
-            item.status = AccreditationStatus.APPROVED
-            item.authorized_by = request.user
-            item.authorized_comment = request.data.get('authorized_comment')
 
-            if 'type' in request.data:
-                item.type = request.data.get('type')
-
-            item.save()
-
-            serializer = self.get_serializer_class()(item)
-            return Response(serializer.data, status=HTTP_200_OK)
-
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-    @decorators.action(detail=True, methods=['patch'])
-    def review(self, request, pk=None, *args, **kwargs):
-        try:
-            item = self.get_queryset().get(pk=pk)
-            item.status = AccreditationStatus.REVIEWED
-            item.reviewed_by = request.user
-            item.reviewed_comment = request.data.get('reviewed_comment')
-            item.save()
-
-            serializer = self.get_serializer_class()(item)
-            return Response(serializer.data, status=HTTP_200_OK)
-
-        except ObjectDoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-    @decorators.action(detail=True, methods=['patch'])
-    def reject(self, request, pk=None, *args, **kwargs):
-        qs = self.get_queryset()
-
-        try:
-            item = qs.get(pk=pk)
-            item.status = AccreditationStatus.REJECTED
-            item.rejected_by = request.user
-            item.save()
-
-            serializer = self.get_serializer_class()(item)
-            return Response(serializer.data, status=HTTP_200_OK)
-
-        except qs.model.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-class ComplexAccreditationViewSet(AccreditationViewSet):
+class ComplexAccreditationViewSet(CertificateMixin,
+                                  ExportDataMixin,
+                                  ImportDataMixin,
+                                  AccreditationViewSet):
     def get_queryset(self):
         is_newsletters = IsNewsletters().has_permission(self.request, self)
         if not is_newsletters:
@@ -345,64 +300,3 @@ class ComplexAccreditationViewSet(AccreditationViewSet):
             Q(type=choices.NEWSLETTER_COMMITTEE) |
             Q(type=choices.COMMERCIAL_NEWSLETTER)
         )
-
-    @decorators.action(detail=True, methods=['patch'])
-    def certificate(self, request, pk=None, *args, **kwargs) -> Response:
-        queryset = self.get_queryset()
-        model = queryset.model
-
-        configuration = SiteConfiguration.objects.filter(available=True).first()
-
-        if not configuration:
-            return Response(
-                {"error": "Site not available."},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
-        try:
-            item = queryset.get(pk=pk)
-            certificate_accreditation(configuration, 'nationals', item)
-
-        except Certification.DoesNotExist:
-            return Response(
-                {"error": "Certification config not found."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        except model.DoesNotExist:
-            return Response(
-                {"error": "National accreditation not found."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        return Response(
-            {"message": "Accepted"},
-            status=status.HTTP_202_ACCEPTED,
-        )
-
-    @decorators.action(detail=False, methods=['get'])
-    def export(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(status=AccreditationStatus.PENDING)
-
-        if not queryset.exists():
-            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
-        buffer = BytesIO()
-
-        utils.get_data_frame(queryset=queryset) \
-            .to_excel(buffer, index=False, sheet_name='Items')
-
-        buffer.seek(0)
-
-        response = HttpResponse(
-            buffer.getvalue(),
-            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        )
-
-        response['Content-Disposition'] = 'attachment; filename=national_accreditations.xlsx'
-
-        return response
-
-    @decorators.action(detail=False, methods=['post'], url_path='import', url_name='import')
-    def import_data(self, request, *args, **kwargs):
-        pass
