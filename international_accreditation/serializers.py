@@ -87,9 +87,6 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'uuid': {'read_only': True},
         }
 
-    # def to_internal_value(self, data):
-    #     return super().to_internal_value(data)
-
     def validate(self, data):
         passport_id = data.get('passport_id')
         first_name = data.get('first_name')
@@ -107,6 +104,9 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
         immunizations_data = validated_data.pop('immunizations', [])
         medicals_data = validated_data.pop('medicals', [])
 
+        user = self.context['request'].user
+        validated_data['country'] = user.profile.country
+
         instance = super().create(validated_data)
 
         instance.allergies.set(allergies_data)
@@ -114,6 +114,17 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
         instance.medicals.set(medicals_data)
 
         return instance
+
+    def to_internal_value(self, data):
+
+        country = data.get('country')
+        print(country)
+
+        if country == '0':
+            data['country'] = self.context['request'].user.profile.country.id
+
+        print(data)
+        return super().to_internal_value(data)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

@@ -41,9 +41,14 @@ class InternationalViewSet(AccreditationViewSet):
             Q(type=choices.COMMERCIAL_NEWSLETTER)
         )
 
+    # def perform_create(self, serializer):
+
+    #     serializer.save(created_by=self.request.user)
+
     @decorators.action(detail=True, methods=['patch'])
     def certificate(self, request, pk=None, *args, **kwargs) -> Response:
-        configuration = SiteConfiguration.objects.filter(available=True).first()
+        configuration = SiteConfiguration.objects.filter(
+            available=True).first()
         if not configuration:
             return Response(
                 {"error": "Site not available."},
