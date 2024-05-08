@@ -382,7 +382,7 @@ class ComplexAccreditationViewSet(AccreditationViewSet):
 
     @decorators.action(detail=False, methods=['get'])
     def export(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(status=AccreditationStatus.APPROVED)
+        queryset = self.get_queryset().filter(status=AccreditationStatus.PENDING)
 
         if not queryset.exists():
             return HttpResponse(status=status.HTTP_204_NO_CONTENT)
