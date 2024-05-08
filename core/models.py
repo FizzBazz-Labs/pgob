@@ -29,10 +29,10 @@ class SiteConfiguration(models.Model):
 
 
 class AccreditationStatus(models.TextChoices):
-    PENDING = 'PENDING', _('Pending')
-    REVIEWED = 'REVIEWED', _('Reviewed')
-    APPROVED = 'APPROVED', _('Approved')
-    REJECTED = 'REJECTED', _('Rejected')
+    PENDING = 'PENDING', _('Pendiente')
+    REVIEWED = 'REVIEWED', _('Revisado')
+    APPROVED = 'APPROVED', _('Aprovado')
+    REJECTED = 'REJECTED', _('Rechazado')
 
 
 class Accreditation(models.Model):
