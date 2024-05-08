@@ -11,6 +11,8 @@ from medical_histories.models import MedicalHistory
 from medical_histories.serializers import MedicalHistorySerializer
 from positions.serializers import PositionSerializer, SubPositionSerializer
 
+from core.serializers import UserSerializer
+
 
 class InternationalAccreditationSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
@@ -85,6 +87,9 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'uuid': {'read_only': True},
         }
 
+    # def to_internal_value(self, data):
+    #     return super().to_internal_value(data)
+
     def validate(self, data):
         passport_id = data.get('passport_id')
         first_name = data.get('first_name')
@@ -109,6 +114,12 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
         instance.medicals.set(medicals_data)
 
         return instance
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        representation['created_by'] = UserSerializer(instance.created_by).data
+        return representation
 
 
 class InternationalAccreditationUpdateSerializer(serializers.ModelSerializer):
