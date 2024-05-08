@@ -13,6 +13,8 @@ from positions.serializers import PositionSerializer, SubPositionSerializer
 
 from core.serializers import UserSerializer
 
+from countries.serializers import CountrySerializer
+
 
 class InternationalAccreditationSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
@@ -118,18 +120,26 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
 
         country = data.get('country')
-        print(country)
 
         if country == '0':
             data['country'] = self.context['request'].user.profile.country.id
 
-        print(data)
         return super().to_internal_value(data)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
+        representation['flight_from'] = CountrySerializer(
+            instance.flight_from).data
+        representation['flight_to'] = CountrySerializer(
+            instance.flight_to).data
+        representation
         representation['created_by'] = UserSerializer(instance.created_by).data
+        representation['position'] = PositionSerializer(
+            instance.position).data
+        if instance.sub_position:
+            representation['sub_position'] = SubPositionSerializer(
+                instance.sub_position).data
         return representation
 
 

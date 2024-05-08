@@ -1,9 +1,13 @@
+from django_filters.rest_framework import DjangoFilterBackend
+
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
+
 
 from core.models import AccreditationStatus
 from core.views import ReviewAccreditationBase, ComplexAccreditationViewSet
@@ -22,7 +26,9 @@ from .models import InternationalAccreditation as International
 class InternationalViewSet(ComplexAccreditationViewSet):
     queryset = International.objects.all()
     serializer_class = InternationalAccreditationSerializer
+    filter_backends = [SearchFilter, DjangoFilterBackend]
     filterset_fields = ['status', 'country', 'certificated']
+    search_fields = ['first_name', 'last_name']
 
 
 class InternationalListCreateApiView(ListCreateAPIView):

@@ -10,6 +10,8 @@ from medical_histories.serializers import MedicalHistorySerializer
 from national_accreditation.models import NationalAccreditation
 from positions.serializers import PositionSerializer, SubPositionSerializer
 
+from core.serializers import UserSerializer
+
 
 class NationalSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(
@@ -97,6 +99,12 @@ class NationalSerializer(serializers.ModelSerializer):
             instance.medicals.set(medicals)
 
             return instance
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        representation['created_by'] = UserSerializer(instance.created_by).data
+        return representation
 
 
 class NationalUpdateSerializer(serializers.ModelSerializer):
