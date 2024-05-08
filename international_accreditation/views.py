@@ -1,5 +1,6 @@
 from django.db.models import Q
 
+from rest_framework import decorators, status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
@@ -7,9 +8,10 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 
-from core.models import AccreditationStatus
-from core.views import ReviewAccreditationBase
-from core.views import AccreditationViewSet
+from core.models import SiteConfiguration, Certification, AccreditationStatus
+from core.views import ReviewAccreditationBase, AccreditationViewSet
+
+from credentials.utils import certificate_accreditation
 
 from international_accreditation.models import InternationalAccreditation
 from international_accreditation.serializers import (
@@ -37,6 +39,34 @@ class InternationalViewSet(AccreditationViewSet):
         return International.objects.filter(
             Q(type=choices.OFFICIAL_NEWSLETTER) |
             Q(type=choices.COMMERCIAL_NEWSLETTER)
+        )
+
+    @decorators.action(detail=True, methods=['patch'])
+    def certificate(self, request, pk=None, *args, **kwargs) -> Response:
+        configuration = SiteConfiguration.objects.filter(available=True).first()
+        if not configuration:
+            return Response(
+                {"error": "Site not available."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        try:
+            item = International.objects.get(pk=pk)
+            certificate_accreditation(configuration, 'nationals', item)
+        except Certification.DoesNotExist:
+            return Response(
+                {"error": "Certification config not found."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except International.DoesNotExist:
+            return Response(
+                {"error": "National accreditation not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        return Response(
+            {"message": "Accepted"},
+            status=status.HTTP_202_ACCEPTED,
         )
 
 

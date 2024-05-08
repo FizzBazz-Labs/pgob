@@ -35,7 +35,7 @@ from security_accreditations.serializers import SecurityWeaponAccreditationSeria
 from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
 from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer
 
-from pgob_auth.permissions import IsAdmin, IsReviewer
+from pgob_auth.permissions import IsAdmin, IsReviewer, IsNewsletters
 
 
 class SiteConfigurationView(RetrieveUpdateAPIView):
