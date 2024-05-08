@@ -36,7 +36,7 @@ def get_data_frame(queryset) -> pd.DataFrame:
 
     df['birthday'] = df['birthday'].apply(lambda x: x.strftime('%d-%m-%Y'))
 
-    df['type'] = df['type'].apply(lambda x: str(model.AccreditationType(x).label))
+    df['type'] = df['type'].apply(lambda x: str(model.AccreditationType(x).label) if not pd.isnull(x) else 'N/A')
     df['status'] = df['status'].apply(lambda x: str(AccreditationStatus(x).label))
 
     # Rename columns and change order
@@ -51,7 +51,7 @@ def get_data_frame(queryset) -> pd.DataFrame:
         'type',
         'status',
     ]]
-    
+
     df = df.rename(columns={
         'id': 'ID',
         'first_name': 'Primer Nombre',

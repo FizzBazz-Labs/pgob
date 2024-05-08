@@ -382,13 +382,10 @@ class ComplexAccreditationViewSet(AccreditationViewSet):
 
     @decorators.action(detail=False, methods=['get'])
     def export(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(status=AccreditationStatus.PENDING)
+        queryset = self.get_queryset().filter(status=AccreditationStatus.APPROVED)
 
         if not queryset.exists():
-            return Response(
-                {'message': 'No data to export.'},
-                status=status.HTTP_204_NO_CONTENT
-            )
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
         buffer = BytesIO()
 
