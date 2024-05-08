@@ -1,6 +1,8 @@
 from io import BytesIO
 from http import HTTPMethod
 
+import pandas as pd
+
 from django.http import HttpResponse
 from django.db.models.query import QuerySet
 
@@ -144,9 +146,35 @@ class ImportDataMixin:
             methods=[HTTPMethod.POST],
             url_path='import', url_name='import',
             permission_classes=[AllowAny])
-    def import_data(self, request: Request, *args, **kwargs):
-        print(request.FILES['data'])
+    def import_data(self, request: Request, *args, **kwargs) -> Response:
+        try:
+            df = pd.read_excel(request.FILES['data'])
+            df = df.rename(columns={'ID': 'id', 'Estado': 'status'})
+            df['status'] = df['status'].str.lower()
+            df = df[df['status'] == 'revisado']
 
-        return Response({
-            "message": "Accepted",
-        })
+        except KeyError:
+            return Response(
+                {"error": "Data file or columns not found"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        bulk_data = []
+        queryset: QuerySet = self.get_queryset()
+
+        for index, row in df.iterrows():
+            try:
+                item = queryset.get(pk=row['id'])
+                item.status = AccreditationStatus.REVIEWED
+
+                bulk_data.append(item)
+
+            except:
+                continue
+
+        queryset.bulk_update(bulk_data, ['status'])
+
+        return Response(
+            {"message": "Accepted"},
+            status=status.HTTP_202_ACCEPTED,
+        )

@@ -272,13 +272,15 @@ class ReviewAccreditationBase(APIView):
 
 
 class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet):
+    permission_classes = [IsAuthenticated]
+
     def get_permissions(self):
         match self.action:
             case 'retrieve':
                 permissions = [AllowAny]
 
             case _:
-                permissions = [IsAuthenticated]
+                permissions = self.permission_classes
 
         return [permission() for permission in permissions]
 
