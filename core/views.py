@@ -289,7 +289,7 @@ class AccreditationViewSet(ModelViewSet):
 
             item.save()
 
-            serializer = self.get_serializer_class(item)
+            serializer = self.get_serializer_class()(item)
             return Response(serializer.data, status=HTTP_200_OK)
 
         except ObjectDoesNotExist:
@@ -304,7 +304,7 @@ class AccreditationViewSet(ModelViewSet):
             item.reviewed_comment = request.data.get('reviewed_comment')
             item.save()
 
-            serializer = self.get_serializer_class(item)
+            serializer = self.get_serializer_class()(item)
             return Response(serializer.data, status=HTTP_200_OK)
 
         except ObjectDoesNotExist:
@@ -320,7 +320,7 @@ class AccreditationViewSet(ModelViewSet):
             item.rejected_by = request.user
             item.save()
 
-            serializer = self.get_serializer_class(item)
+            serializer = self.get_serializer_class()(item)
             return Response(serializer.data, status=HTTP_200_OK)
 
         except qs.model.DoesNotExist:
