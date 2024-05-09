@@ -5,7 +5,6 @@ from allergies.serializers import AllergySerializer
 from countries.serializers import CountrySerializer
 from immunizations.models import Immunization
 from immunizations.serializers import ImmunizationSerializer
-from international_accreditation.models import InternationalAccreditation
 from media_channels.serializers import MediaChannelSerializer
 from medical_histories.models import MedicalHistory
 from medical_histories.serializers import MedicalHistorySerializer
@@ -14,6 +13,9 @@ from positions.serializers import PositionSerializer, SubPositionSerializer
 from core.serializers import UserSerializer
 
 from countries.serializers import CountrySerializer
+
+from international_accreditation.models import InternationalAccreditation
+from international_accreditation.models import InternationalAccreditation as International
 
 
 class InternationalAccreditationSerializer(serializers.ModelSerializer):
@@ -89,19 +91,34 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'uuid': {'read_only': True},
         }
 
-    def validate(self, data):
-        passport_id = data.get('passport_id')
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
-
-        if InternationalAccreditation.objects.filter(passport_id=passport_id, first_name=first_name,
-                                                     last_name=last_name).exists():
-            raise serializers.ValidationError(
-                {'error': 'There is already an accreditation with this passport id, first name or last name.'})
-
-        return data
+    # def validate(self, data):
+    #     passport_id = data.get('passport_id')
+    #     first_name = data.get('first_name')
+    #     last_name = data.get('last_name')
+    #
+    #     if InternationalAccreditation.objects.filter(passport_id=passport_id, first_name=first_name,
+    #                                                  last_name=last_name).exists():
+    #         raise serializers.ValidationError(
+    #             {'error': 'There is already an accreditation with this passport id, first name or last name.'})
+    #
+    #     return data
 
     def create(self, validated_data):
+        passport_id = validated_data.get('passport_id')
+        first_name = validated_data.get('first_name')
+        last_name = validated_data.get('last_name')
+
+        already_exists = International.objects.filter(
+            passport_id=passport_id,
+            first_name=first_name,
+            last_name=last_name
+        ).exists()
+
+        if already_exists:
+            raise serializers.ValidationError({
+                'error': 'There is already an accreditation with this passport id, first name or last name.'
+            })
+
         allergies_data = validated_data.pop('allergies', [])
         immunizations_data = validated_data.pop('immunizations', [])
         medicals_data = validated_data.pop('medicals', [])
