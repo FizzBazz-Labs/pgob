@@ -151,7 +151,6 @@ class ImportDataMixin:
             df = pd.read_excel(request.FILES['data'])
             df = df.rename(columns={'ID': 'id', 'Estado': 'status'})
             df['status'] = df['status'].str.lower()
-            df = df[df['status'] == 'revisado']
 
         except KeyError:
             return Response(
@@ -165,7 +164,14 @@ class ImportDataMixin:
         for index, row in df.iterrows():
             try:
                 item = queryset.get(pk=row['id'])
-                item.status = AccreditationStatus.REVIEWED
+
+                match row['status']:
+                    case 'revisado':
+                        item.status = AccreditationStatus.REVIEWED
+                    case 'rechazado':
+                        item.status = AccreditationStatus.REJECTED
+                    case _:
+                        item.status = AccreditationStatus.PENDING
 
                 bulk_data.append(item)
 
