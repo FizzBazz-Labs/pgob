@@ -41,7 +41,7 @@ from security_accreditations.serializers import SecurityWeaponAccreditationSeria
 from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
 from vehicle_access_airport_accreditations.serializers import VehicleAccessAirportAccreditationsSerializer
 
-from pgob_auth.permissions import IsAdmin, IsReviewer, IsNewsletters
+from pgob_auth.permissions import IsAdmin, IsReviewer, IsNewsletters, IsUser
 
 
 class SiteConfigurationView(RetrieveUpdateAPIView):
@@ -275,7 +275,8 @@ class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet)
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self) -> QuerySet:
-        if self.request.user.groups.filter(name='User').exists():
+        is_user = IsUser().has_permission(self.request, self)
+        if is_user:
             return self.queryset.filter(created_by=self.request.user)
 
         return super().get_queryset()
@@ -296,13 +297,15 @@ class ComplexAccreditationViewSet(CertificateMixin,
                                   ImportDataMixin,
                                   AccreditationViewSet):
     def get_queryset(self) -> QuerySet:
+        queryset = super().get_queryset()
+
         is_newsletters = IsNewsletters().has_permission(self.request, self)
         if not is_newsletters:
-            return self.queryset
+            return queryset
 
-        choices = self.queryset.model.AccreditationType
+        choices = queryset.model.AccreditationType
 
-        return self.queryset.filter(
+        return queryset.filter(
             Q(type=choices.NEWSLETTER_COMMITTEE) |
             Q(type=choices.COMMERCIAL_NEWSLETTER)
         )
