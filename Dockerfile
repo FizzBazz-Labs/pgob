@@ -15,6 +15,8 @@ RUN apt-get update \
   wget \
   git \
   pkg-config \
+  locales \
+  locales-all \
   && apt-get clean
 
 RUN pip install --upgrade pip
@@ -22,6 +24,7 @@ RUN pip install psycopg2
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV LC_TIME=es_ES.UTF-8
 
 COPY ./bin/entry-point.sh /
 WORKDIR /etc/pgob/code
