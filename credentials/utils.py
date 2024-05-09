@@ -144,8 +144,8 @@ def certificate_accreditation(
     if not save_path.exists():
         save_path.mkdir(parents=True)
 
-    filename = f'{data['type']} {data['fullname']}.png'.replace(' ', '_').lower()
-    image.save(save_path / filename)
+    filename = f'{data['type']} {data['fullname']}'.replace(' ', '_').lower()
+    image.save(save_path / f'{filename}.pdf')
 
     item.uuid = data['uuid']
     item.certificated = True
@@ -154,6 +154,6 @@ def certificate_accreditation(
     image.save(image_bytes, format='PNG')
     image_bytes.seek(0)
 
-    item.certification.save(filename, image_bytes, save=False)
+    item.certification.save(f'{filename}.png', image_bytes, save=False)
 
     item.save()
