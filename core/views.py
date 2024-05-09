@@ -278,7 +278,7 @@ class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet)
         if self.request.user.groups.filter(name='User').exists():
             return self.queryset.filter(created_by=self.request.user)
 
-        return self.queryset
+        return super().get_queryset()
 
     def get_permissions(self):
         match self.action:
