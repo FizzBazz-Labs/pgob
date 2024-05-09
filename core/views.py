@@ -1,5 +1,5 @@
 from enum import Enum
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.contrib.auth.models import Group
 
 from rest_framework.request import Request
@@ -274,6 +274,12 @@ class ReviewAccreditationBase(APIView):
 class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet):
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self) -> QuerySet:
+        if self.request.user.groups.filter(name='User').exists():
+            return self.queryset.filter(created_by=self.request.user)
+
+        return self.queryset
+
     def get_permissions(self):
         match self.action:
             case 'retrieve':
@@ -289,7 +295,7 @@ class ComplexAccreditationViewSet(CertificateMixin,
                                   ExportDataMixin,
                                   ImportDataMixin,
                                   AccreditationViewSet):
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         is_newsletters = IsNewsletters().has_permission(self.request, self)
         if not is_newsletters:
             return self.queryset
