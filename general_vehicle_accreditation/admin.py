@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from .models import GeneralVehicleAccreditation
+from general_vehicle_accreditation.models import GeneralVehicleAccreditation as GeneralVehicle
 
 
-@admin.register(GeneralVehicleAccreditation)
-class GeneralVehicleAccreditationAdmin(admin.ModelAdmin):
+@admin.register(GeneralVehicle)
+class GeneralVehicleAdmin(admin.ModelAdmin):
     ...

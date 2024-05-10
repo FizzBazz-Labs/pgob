@@ -9,6 +9,7 @@ from intercom_equipment_declaration.views import IntercomEquipmentDeclarationVie
 from security_accreditations.views import SecurityWeaponViewSet
 from national_accreditation.views import NationalViewSet
 from international_accreditation.views import InternationalViewSet
+from vehicles.views import VehicleViewSet
 
 router = DefaultRouter()
 
@@ -21,3 +22,4 @@ router.register(r'intercommunication-equipments', IntercomEquipmentDeclarationVi
 router.register(r'security-weapons', SecurityWeaponViewSet)
 router.register(r'nationals', NationalViewSet)
 router.register(r'internationals', InternationalViewSet)
+router.register(r'vehicles', VehicleViewSet)
