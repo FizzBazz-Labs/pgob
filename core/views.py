@@ -76,10 +76,7 @@ class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet)
         return [permission() for permission in permissions]
 
 
-class ComplexAccreditationViewSet(CertificateMixin,
-                                  ExportDataMixin,
-                                  ImportDataMixin,
-                                  AccreditationViewSet):
+class ComplexAccreditationViewSet(CertificateMixin, ExportDataMixin, ImportDataMixin, AccreditationViewSet):
     def get_queryset(self) -> QuerySet:
         queryset = super().get_queryset()
 
