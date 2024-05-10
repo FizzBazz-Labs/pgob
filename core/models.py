@@ -7,21 +7,30 @@ class SiteConfiguration(models.Model):
 
     name = models.CharField(max_length=255)
     logo = models.ImageField(upload_to='site/logo', null=True, blank=True)
-    favicon = models.ImageField(upload_to='site/favicon', null=True, blank=True)
+    favicon = models.ImageField(
+        upload_to='site/favicon', null=True, blank=True)
 
     # Login Background
-    login_background = models.ImageField(upload_to='site/backgrounds', null=True, blank=True)
+    login_background = models.ImageField(
+        upload_to='site/backgrounds', null=True, blank=True)
+    login_title = models.CharField(max_length=255, default='Iniciar Sesión')
+    login_title_color = models.CharField(max_length=150, default='#FFFFFF')
+    login_title_size = models.CharField(max_length=150, default='24')
 
     # Unavailable Site
-    unavailable_title = models.CharField(max_length=255, default='Sitio en Mantenimiento')
+    unavailable_title = models.CharField(
+        max_length=255, default='Sitio en Mantenimiento')
     unavailable_message = models.TextField(
         blank=True,
         default='Estamos realizando tareas de mantenimiento. Por favor, vuelva más tarde.')
-    unavailable_color = models.CharField(max_length=15, blank=True, default='#000000')
-    unavailable_background = models.ImageField(upload_to='site/backgrounds', null=True, blank=True)
+    unavailable_color = models.CharField(
+        max_length=15, blank=True, default='#000000')
+    unavailable_background = models.ImageField(
+        upload_to='site/backgrounds', null=True, blank=True)
 
     # President
-    president = models.CharField(max_length=255, default='Nombre del Presidente/a')
+    president = models.CharField(
+        max_length=255, default='Nombre del Presidente/a')
     term_date = models.DateField(default='2024-12-31')
 
     def __str__(self) -> str:
@@ -44,7 +53,8 @@ class Accreditation(models.Model):
 
 class Certification(models.Model):
     class AccreditationType(models.TextChoices):
-        GENERAL_COORDINATION = 'GENERAL_COORDINATION', _('Coordinación General')
+        GENERAL_COORDINATION = 'GENERAL_COORDINATION', _(
+            'Coordinación General')
         PROTOCOL = 'PROTOCOL', _('Protocolo')
         SECURITY = 'SECURITY', _('Seguridad')
         TECHNICAL_STAFF = 'TECHNICAL_STAFF', _('Personal Técnico')
@@ -53,7 +63,8 @@ class Certification(models.Model):
         SUPPLIER = 'SUPPLIER', _('Proveedor')
         NEWSLETTER_COMMITTEE = 'NEWSLETTER_COMMITTEE', _('Comisión de Prensa')
         COMMERCIAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Comercial')
-        OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD', _('Jefe de Delegación Oficial'),
+        OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD', _(
+            'Jefe de Delegación Oficial'),
         SUPPORT_STAFF = 'SUPPORT_STAFF', _('Personal de Apoyo')
         OFFICIAL_NEWSLETTER = 'OFFICIAL_NEWSLETTER', _('Prensa Oficial')
         CREW = 'CREW', _('Tripulación')

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 
 from core.models import SiteConfiguration, Accreditation, Certification
 
@@ -13,8 +14,19 @@ class CertificationAdmin(admin.ModelAdmin):
     ...
 
 
+class SiteConfigForm(forms.ModelForm):
+    class Meta:
+        model = SiteConfiguration
+        fields = '__all__'
+        widgets = {
+            'login_title_color': forms.TextInput(attrs={'type': 'color'}),
+        }
+
+
 @admin.register(SiteConfiguration)
 class SiteConfigurationAdmin(admin.ModelAdmin):
+    form = SiteConfigForm
+
     fieldsets = (
         (None, {
             'fields': (
@@ -31,6 +43,9 @@ class SiteConfigurationAdmin(admin.ModelAdmin):
         ('Login Background', {
             'fields': (
                 'login_background',
+                'login_title',
+                'login_title_color',
+                'login_title_size',
             )
         }),
         ('Unavailable Site', {
