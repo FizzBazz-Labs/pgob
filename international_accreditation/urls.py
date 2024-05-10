@@ -1,7 +1,5 @@
 from django.urls import path
 
-from credentials.views import GenerateCredential
-
 from international_accreditation.models import InternationalAccreditation
 
 from international_accreditation.views import (
@@ -17,6 +15,4 @@ urlpatterns = [
     path('<int:pk>/review/', ReviewAccreditation.as_view()),
     path('<int:pk>/approve/', ApproveAccreditation.as_view()),
     path('<int:pk>/reject/', RejectAccreditation.as_view()),
-    path('<int:pk>/certificate/',
-         GenerateCredential.as_view(model=InternationalAccreditation)),
 ]

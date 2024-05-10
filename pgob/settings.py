@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
 
+    'accreditations.apps.AccreditationsConfig',
     'core.apps.CoreConfig',
     'national_accreditation.apps.NationalAccreditationConfig',
     'overflight_non_commercial_aircraft.apps.OverflightNonCommercialAircraftConfig',

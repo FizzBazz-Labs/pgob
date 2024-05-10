@@ -15,8 +15,10 @@ class Vehicle(models.Model):
     type = models.CharField(max_length=150)
     type_other = models.CharField(max_length=150, blank=True)
     brand = models.CharField(max_length=150)
+    model = models.CharField(max_length=150, blank=True)
     color = models.CharField(max_length=150)
     plate = models.CharField(max_length=50)
+
     driver_name = models.CharField(max_length=150)
     driver_id = models.CharField(max_length=50)
     phone = models.CharField(max_length=50, blank=True)

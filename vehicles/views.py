@@ -1,22 +1,11 @@
-from django.shortcuts import render
-
-from rest_framework.views import APIView
-
-from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import CreateAPIView
 
-from vehicles.serializers import VehicleSerializer
 from vehicles.models import Vehicle
+from vehicles.serializers import VehicleSerializer
 
 
-class VehicleCreateView(CreateAPIView):
+class VehicleViewSet(ModelViewSet):
+    queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
     permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        vehicle = Vehicle.objects.create(
-            **request.data.dict())
-
-        return Response({'vehicle_id': vehicle.id}, status=HTTP_201_CREATED)

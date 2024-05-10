@@ -1,18 +1,10 @@
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation as GeneralVehicle
-from general_vehicle_accreditation.serializers import GeneralVehicleAccreditationSerializer, \
-    GeneralVehicleAccreditationReadSerializer
+from general_vehicle_accreditation.serializers import GeneralVehicleSerializer
 
-from core.views import AccreditationViewSet
-
-from countries.models import Country
+from accreditations.views import AccreditationViewSet
 
 
 class GeneralVehicleViewSet(AccreditationViewSet):
     queryset = GeneralVehicle.objects.all()
     filterset_fields = ['status', 'country']
-
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return GeneralVehicleAccreditationReadSerializer
-
-        return GeneralVehicleAccreditationSerializer
+    serializer_class = GeneralVehicleSerializer

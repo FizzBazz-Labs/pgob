@@ -12,7 +12,6 @@ from pgob.router import router
 
 urlpatterns = [
     path('api/v1/', include('core.urls')),
-    # path('api/v1/', include('pgob_auth.urls')),
 
     path('admin/', admin.site.urls),
 
@@ -28,14 +27,11 @@ urlpatterns = [
     path('api/v1/auth/token/verify/',
          jwt_views.TokenVerifyView.as_view(), name='token-verify'),
 
-    path('api/v1/', include('core.urls')),
     path("api/v1/national-accreditations/",
          include("national_accreditation.urls")),
-
     path("api/v1/international-accreditations/",
          include("international_accreditation.urls")),
 
-    path('api/v1/', include('vehicles.urls')),
     path('api/v1/', include('allergies.urls')),
     path('api/v1/', include('countries.urls')),
     path('api/v1/', include('immunizations.urls')),
@@ -49,6 +45,4 @@ urlpatterns = [
 ]
 
 urlpatterns += staticfiles_urlpatterns()
-
-urlpatterns = urlpatterns + \
-    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

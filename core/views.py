@@ -1,25 +1,15 @@
-from django.db.models import Q, QuerySet
-
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
-from rest_framework.viewsets import ModelViewSet
-
 from core.models import SiteConfiguration, AccreditationStatus
 from core.serializers import SiteConfigurationSerializer
-from core.mixins import (
-    ApproveMixin,
-    ReviewMixin,
-    RejectMixin,
-    CertificateMixin,
-    ExportDataMixin,
-    ImportDataMixin,
-)
 
-from pgob_auth.permissions import IsAdmin, IsReviewer, IsNewsletters, IsUser
+from pgob_auth.permissions import IsAdmin, IsReviewer
+
+from accreditations.views import AccreditationViewSet, ComplexAccreditationViewSet
 
 
 class SiteConfigurationView(RetrieveUpdateAPIView):
@@ -53,40 +43,3 @@ class ReviewAccreditationBase(APIView):
 
         except self.model.DoesNotExist:
             return Response(status=HTTP_404_NOT_FOUND)
-
-
-class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet):
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self) -> QuerySet:
-        is_user = IsUser().has_permission(self.request, self)
-        if is_user:
-            return self.queryset.filter(created_by=self.request.user)
-
-        return super().get_queryset()
-
-    def get_permissions(self):
-        match self.action:
-            case 'retrieve':
-                permissions = [AllowAny]
-
-            case _:
-                permissions = self.permission_classes
-
-        return [permission() for permission in permissions]
-
-
-class ComplexAccreditationViewSet(CertificateMixin, ExportDataMixin, ImportDataMixin, AccreditationViewSet):
-    def get_queryset(self) -> QuerySet:
-        queryset = super().get_queryset()
-
-        is_newsletters = IsNewsletters().has_permission(self.request, self)
-        if not is_newsletters:
-            return queryset
-
-        choices = queryset.model.AccreditationType
-
-        return queryset.filter(
-            Q(type=choices.NEWSLETTER_COMMITTEE) |
-            Q(type=choices.COMMERCIAL_NEWSLETTER)
-        )

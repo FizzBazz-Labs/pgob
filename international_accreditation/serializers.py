@@ -84,11 +84,14 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'security_weapon_accreditation',
             'allergies_description',
             'reviewed_comment',
+
+            'certification',
         ]
 
         extra_kwargs = {
             'certificated': {'read_only': True},
             'uuid': {'read_only': True},
+            'certification': {'read_only': True},
         }
 
     # def validate(self, data):
