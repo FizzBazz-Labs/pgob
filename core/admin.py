@@ -44,6 +44,9 @@ class SiteConfigurationAdmin(admin.ModelAdmin):
             'fields': (
                 'login_background',
                 'login_title',
+                'login_title_2',
+                'login_title_3',
+                'use_bold',
                 'login_title_color',
                 'login_title_size',
             )
