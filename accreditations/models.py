@@ -10,7 +10,7 @@ class Accreditation(models.Model):
         REJECTED = 'REJECTED', _('Rechazado')
 
     certificated = models.BooleanField(default=False)
-    certification = models.ImageField(upload_to='certifications/img/', blank=True)
+    certification = models.ImageField(upload_to='certifications/img/', blank=True, null=True)
     reviewed_comment = models.TextField(blank=True)
     authorized_comment = models.TextField(blank=True)
     status = models.CharField(max_length=150, choices=Status.choices, default=Status.PENDING)
