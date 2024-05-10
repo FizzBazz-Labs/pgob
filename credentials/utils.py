@@ -14,6 +14,15 @@ from national_accreditation.models import NationalAccreditation as National
 from international_accreditation.models import InternationalAccreditation as International
 
 
+def get_qr_code(data: str) -> Image:
+    qr_code = qrcode.make(data)
+    qr_buffer = BytesIO()
+    qr_code.save(qr_buffer, format='PNG')
+    qr_buffer.seek(0)
+
+    return Image.open(qr_buffer).resize((175, 175))
+
+
 def get_certification_data(
     configuration: SiteConfiguration,
     certification: Certification,
@@ -39,7 +48,7 @@ def get_certification_data(
     }
 
 
-def get_certification(data: dict[str, Any]) -> Image:
+def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     template = settings.BASE_DIR / 'credentials' / 'static' / 'credentials' / 'base.png'
 
     image = Image.open(template)
@@ -90,20 +99,6 @@ def get_certification(data: dict[str, Any]) -> Image:
         stroke_fill='#002757'
     )
 
-    # Draw QR code
-    qr_data = f'{settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
-    qr_code = qrcode.make(qr_data)
-    qr_buffer = BytesIO()
-    qr_code.save(qr_buffer, format='PNG')
-    qr_buffer.seek(0)
-
-    qr_image = Image.open(qr_buffer).resize((175, 175))
-
-    image.paste(qr_image, (
-        int((image.width - 175) / 2),
-        780,
-    ))
-
     # Draw type box and title
     type_box = Image.new('RGBA', (image.width - 29, 100), data['color'])
     type_box_draw = ImageDraw.Draw(type_box)
@@ -120,7 +115,22 @@ def get_certification(data: dict[str, Any]) -> Image:
 
     image.paste(type_box, (19, image.height - 118))
 
-    return image
+    # Draw Temp Image QR code
+    image_copy = image.copy()
+    qr_found_data_image = get_qr_code(f'{settings.FRONTEND_DETAIL_URL}/404')
+    image_copy.paste(qr_found_data_image, (
+        int((image.width - 175) / 2),
+        780,
+    ))
+
+    # Draw QR Code
+    qr_image = get_qr_code(f'{settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}')
+    image.paste(qr_image, (
+        int((image.width - 175) / 2),
+        780,
+    ))
+
+    return image, image_copy
 
 
 def certificate_accreditation(
@@ -131,7 +141,7 @@ def certificate_accreditation(
     certification = Certification.objects.get(accreditation_type=item.type)
 
     data = get_certification_data(configuration, certification, accreditation, item)
-    image = get_certification(data)
+    image, image_copy = get_certification(data)
 
     save_path = (
         settings.BASE_DIR /
@@ -151,7 +161,7 @@ def certificate_accreditation(
     item.certificated = True
 
     image_bytes = BytesIO()
-    image.save(image_bytes, format='PNG')
+    image_copy.save(image_bytes, format='PNG')
     image_bytes.seek(0)
 
     item.certification.save(f'{filename}.png', image_bytes, save=False)
