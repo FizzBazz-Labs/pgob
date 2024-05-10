@@ -79,6 +79,7 @@ class NationalSerializer(serializers.ModelSerializer):
             'passport_id',
             'created_by',
             'certificated',
+            'certification',
             'uuid',
             'reviewed_comment',
         ]
@@ -86,6 +87,7 @@ class NationalSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'certificated': {'read_only': True},
             'uuid': {'read_only': True},
+            'certification': {'read_only': True},
         }
 
         def create(self, validated_data):
