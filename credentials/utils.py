@@ -143,12 +143,16 @@ def certificate_accreditation(
     data = get_certification_data(configuration, certification, accreditation, item)
     image, image_copy = get_certification(data)
 
+    country = ''
+    if accreditation == 'internationals':
+        country = item.country.name.lower().replace(' ', '_')
+
     save_path = (
         settings.BASE_DIR /
         'certifications' /
         accreditation /
-        str(data['type']).replace(' ', '_').lower() /
-        (item.country.name.lower() if accreditation == 'international' else '')
+        country /
+        str(data['type']).replace(' ', '_').lower()
     )
 
     if not save_path.exists():
