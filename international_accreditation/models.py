@@ -79,7 +79,7 @@ class InternationalAccreditation(models.Model):
 
     # Medical Information
     blood_type = models.CharField(max_length=150, blank=True)
-    diseases = models.TextField()
+    diseases = models.TextField(blank=True)
     medication_1 = models.CharField(max_length=200, blank=True)
     medication_2 = models.CharField(max_length=200, blank=True)
     medication_3 = models.CharField(max_length=200, blank=True)
@@ -106,14 +106,14 @@ class InternationalAccreditation(models.Model):
     hotel_phone = models.CharField(max_length=120)
 
     # Flight Information
-    flight_arrival_datetime = models.DateTimeField(blank=True)
+    flight_arrival_datetime = models.DateTimeField(blank=True, null=True)
     flight_arrival_number = models.CharField(max_length=150, blank=True)
     flight_from = models.ForeignKey(
         'countries.Country',
         on_delete=models.PROTECT,
         related_name='flight_from', blank=True, null=True)
 
-    flight_departure_datetime = models.DateTimeField(blank=True)
+    flight_departure_datetime = models.DateTimeField(blank=True, null=True)
     flight_departure_number = models.CharField(max_length=150, blank=True)
     flight_to = models.ForeignKey(
         'countries.Country',
