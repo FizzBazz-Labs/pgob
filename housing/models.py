@@ -9,6 +9,7 @@ class Housing(Accreditation):
         house = 'HOUSE', 'House'
         apartment = 'APARTMENT', 'Apartment'
 
+    address = models.CharField(max_length=150)
     building_type = models.CharField(max_length=150, choices=BuildingType.choices)
     house_number = models.CharField(max_length=150, blank=True)
     apartment_tower = models.CharField(max_length=150, blank=True)
@@ -49,5 +50,4 @@ class HousingPerson(models.Model):
     birthday = models.DateField()
     phone_number = models.CharField(max_length=150)
     email = models.EmailField()
-    address = models.CharField(max_length=150)
     housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='persons')
