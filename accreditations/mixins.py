@@ -164,6 +164,8 @@ class ImportDataMixin:
         for index, row in df.iterrows():
             try:
                 item = queryset.get(pk=row['id'])
+                if item.status != AccreditationStatus.PENDING:
+                    continue
 
                 match row['status']:
                     case 'revisado':
