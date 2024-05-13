@@ -1,10 +1,17 @@
 from rest_framework import serializers
 
-from commerce.models import Commerce
+from commerce.models import Commerce, CommerceEmployee
+
+
+class CommerceEmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommerceEmployee
+        fields = '__all__'
 
 
 class CommerceSerializer(serializers.ModelSerializer):
     created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    employees = CommerceEmployeeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Commerce
@@ -13,7 +20,6 @@ class CommerceSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'created_at',
             'updated_at',
-            'downloaded',
             'reviewed_comment',
             'reviewed_by',
             'authorized_comment',
@@ -21,5 +27,6 @@ class CommerceSerializer(serializers.ModelSerializer):
             'rejected_by',
             'status',
             'uuid',
-            'qr_code',
+            'certificated',
+            'certification',
         ]

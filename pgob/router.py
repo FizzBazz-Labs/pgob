@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter
 
 from housing.views import HousingViewSet, HousingPersonViewSet
-from commerce.views import CommerceViewSet
+from commerce.views import CommerceViewSet, CommerceEmployeeViewSet
 from general_vehicle_accreditation.views import GeneralVehicleViewSet
 from overflight_non_commercial_aircraft.views import OverflightNonCommercialAircraftViewSet
 from vehicle_access_airport_accreditations.views import AirportVehicleAccessViewSet
@@ -16,6 +16,7 @@ router = DefaultRouter()
 router.register(r'housings', HousingViewSet)
 router.register(r'housing-persons', HousingPersonViewSet)
 router.register(r'commerces', CommerceViewSet)
+router.register(r'commerce-employees', CommerceEmployeeViewSet)
 router.register(r'general-vehicles', GeneralVehicleViewSet)
 router.register(r'aircrafts', OverflightNonCommercialAircraftViewSet)
 router.register(r'airport-vehicle-access', AirportVehicleAccessViewSet)
