@@ -1,6 +1,5 @@
-from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Q
 
-from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
@@ -14,7 +13,7 @@ from core.views import ReviewAccreditationBase, ComplexAccreditationViewSet
 from national_accreditation.models import NationalAccreditation
 from national_accreditation.serializers import NationalSerializer, NationalReadSerializer, NationalUpdateSerializer
 
-from pgob_auth.permissions import IsReviewer, IsAccreditor
+from pgob_auth.permissions import IsReviewer, IsAccreditor, IsNewsletters
 
 from .models import NationalAccreditation as National
 
@@ -24,6 +23,20 @@ class NationalViewSet(ComplexAccreditationViewSet):
     serializer_class = NationalSerializer
     filterset_fields = ['status', 'country', 'certificated']
     search_fields = ['first_name', 'last_name', 'created_at__date']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        is_newsletters = IsNewsletters().has_permission(self.request, self)
+        if not is_newsletters:
+            return queryset
+
+        choices = National.AccreditationType
+
+        return queryset.filter(
+            Q(type=choices.COMMERCIAL_NEWSLETTER) |
+            Q(type=choices.NEWSLETTER_COMMITTEE)
+        )
 
 
 class NationalListCreateApiView(ListCreateAPIView):

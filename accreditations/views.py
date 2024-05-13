@@ -40,16 +40,4 @@ class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet)
 
 
 class ComplexAccreditationViewSet(CertificateMixin, ExportDataMixin, ImportDataMixin, AccreditationViewSet):
-    def get_queryset(self) -> QuerySet:
-        queryset = super().get_queryset()
-
-        is_newsletters = IsNewsletters().has_permission(self.request, self)
-        if not is_newsletters:
-            return queryset
-
-        choices = queryset.model.AccreditationType
-
-        return queryset.filter(
-            Q(type=choices.NEWSLETTER_COMMITTEE) |
-            Q(type=choices.COMMERCIAL_NEWSLETTER)
-        )
+    ...
