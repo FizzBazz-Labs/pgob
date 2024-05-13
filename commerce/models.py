@@ -51,4 +51,5 @@ class CommerceEmployee(models.Model):
     birthday = models.DateField(blank=True, null=True)
     phone_number = models.CharField(max_length=150, blank=True)
     email = models.EmailField(blank=True)
+    schedule = models.CharField(max_length=150, blank=True)
     commerce = models.ForeignKey(Commerce, on_delete=models.CASCADE, related_name='employees')
