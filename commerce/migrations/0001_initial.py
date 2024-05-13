@@ -7,7 +7,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -41,16 +40,24 @@ class Migration(migrations.Migration):
                 ('downloaded', models.BooleanField(default=False)),
                 ('reviewed_comment', models.TextField(blank=True)),
                 ('authorized_comment', models.TextField(blank=True)),
-                ('status', models.CharField(choices=[('PENDING', 'Pending'), ('REVIEWED', 'Reviewed'), ('APPROVED', 'Approved'), ('REJECTED', 'Rejected')], default='PENDING', max_length=150)),
+                ('status', models.CharField(
+                    choices=[('PENDING', 'Pending'), ('REVIEWED', 'Reviewed'), ('APPROVED', 'Approved'),
+                             ('REJECTED', 'Rejected')], default='PENDING', max_length=150)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('uuid', models.TextField(blank=True)),
-                ('qr_code', models.ImageField(blank=True, upload_to=commerce.models.qr_filename)),
-                ('authorized_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='commerce_authorized_set', to=settings.AUTH_USER_MODEL)),
+                ('qr_code', models.ImageField(blank=True, upload_to='temp/q_codes/')),
+                ('authorized_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
+                                                    related_name='commerce_authorized_set',
+                                                    to=settings.AUTH_USER_MODEL)),
                 ('country', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='countries.country')),
-                ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='commerce_created_set', to=settings.AUTH_USER_MODEL)),
-                ('rejected_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='commerce_rejected_set', to=settings.AUTH_USER_MODEL)),
-                ('reviewed_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='commerce_reviewed_set', to=settings.AUTH_USER_MODEL)),
+                ('created_by',
+                 models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='commerce_created_set',
+                                   to=settings.AUTH_USER_MODEL)),
+                ('rejected_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
+                                                  related_name='commerce_rejected_set', to=settings.AUTH_USER_MODEL)),
+                ('reviewed_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
+                                                  related_name='commerce_reviewed_set', to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
