@@ -1,5 +1,7 @@
 from django.db.models import Q, QuerySet
+from django_filters.rest_framework import DjangoFilterBackend
 
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 
@@ -17,6 +19,7 @@ from pgob_auth.permissions import IsNewsletters, IsUser
 
 class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet):
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter, DjangoFilterBackend]
 
     def get_queryset(self) -> QuerySet:
         is_user = IsUser().has_permission(self.request, self)

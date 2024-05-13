@@ -1,6 +1,6 @@
 from rest_framework.filters import SearchFilter
-from django_filters.rest_framework import DjangoFilterBackend
 
+from django_filters.rest_framework import DjangoFilterBackend
 
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft
 from overflight_non_commercial_aircraft.serializers import OverflightNonCommercialAircraftSerializer, \
@@ -12,9 +12,7 @@ from core.views import AccreditationViewSet
 class OverflightNonCommercialAircraftViewSet(AccreditationViewSet):
     queryset = OverflightNonCommercialAircraft.objects.all()
     filterset_fields = ['status', 'country']
-    filter_backends = [SearchFilter, DjangoFilterBackend]
-    # search_fields = ['created_by__firstname']
-    # se
+    search_fields = ['created_at__date']
 
     def get_serializer_class(self):
         if self.action == 'retrieve':

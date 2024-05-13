@@ -22,7 +22,6 @@ from .models import NationalAccreditation as National
 class NationalViewSet(ComplexAccreditationViewSet):
     queryset = National.objects.all()
     serializer_class = NationalSerializer
-    filter_backends = [SearchFilter, DjangoFilterBackend]
     filterset_fields = ['status', 'country', 'certificated']
     search_fields = ['first_name', 'last_name', 'created_at__date']
 
