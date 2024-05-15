@@ -25,7 +25,7 @@ class InternationalViewSet(ComplexAccreditationViewSet):
     queryset = International.objects.all()
     serializer_class = InternationalAccreditationSerializer
     filterset_fields = ['status', 'country', 'certificated']
-    search_fields = ['first_name', 'last_name', 'created_at__date']
+    search_fields = ['first_name', 'last_name']
 
     def get_queryset(self):
         queryset = super().get_queryset()
