@@ -13,6 +13,7 @@ class GeneralVehicleAccreditation(Accreditation):
         NATIONAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Nacional')
         INTERNATIONAL_NEWSLETTER = 'INTERNATIONAL_NEWSLETTER', _('Prensa Internacional')
         DIPLOMATIC_MISSION = 'DIPLOMATIC_MISSION', _('Misión Diplomática')
+        MINREX_OFFICIALS = 'MINREX_OFFICIALS', _('Funcionarios MINREX')
 
     accreditation_type = models.CharField(
         max_length=150,
