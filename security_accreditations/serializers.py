@@ -36,7 +36,8 @@ class WeaponSerializer(serializers.ModelSerializer):
 class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
     communication_items = EquipmentSerializer(many=True)
     weapons = WeaponSerializer(many=True)
-    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
 
     class Meta:
         model = SecurityWeaponAccreditation
@@ -118,6 +119,10 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
                 WeaponSerializer().update(weapon_item, weapon)
             else:
                 instance.weapons.create(**weapon)
+
+    def to_internal_value(self, data):
+        data['country'] = self.context['request'].user.profile.country.pk
+        return super().to_internal_value(data)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

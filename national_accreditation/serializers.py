@@ -91,21 +91,22 @@ class NationalSerializer(serializers.ModelSerializer):
             'certification': {'read_only': True},
         }
 
-        def create(self, validated_data):
-            allergies = validated_data.pop('allergies', [])
-            immunizations = validated_data.pop('immunizations', [])
-            medicals = validated_data.pop('medicals', [])
+    def to_internal_value(self, data):
+        data['country'] = self.context['request'].user.profile.country.pk
+        return super().to_internal_value(data)
 
-            user = self.context['request'].user
-            validated_data['country'] = user.profile.country
+    def create(self, validated_data):
+        allergies = validated_data.pop('allergies', [])
+        immunizations = validated_data.pop('immunizations', [])
+        medicals = validated_data.pop('medicals', [])
 
-            instance = super().create(validated_data)
+        instance = super().create(validated_data)
 
-            instance.allergies.set(allergies)
-            instance.immunizations.set(immunizations)
-            instance.medicals.set(medicals)
+        instance.allergies.set(allergies)
+        instance.immunizations.set(immunizations)
+        instance.medicals.set(medicals)
 
-            return instance
+        return instance
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

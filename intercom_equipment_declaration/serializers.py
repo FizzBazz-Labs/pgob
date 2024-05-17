@@ -56,6 +56,10 @@ class IntercomEquipmentDeclarationSerializer(serializers.ModelSerializer):
             else:
                 instance.equipments.create(**equipment_data)
 
+    def to_internal_value(self, data):
+        data['country'] = self.context['request'].user.profile.country.pk
+        return super().to_internal_value(data)
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
