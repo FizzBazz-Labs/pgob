@@ -160,6 +160,8 @@ class InternationalAccreditation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    times_edited = models.PositiveIntegerField(default=0)
+
     uuid = models.TextField(blank=True)
     certificated = models.BooleanField(default=False)
     certification = models.ImageField(upload_to=qr_filename, blank=True)

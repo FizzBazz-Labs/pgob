@@ -42,6 +42,8 @@ class Commerce(Accreditation):
         on_delete=models.PROTECT,
         related_name='commerce_created_set')
 
+    times_edited = models.PositiveIntegerField(default=0)
+
 
 class CommerceEmployee(models.Model):
     first_name = models.CharField(max_length=150)
@@ -52,4 +54,5 @@ class CommerceEmployee(models.Model):
     phone_number = models.CharField(max_length=150, blank=True)
     email = models.EmailField(blank=True)
     schedule = models.CharField(max_length=150, blank=True)
-    commerce = models.ForeignKey(Commerce, on_delete=models.CASCADE, related_name='employees')
+    commerce = models.ForeignKey(
+        Commerce, on_delete=models.CASCADE, related_name='employees')

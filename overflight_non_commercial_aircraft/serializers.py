@@ -55,6 +55,13 @@ class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
 
         representation['created_by'] = UserSerializer(instance.created_by).data
 
+        try:
+            representation['flight_type'] = instance.get_flight_type_display()
+            representation['category'] = instance.get_category_display()
+            representation['aircraft_type'] = instance.get_aircraft_type_display()
+        except:
+            pass
+
         return representation
 
 

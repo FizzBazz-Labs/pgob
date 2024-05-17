@@ -10,7 +10,8 @@ class CommerceEmployeeSerializer(serializers.ModelSerializer):
 
 
 class CommerceSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
     employees = CommerceEmployeeSerializer(many=True, read_only=True)
 
     class Meta:
@@ -24,6 +25,7 @@ class CommerceSerializer(serializers.ModelSerializer):
             'reviewed_by',
             'authorized_comment',
             'authorized_by',
+            'times_edited',
             'rejected_by',
             'status',
             'uuid',

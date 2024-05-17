@@ -10,7 +10,8 @@ class Housing(Accreditation):
         apartment = 'APARTMENT', 'Apartment'
 
     address = models.CharField(max_length=150)
-    building_type = models.CharField(max_length=150, choices=BuildingType.choices)
+    building_type = models.CharField(
+        max_length=150, choices=BuildingType.choices)
     house_number = models.CharField(max_length=150, blank=True)
     apartment_tower = models.CharField(max_length=150, blank=True)
     building_admin_name = models.CharField(max_length=150, blank=True)
@@ -41,6 +42,8 @@ class Housing(Accreditation):
         on_delete=models.PROTECT,
         related_name='housing_created_set')
 
+    times_edited = models.PositiveIntegerField(default=0)
+
 
 class HousingPerson(models.Model):
     first_name = models.CharField(max_length=150)
@@ -50,4 +53,5 @@ class HousingPerson(models.Model):
     birthday = models.DateField()
     phone_number = models.CharField(max_length=150)
     email = models.EmailField()
-    housing = models.ForeignKey(Housing, on_delete=models.CASCADE, related_name='persons')
+    housing = models.ForeignKey(
+        Housing, on_delete=models.CASCADE, related_name='persons')

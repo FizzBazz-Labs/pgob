@@ -10,7 +10,8 @@ class HousingPersonSerializer(serializers.ModelSerializer):
 
 
 class HousingSerializer(serializers.ModelSerializer):
-    created_by = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    created_by = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
     persons = HousingPersonSerializer(many=True, read_only=True)
 
     class Meta:

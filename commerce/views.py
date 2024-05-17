@@ -49,7 +49,8 @@ class CommerceViewSet(AccreditationViewSet):
                     'Nacionalidad': person.country.nationality
                 })
 
-        pd.DataFrame(values).to_excel(buffer, index=False, sheet_name='Personas')
+        pd.DataFrame(values).to_excel(
+            buffer, index=False, sheet_name='Personas')
         buffer.seek(0)
 
         response = HttpResponse(
@@ -60,6 +61,15 @@ class CommerceViewSet(AccreditationViewSet):
         response['Content-Disposition'] = 'attachment; filename=data.xlsx'
 
         return response
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if instance.times_edited == 0:
+            instance.times_edited += 1
+            instance.save()
+
+        return super().update(request, *args, **kwargs)
 
 
 class CommerceEmployeeViewSet(ModelViewSet):
