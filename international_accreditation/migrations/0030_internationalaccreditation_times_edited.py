@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
     dependencies = [
         (
             "international_accreditation",
-            "0028_alter_internationalaccreditation_flight_arrival_datetime_and_more",
+            "0029_internationalaccreditation_flight_arrival_airport_and_more",
         ),
     ]
 
