@@ -1,6 +1,8 @@
 import pandas as pd
+from django.db.models import QuerySet
 
 from core.models import AccreditationStatus
+from international_accreditation.models import InternationalAccreditation
 
 
 def split_space(name: str) -> tuple[str, str]:
@@ -14,18 +16,24 @@ def split_space(name: str) -> tuple[str, str]:
     return first_name, last_name
 
 
-def get_data_frame(queryset) -> pd.DataFrame:
+def get_data_frame(queryset: QuerySet) -> pd.DataFrame:
     model = queryset.model
-    data = queryset.values(
+
+    fields = [
         'id',
+        'passport_id',
         'first_name',
         'last_name',
         'birthday',
         'country__nationality',
         'type',
         'status',
-    )
+    ]
 
+    if model == InternationalAccreditation:
+        fields.append('flight_arrival_datetime')
+
+    data = queryset.values(*fields)
     df = pd.DataFrame(data)
 
     df['second_name'] = df['first_name'].apply(lambda x: split_space(x)[1])
@@ -40,28 +48,39 @@ def get_data_frame(queryset) -> pd.DataFrame:
     df['status'] = df['status'].apply(lambda x: str(AccreditationStatus(x).label))
 
     # Rename columns and change order
-    df = df[[
+    df_fields = [
         'id',
         'first_name',
         'second_name',
         'last_name',
         'second_last_name',
+        'passport_id',
         'birthday',
         'country__nationality',
         'type',
         'status',
-    ]]
+    ]
 
-    df = df.rename(columns={
+    if model == InternationalAccreditation:
+        df_fields.append('flight_arrival_datetime')
+
+    df = df[df_fields]
+
+    rename_fields = {
         'id': 'ID',
         'first_name': 'Primer Nombre',
         'second_name': 'Segundo Nombre',
         'last_name': 'Primer Apellido',
         'second_last_name': 'Segundo Apellido',
+        'passport_id': 'Identificación (Pasaporte o Cédula)',
         'birthday': 'Fecha de Nacimiento',
         'country__nationality': 'Nacionalidad',
         'type': 'Tipo',
         'status': 'Estado',
-    })
+    }
 
+    if model == InternationalAccreditation:
+        rename_fields['flight_arrival_datetime'] = 'Fecha de Llegada'
+
+    df = df.rename(columns=rename_fields)
     return df
