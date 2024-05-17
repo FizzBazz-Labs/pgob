@@ -72,7 +72,7 @@ def get_data_frame(queryset: QuerySet) -> pd.DataFrame:
         'second_name': 'Segundo Nombre',
         'last_name': 'Primer Apellido',
         'second_last_name': 'Segundo Apellido',
-        'passport_id': 'Identificación (Pasaporte o Cédula)',
+        'passport_id': 'Cédula',
         'birthday': 'Fecha de Nacimiento',
         'country__nationality': 'Nacionalidad',
         'type': 'Tipo',
@@ -80,6 +80,7 @@ def get_data_frame(queryset: QuerySet) -> pd.DataFrame:
     }
 
     if model == InternationalAccreditation:
+        rename_fields['passport_id'] = 'Pasaporte'
         rename_fields['flight_arrival_datetime'] = 'Fecha de Llegada'
 
     df = df.rename(columns=rename_fields)
