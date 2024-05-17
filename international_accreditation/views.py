@@ -41,6 +41,10 @@ class InternationalViewSet(ComplexAccreditationViewSet):
             Q(type=choices.COMMERCIAL_NEWSLETTER)
         )
 
+    def update(self, request, *args, **kwargs):
+        print(request.data)
+        return super().update(request, *args, **kwargs)
+
 
 class InternationalListCreateApiView(ListCreateAPIView):
     queryset = InternationalAccreditation.objects.all()

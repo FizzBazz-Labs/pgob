@@ -59,6 +59,7 @@ class NationalSerializer(serializers.ModelSerializer):
             'email',
             'birthday',
             'birthplace',
+            'times_edited',
 
             # Medical Information
             'blood_type',
@@ -95,6 +96,9 @@ class NationalSerializer(serializers.ModelSerializer):
             immunizations = validated_data.pop('immunizations', [])
             medicals = validated_data.pop('medicals', [])
 
+            user = self.context['request'].user
+            validated_data['country'] = user.profile.country
+
             instance = super().create(validated_data)
 
             instance.allergies.set(allergies)
@@ -107,6 +111,14 @@ class NationalSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
 
         representation['created_by'] = UserSerializer(instance.created_by).data
+        representation['position'] = PositionSerializer(instance.position).data
+        if instance.sub_position:
+            representation['sub_position'] = SubPositionSerializer(
+                instance.sub_position).data
+
+        if instance.media_channel:
+            representation['media_channel'] = MediaChannelSerializer(
+                instance.media_channel).data
         return representation
 
 
@@ -120,7 +132,7 @@ class NationalUpdateSerializer(serializers.ModelSerializer):
             'id',
             'image',
             'first_name',
-            'country',
+            # 'country',
             'last_name',
             'position',
             'sub_position',
@@ -160,29 +172,32 @@ class NationalUpdateSerializer(serializers.ModelSerializer):
             'authorization_letter': {'required': False},
         }
 
-        def update(self, instance, validated_data):
-            self.update_many_to_many(instance, 'allergies', validated_data)
-            self.update_many_to_many(instance, 'immunizations', validated_data)
-            self.update_many_to_many(instance, 'medicals', validated_data)
+    def update(self, instance, validated_data):
+        self.update_many_to_many(instance, 'allergies', validated_data)
+        self.update_many_to_many(instance, 'immunizations', validated_data)
+        self.update_many_to_many(instance, 'medicals', validated_data)
 
-            # Update other fields
-            for field, value in validated_data.items():
-                setattr(instance, field, value)
+        # Update other fields
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
 
-            instance.save()
-            return instance
+        if instance.times_edited == 0:
+            print(self.context['request'].user)
+            print('times_edited', instance.times_edited)
 
-        def update_many_to_many(self, instance, field_name, validated_data):
-            field_data = validated_data.pop(field_name, None)
+        instance.save()
+        return instance
 
-            if field_data is not None:
-                getattr(instance, field_name).set(field_data)
-            elif field_name in validated_data:
-                getattr(instance, field_name).clear()
+    def update_many_to_many(self, instance, field_name, validated_data):
+        field_data = validated_data.pop(field_name, None)
+
+        if field_data is not None:
+            getattr(instance, field_name).set(field_data)
+        elif field_name in validated_data:
+            getattr(instance, field_name).clear()
 
 
 class NationalReadSerializer(NationalSerializer):
-    country = serializers.StringRelatedField()
     position = PositionSerializer()
     sub_position = SubPositionSerializer()
     media_channel = MediaChannelSerializer()

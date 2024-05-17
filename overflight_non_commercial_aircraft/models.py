@@ -6,7 +6,7 @@ from core.models import AccreditationStatus
 
 
 class OverflightNonCommercialAircraft(models.Model):
-    class FlightType(models.TextChoices):
+    class AircraftType(models.TextChoices):
         CIVIL = 'CIVIL', _('Civil')
         MILITARY = 'MILITARY', _('Militar')
         EMERGENCY = 'EMERGENCY', _('Emergencia')
@@ -15,18 +15,30 @@ class OverflightNonCommercialAircraft(models.Model):
         OVERFLIGHT = 'OVERFLIGHT', _('Sobrevuelo')
         TECHNICAL_SCALE = 'TECHNICAL_SCALE', _('Escala Técnica')
 
+    class FlightType(models.TextChoices):
+        FLIGHT = 'FLIGHT', _('Vuelo')
+        OVERFLIGHT = 'OVERFLIGHT', _('Sobrevuelo')
+
+    class Category(models.TextChoices):
+        TECHNICIANS = 'TECHNICIANS', _('Técnicos')
+        DIPLOMATS = 'DIPLOMATS', _('Diplomáticos')
+        MILITARIES = 'MILITARIES', _('Militares')
+        VOLUNTEERS = 'VOLUNTEERS', _('Voluntarios')
+        RESCUERS = 'RESCUERS', _('Rescatistas')
+
     country = models.ForeignKey(
         'countries.Country',
         on_delete=models.PROTECT,
         related_name='flight_forms')
 
     # Aircraft Information
-    aircraft_type = models.CharField(max_length=150)
+    aircraft_type = models.CharField(
+        max_length=150, choices=AircraftType.choices, default=AircraftType.CIVIL)
     model = models.CharField(max_length=150)
     flight_type = models.CharField(
         max_length=50,
         choices=FlightType.choices,
-        default=FlightType.CIVIL)
+        default=FlightType.FLIGHT)
 
     # Fixed Base Operator (FBO) when flight_type is CHARTER
     fbo_attendant = models.CharField(max_length=150, blank=True)
@@ -49,15 +61,16 @@ class OverflightNonCommercialAircraft(models.Model):
     passengers_count = models.IntegerField()
 
     # Flight information
-    arrival_date = models.DateField()
-    departure_date = models.DateField()
+    arrival_date = models.DateTimeField()
+    departure_date = models.DateTimeField()
     overflight_info = models.TextField()
     landing_info = models.TextField()
     origin = models.CharField(max_length=150)
     destination = models.CharField(max_length=150)
     route = models.CharField(max_length=150)
     ground_facilities = models.TextField()
-
+    category = models.CharField(
+        max_length=150, choices=Category.choices, default=Category.TECHNICIANS)
     # signature = models.CharField(max_length=150, blank=True, null=True,)
 
     created_by = models.ForeignKey(

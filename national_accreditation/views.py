@@ -4,7 +4,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
+from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from core.models import AccreditationStatus
@@ -38,6 +38,18 @@ class NationalViewSet(ComplexAccreditationViewSet):
             Q(type=choices.NEWSLETTER_COMMITTEE)
         )
 
+    def update(self, request, *args, **kwargs):
+        if self.get_object().times_edited > 0:
+
+            return Response({'error': 'You can not update this accreditation.'}, status=HTTP_400_BAD_REQUEST)
+
+        instance = self.get_object()
+        if instance.times_edited == 0:
+            instance.times_edited += 1
+            instance.save()
+
+        return super().update(request, *args, **kwargs)
+
 
 class NationalListCreateApiView(ListCreateAPIView):
     queryset = NationalAccreditation.objects.all()
@@ -49,6 +61,7 @@ class NationalRetrieveApiView(RetrieveUpdateAPIView):
     queryset = NationalAccreditation.objects.all()
 
     def get_serializer_class(self):
+        print('entra aca')
         if self.request.method == 'PUT' or self.request.method == 'PATCH':
             return NationalUpdateSerializer
 

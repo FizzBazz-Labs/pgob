@@ -40,6 +40,7 @@ class OverflightNonCommercialAircraftSerializer(serializers.ModelSerializer):
             'destination',
             'route',
             'ground_facilities',
+            'category',
             # 'signature',
             'created_by',
             'status',
