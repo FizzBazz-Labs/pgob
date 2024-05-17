@@ -2,6 +2,7 @@ import pandas as pd
 from django.db.models import QuerySet
 
 from core.models import AccreditationStatus
+from housing.models import Housing
 from international_accreditation.models import InternationalAccreditation
 
 
