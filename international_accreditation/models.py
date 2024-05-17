@@ -108,17 +108,21 @@ class InternationalAccreditation(models.Model):
     # Flight Information
     flight_arrival_datetime = models.DateTimeField(blank=True, null=True)
     flight_arrival_number = models.CharField(max_length=150, blank=True)
+    flight_arrival_airport = models.CharField(max_length=150, blank=True)
     flight_from = models.ForeignKey(
         'countries.Country',
         on_delete=models.PROTECT,
-        related_name='flight_from', blank=True, null=True)
+        related_name='flight_from',
+        blank=True, null=True)
 
     flight_departure_datetime = models.DateTimeField(blank=True, null=True)
     flight_departure_number = models.CharField(max_length=150, blank=True)
+    flight_departure_airport = models.CharField(max_length=150, blank=True)
     flight_to = models.ForeignKey(
         'countries.Country',
         on_delete=models.PROTECT,
-        related_name='flight_to', blank=True, null=True)
+        related_name='flight_to',
+        blank=True, null=True)
 
     # Accreditation Type
     type = models.CharField(
