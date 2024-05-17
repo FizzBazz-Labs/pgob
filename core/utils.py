@@ -32,6 +32,7 @@ def get_data_frame(queryset: QuerySet) -> pd.DataFrame:
 
     if model == InternationalAccreditation:
         fields.append('flight_arrival_datetime')
+        fields.append('flight_departure_datetime')
 
     data = queryset.values(*fields)
     df = pd.DataFrame(data)
@@ -46,6 +47,12 @@ def get_data_frame(queryset: QuerySet) -> pd.DataFrame:
 
     df['type'] = df['type'].apply(lambda x: str(model.AccreditationType(x).label) if not pd.isnull(x) else 'N/A')
     df['status'] = df['status'].apply(lambda x: str(AccreditationStatus(x).label))
+
+    if model == InternationalAccreditation:
+        df['flight_arrival_datetime'] = df['flight_arrival_datetime'].apply(
+            lambda x: x.strftime('%d-%m-%Y %H:%M') if not pd.isnull(x) else 'N/A')
+        df['flight_departure_datetime'] = df['flight_departure_datetime'].apply(
+            lambda x: x.strftime('%d-%m-%Y %H:%M') if not pd.isnull(x) else 'N/A')
 
     # Rename columns and change order
     df_fields = [
@@ -63,6 +70,7 @@ def get_data_frame(queryset: QuerySet) -> pd.DataFrame:
 
     if model == InternationalAccreditation:
         df_fields.append('flight_arrival_datetime')
+        df_fields.append('flight_departure_datetime')
 
     df = df[df_fields]
 
@@ -81,7 +89,8 @@ def get_data_frame(queryset: QuerySet) -> pd.DataFrame:
 
     if model == InternationalAccreditation:
         rename_fields['passport_id'] = 'Pasaporte'
-        rename_fields['flight_arrival_datetime'] = 'Fecha de Llegada'
+        rename_fields['flight_arrival_datetime'] = 'Fecha y Hora de Llegada'
+        rename_fields['flight_departure_datetime'] = 'Fecha y Hora de Salida'
 
     df = df.rename(columns=rename_fields)
     return df
