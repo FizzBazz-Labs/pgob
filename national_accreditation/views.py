@@ -61,7 +61,6 @@ class NationalRetrieveApiView(RetrieveUpdateAPIView):
     queryset = NationalAccreditation.objects.all()
 
     def get_serializer_class(self):
-        print('entra aca')
         if self.request.method == 'PUT' or self.request.method == 'PATCH':
             return NationalUpdateSerializer
 

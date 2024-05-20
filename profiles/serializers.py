@@ -88,11 +88,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         return email
 
-    def create_profile(self, user, phone_number, country):
+    def create_profile(self, user, phone_number, country, passport_id):
         Profile.objects.create(
             user=user,
             phone_number=phone_number,
-            country=country
+            country=country,
+            passport_id=passport_id
         )
 
     def add_to_group(self, user, group_name: str):
@@ -113,11 +114,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         group = validated_data.pop('group', '')
         country = profile_data.get('country')
         phone_number = profile_data.get('phone_number')
+        passport_id = profile_data.get('passport_id')
 
         user = get_user_model().objects.create(**validated_data)
         user.set_password(user.password)
         user.save()
-        self.create_profile(user, phone_number, country)
+        self.create_profile(user, phone_number, country, passport_id)
         self.add_accreditations(user, accreditations)
         self.add_to_group(user, group)
         return user
