@@ -17,6 +17,8 @@ from core.models import AccreditationStatus, SiteConfiguration, Certification
 
 from credentials.utils import certificate_accreditation
 
+from national_accreditation.models import NationalAccreditation as National
+
 
 class ApproveMixin:
     @action(detail=True, methods=['patch'])
@@ -94,7 +96,10 @@ class CertificateMixin:
 
         try:
             item = queryset.get(pk=pk)
-            certificate_accreditation(configuration, 'nationals', item)
+            certificate_accreditation(
+                configuration,
+                'nationals' if model == National else 'internationals',
+                item)
 
         except Certification.DoesNotExist:
             return Response(
