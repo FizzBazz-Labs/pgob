@@ -17,7 +17,10 @@ from overflight_non_commercial_aircraft.models import OverflightNonCommercialAir
 
 
 def get_image_font(size: int) -> ImageFont:
-    return ImageFont.truetype('Andale Mono.ttf', size, encoding='utf-8')
+    from urllib.request import urlopen
+
+    font_url = 'https://github.com/googlefonts/roboto/blob/master/src/hinted/Roboto-Regular.ttf?raw=true'
+    return ImageFont.truetype(urlopen(font_url), size, encoding='utf-8')
 
 
 def get_qr_code(data: str) -> Image:
