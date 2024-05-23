@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
+    'import_export',
 
     'accreditations.apps.AccreditationsConfig',
     'core.apps.CoreConfig',
