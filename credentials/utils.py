@@ -3,6 +3,8 @@ from uuid import uuid4
 from typing import Any
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
+import os
+import tempfile
 
 import qrcode
 
@@ -17,10 +19,12 @@ from overflight_non_commercial_aircraft.models import OverflightNonCommercialAir
 
 
 def get_image_font(size: int) -> ImageFont:
-    from urllib.request import urlopen
+    try:
+        path = settings.BASE_DIR / 'credentials' / 'static' / 'credentials' / 'Roboto-Regular.ttf'
+        return ImageFont.truetype(path, size=size, encoding='utf-8')
 
-    font_url = 'https://github.com/googlefonts/roboto/blob/master/src/hinted/Roboto-Regular.ttf?raw=true'
-    return ImageFont.truetype(urlopen(font_url), size, encoding='utf-8')
+    except OSError as e:
+        return ImageFont.load_default(size)
 
 
 def get_qr_code(data: str) -> Image:
