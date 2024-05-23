@@ -11,8 +11,8 @@ class Accreditation(models.Model):
 
     certificated = models.BooleanField(default=False)
     certification = models.ImageField(upload_to='certifications/img/', blank=True, null=True)
-    reviewed_comment = models.TextField(blank=True)
-    authorized_comment = models.TextField(blank=True)
+    reviewed_comment = models.TextField(blank=True, null=True)
+    authorized_comment = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=150, choices=Status.choices, default=Status.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

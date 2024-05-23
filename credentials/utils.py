@@ -192,7 +192,6 @@ def certificate_accreditation(
     image_bytes.seek(0)
 
     item.certification.save(f'{filename}.png', image_bytes, save=False)
-
     item.save()
 
 

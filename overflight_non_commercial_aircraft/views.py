@@ -1,11 +1,11 @@
 from django.http import HttpResponse
 
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 
 from credentials.utils import draw_overflight_permission
-
 
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft
 from overflight_non_commercial_aircraft.serializers import OverflightNonCommercialAircraftSerializer, \
@@ -25,7 +25,7 @@ class OverflightNonCommercialAircraftViewSet(AccreditationViewSet):
 
         return OverflightNonCommercialAircraftSerializer
 
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=['get'], permission_classes=[AllowAny])
     def certificate(self, request, pk=None, *args, **kwargs) -> HttpResponse:
         queryset = self.get_queryset()
 
@@ -38,7 +38,7 @@ class OverflightNonCommercialAircraftViewSet(AccreditationViewSet):
                 response = HttpResponse(
                     pdf_file, content_type='application/pdf')
                 response['Content-Disposition'] = f'attachment; filename=Permiso_Sobrevuelo_{
-                    item.country.name}.pdf'
+                item.country.name}.pdf'
 
             return response
 
