@@ -16,6 +16,10 @@ from international_accreditation.models import InternationalAccreditation as Int
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft as Airfraft
 
 
+def get_image_font(size: int) -> ImageFont:
+    return ImageFont.truetype('Andale Mono.ttf', size, encoding='utf-8')
+
+
 def get_qr_code(data: str) -> Image:
     qr_code = qrcode.make(data)
     qr_buffer = BytesIO()
@@ -52,13 +56,15 @@ def get_certification_data(
 
 def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     template = settings.BASE_DIR / 'credentials' / \
-        'static' / 'credentials' / 'base.png'
+               'static' / 'credentials' / 'base.png'
 
     image = Image.open(template)
     image_draw = ImageDraw.Draw(image)
 
     # Draw title
-    title_font = ImageFont.load_default(30)
+    # title_font = ImageFont.load_default(30)
+    title_font = get_image_font(30)
+
     title_position = (
         image.width - image_draw.textlength(data['president'], title_font))
 
@@ -72,7 +78,8 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     )
 
     # Draw text
-    term_date_font = ImageFont.load_default(20)
+    # term_date_font = ImageFont.load_default(20)
+    term_date_font = get_image_font(20)
     term_date_position = (
         image.width - image_draw.textlength(data['term_date'], term_date_font))
     image_draw.text(
@@ -92,9 +99,9 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
         280,
     ))
 
-    fullname_font = ImageFont.load_default(45)
-    fullname_position = image.width - \
-        image_draw.textlength(data['fullname'], fullname_font)
+    # fullname_font = ImageFont.load_default(45)
+    fullname_font = get_image_font(45)
+    fullname_position = image.width - image_draw.textlength(data['fullname'], fullname_font)
 
     image_draw.text(
         (fullname_position / 2, 580),
@@ -109,9 +116,9 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     type_box = Image.new('RGBA', (image.width - 29, 100), data['color'])
     type_box_draw = ImageDraw.Draw(type_box)
 
-    type_title_font = ImageFont.load_default(30)
-    type_title_with = type_box.width - \
-        type_box_draw.textlength(data['type'], type_title_font)
+    # type_title_font = ImageFont.load_default(30)
+    type_title_font = get_image_font(30)
+    type_title_with = type_box.width - type_box_draw.textlength(data['type'], type_title_font)
 
     type_box_draw.text(
         (type_title_with / 2, 30),
@@ -183,7 +190,6 @@ def certificate_accreditation(
 
 
 def draw_overflight_permission(pk: int):
-
     def draw_flight_type(flightType: str):
         if flightType == Airfraft.FlightType.FLIGHT:
             return (605, 390)
@@ -226,12 +232,15 @@ def draw_overflight_permission(pk: int):
     image = Image.open(template)
     image_draw = ImageDraw.Draw(image)
 
+    # Draw Date
     image_draw.text((160, 298), data.created_at.date().strftime('%Y-%m-%d'), fill='black',
                     font=ImageFont.load_default(20))
 
+    # Draw Applicant
     image_draw.text((220, 357), data.created_by.get_full_name(), fill='black',
                     font=ImageFont.load_default(20))
 
+    # Draw applicant
     image_draw.text((920, 357), data.country.name, fill='black',
                     font=ImageFont.load_default(20))
 
@@ -247,12 +256,15 @@ def draw_overflight_permission(pk: int):
     image_draw.text((470, 680), data.arrival_date.time().strftime(
         '%H:%M'), fill='black', font=ImageFont.load_default(19))
 
+    # Draw applicant
     image_draw.text((860, 680), data.origin, fill='black',
                     font=ImageFont.load_default(20))
 
+    # Draw applicant
     image_draw.text((320, 740), data.model, fill='black',
                     font=ImageFont.load_default(20))
 
+    # Draw applicant
     image_draw.text((687, 740), data.registration, fill='black',
                     font=ImageFont.load_default(20))
 
@@ -274,4 +286,4 @@ def draw_overflight_permission(pk: int):
     image_draw.text(draw_category(data.category), 'X',
                     fill='black', font=ImageFont.load_default(20))
 
-    image.save('aircraft.pdf')
+    image.save('prueba.png')
