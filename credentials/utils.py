@@ -20,7 +20,8 @@ from overflight_non_commercial_aircraft.models import OverflightNonCommercialAir
 
 def get_image_font(size: int) -> ImageFont:
     try:
-        path = settings.BASE_DIR / 'credentials' / 'static' / 'credentials' / 'Roboto-Regular.ttf'
+        path = settings.BASE_DIR / 'credentials' / \
+            'static' / 'credentials' / 'Roboto-Regular.ttf'
         return ImageFont.truetype(path, size=size, encoding='utf-8')
 
     except OSError as e:
@@ -63,7 +64,7 @@ def get_certification_data(
 
 def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     template = settings.BASE_DIR / 'credentials' / \
-               'static' / 'credentials' / 'base.png'
+        'static' / 'credentials' / 'base.png'
 
     image = Image.open(template)
     image_draw = ImageDraw.Draw(image)
@@ -108,7 +109,8 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     # fullname_font = ImageFont.load_default(45)
     fullname_font = get_image_font(45)
-    fullname_position = image.width - image_draw.textlength(data['fullname'], fullname_font)
+    fullname_position = image.width - \
+        image_draw.textlength(data['fullname'], fullname_font)
 
     image_draw.text(
         (fullname_position / 2, 580),
@@ -125,7 +127,8 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     # type_title_font = ImageFont.load_default(30)
     type_title_font = get_image_font(30)
-    type_title_with = type_box.width - type_box_draw.textlength(data['type'], type_title_font)
+    type_title_with = type_box.width - \
+        type_box_draw.textlength(data['type'], type_title_font)
 
     type_box_draw.text(
         (type_title_with / 2, 30),
@@ -292,4 +295,4 @@ def draw_overflight_permission(pk: int):
     image_draw.text(draw_category(data.category), 'X',
                     fill='black', font=ImageFont.load_default(20))
 
-    image.save('prueba.png')
+    image.save('aircraft.pdf')
