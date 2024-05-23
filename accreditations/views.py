@@ -23,6 +23,7 @@ class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet)
 
     def get_queryset(self) -> QuerySet:
         is_user = IsUser().has_permission(self.request, self)
+
         if is_user:
             return self.queryset.filter(created_by=self.request.user)
 

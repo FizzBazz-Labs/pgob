@@ -12,6 +12,8 @@ settings.ini
 pdf_files/
 new_env/
 
+aircraft.pdf
+
 # Distribution / packaging
 .Python
 env/

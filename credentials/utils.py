@@ -182,7 +182,7 @@ def certificate_accreditation(
     item.save()
 
 
-def draw_overflight_permission(request, pk: int):
+def draw_overflight_permission(pk: int):
 
     def draw_flight_type(flightType: str):
         if flightType == Airfraft.FlightType.FLIGHT:
@@ -226,15 +226,12 @@ def draw_overflight_permission(request, pk: int):
     image = Image.open(template)
     image_draw = ImageDraw.Draw(image)
 
-    # Draw Date
     image_draw.text((160, 298), data.created_at.date().strftime('%Y-%m-%d'), fill='black',
                     font=ImageFont.load_default(20))
 
-    # Draw Applicant
     image_draw.text((220, 357), data.created_by.get_full_name(), fill='black',
                     font=ImageFont.load_default(20))
 
-    # Draw applicant
     image_draw.text((920, 357), data.country.name, fill='black',
                     font=ImageFont.load_default(20))
 
@@ -250,15 +247,12 @@ def draw_overflight_permission(request, pk: int):
     image_draw.text((470, 680), data.arrival_date.time().strftime(
         '%H:%M'), fill='black', font=ImageFont.load_default(19))
 
-    # Draw applicant
     image_draw.text((860, 680), data.origin, fill='black',
                     font=ImageFont.load_default(20))
 
-    # Draw applicant
     image_draw.text((320, 740), data.model, fill='black',
                     font=ImageFont.load_default(20))
 
-    # Draw applicant
     image_draw.text((687, 740), data.registration, fill='black',
                     font=ImageFont.load_default(20))
 
@@ -280,4 +274,4 @@ def draw_overflight_permission(request, pk: int):
     image_draw.text(draw_category(data.category), 'X',
                     fill='black', font=ImageFont.load_default(20))
 
-    image.save('prueba.png')
+    image.save('aircraft.pdf')
