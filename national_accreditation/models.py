@@ -99,7 +99,7 @@ class NationalAccreditation(models.Model):
     allergies = models.ManyToManyField(
         'allergies.Allergy',
         blank=True)
-    allergies_description = models.TextField(blank=True)
+    allergies_description = models.TextField(blank=True, null=True)
     immunizations = models.ManyToManyField(
         'immunizations.Immunization',
         blank=True)
@@ -120,14 +120,14 @@ class NationalAccreditation(models.Model):
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='national_reviewed_set')
-    reviewed_comment = models.TextField(blank=True)
+    reviewed_comment = models.TextField(blank=True, null=True)
 
     authorized_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='national_authorized_set')
-    authorized_comment = models.TextField(blank=True)
+    authorized_comment = models.TextField(blank=True, null=True)
 
     rejected_by = models.ForeignKey(
         get_user_model(),

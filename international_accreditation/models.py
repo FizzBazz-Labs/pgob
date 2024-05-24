@@ -88,7 +88,7 @@ class InternationalAccreditation(models.Model):
         'allergies.Allergy',
         related_name='international_forms',
         blank=True)
-    allergies_description = models.TextField(blank=True)
+    allergies_description = models.TextField(blank=True, null=True)
     immunizations = models.ManyToManyField(
         'immunizations.Immunization',
         related_name='international_forms',
@@ -136,14 +136,14 @@ class InternationalAccreditation(models.Model):
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='international_reviewed_set')
-    reviewed_comment = models.TextField(blank=True)
+    reviewed_comment = models.TextField(blank=True, null=True)
 
     authorized_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='international_authorized_set')
-    authorized_comment = models.TextField(blank=True)
+    authorized_comment = models.TextField(blank=True, null=True)
 
     rejected_by = models.ForeignKey(
         get_user_model(),
