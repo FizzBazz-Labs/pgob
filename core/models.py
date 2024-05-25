@@ -15,7 +15,7 @@ class SiteConfiguration(models.Model):
         upload_to='site/backgrounds', null=True, blank=True)
     login_title = models.CharField(max_length=255, default='Iniciar Sesión')
     login_title_2 = models.CharField(max_length=255, default='Acreditaciones')
-    login_title_3 = models.CharField(max_length=255, default='Acreditaciones')
+    login_title_3 = models.CharField(max_length=255, default='Acreditaciones', null=True, blank=True)
     login_title_color = models.CharField(max_length=150, default='#FFFFFF')
     use_bold = models.BooleanField(default=True)
     login_title_size = models.CharField(max_length=150, default='24')
