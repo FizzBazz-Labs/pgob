@@ -4,6 +4,8 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from django.contrib.auth import views as auth_views
+
 import rest_framework_simplejwt.views as jwt_views
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
@@ -14,6 +16,8 @@ urlpatterns = [
     path('api/v1/', include('core.urls')),
 
     path('admin/', admin.site.urls),
+    path('admin/logout/', auth_views.LogoutView.as_view(next_page='/admin/login/'), name='logout'),
+
 
     path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/v1/docs/',
