@@ -61,8 +61,8 @@ class ReviewAccreditationBase(APIView):
 class RetrievePowerBiToken(APIView):
     permission_classes = [IsAuthenticated]
 
-    def build_embed_url(self, group_id, report_id):
-        return f'https://app.powerbi.com/reportEmbed?reportId={report_id}&groupId={group_id}&w=2'
+    def build_embed_url(self, group_id, report_id, embed_token):
+        return f'https://app.powerbi.com/reportEmbed?reportId={report_id}&groupId={group_id}&w=2&config={embed_token}'
 
     def get_embed_token(self, access_token):
         url = "https://api.powerbi.com/v1.0/myorg/groups/76789884-6d41-48a4-a09a-2004737d536e/reports/2a3fa927-5ba8-4e81-ac4a-af0ef302e319/GenerateToken"
@@ -106,23 +106,26 @@ class RetrievePowerBiToken(APIView):
         expiration_date = embed_data.get('expiration')
 
         self.save_token(embed_data.get('token'), expiration_date)
+        return access_token.split('.')[0]
 
     def get(self, request: Request):
 
         token_instance = PowerBiToken.objects.last()
         now = django_timezone.make_aware(datetime.now(), timezone.utc)
+        access_token = None
 
         if token_instance is None:
-            self.generate_token()
+            access_token = self.generate_token()
         else:
             if token_instance.expiration_date < now:
-                self.generate_token()
+                access_token = self.generate_token()
 
         token_instance = PowerBiToken.objects.last()
+        # embed_token = token_instance.token.split('.')[0]
         embed_url = self.build_embed_url('76789884-6d41-48a4-a09a-2004737d536e',
-                                         '2a3fa927-5ba8-4e81-ac4a-af0ef302e319')
+                                         '2a3fa927-5ba8-4e81-ac4a-af0ef302e319', access_token)
 
-        print(token_instance.expiration_date, now)
+        # print(token_instance.expiration_date, now)
 
         return Response({
             'token': token_instance.token,
