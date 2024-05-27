@@ -65,11 +65,11 @@ class RetrievePowerBiToken(APIView):
         return f'https://app.powerbi.com/reportEmbed?reportId={report_id}&groupId={group_id}&w=2&config={embed_token}'
 
     def get_embed_token(self, access_token):
-        url = "https://api.powerbi.com/v1.0/myorg/groups/76789884-6d41-48a4-a09a-2004737d536e/reports/2a3fa927-5ba8-4e81-ac4a-af0ef302e319/GenerateToken"
+        url = "https://api.powerbi.com/v1.0/myorg/groups/76789884-6d41-48a4-a09a-2004737d536e/reports/116de701-d119-4ab8-962a-a07a906f45ac/GenerateToken"
 
         data = {
             "accessLevel": "View",
-            "datasetId": "6c3a1803-260d-4a23-8895-161079b9814b"
+            "datasetId": "0f821299-8a62-456f-93a2-5ec7b9fffb6f"
         }
         headers = {
             'Authorization': f'Bearer {access_token}'
