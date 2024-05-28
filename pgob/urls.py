@@ -16,7 +16,9 @@ urlpatterns = [
     path('api/v1/', include('core.urls')),
 
     path('admin/', admin.site.urls),
-    path('admin/logout/', auth_views.LogoutView.as_view(next_page='/admin/login/'), name='logout'),
+    path('admin/logout/',
+         auth_views.LogoutView.as_view(next_page='/admin/login/'), name='logout'),
+
 
 
     path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
