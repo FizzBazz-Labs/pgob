@@ -239,8 +239,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = 'auth:login'
-LOGIN_REDIRECT_URL = 'auth:index'
-LOGOUT_REDIRECT_URL = 'auth:index'
+LOGIN_REDIRECT_URL = 'auth:login'
+LOGOUT_REDIRECT_URL = '/admin/login/'
 
 # Email settings
 
