@@ -20,7 +20,7 @@ from pgob_auth.permissions import IsAdmin, IsReviewer
 
 from pgob.settings import POWERBI_CLIENT_ID, POWERBI_CLIENT_SECRET, POWERBI_TENANT_ID
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from accreditations.views import AccreditationViewSet, ComplexAccreditationViewSet
 
@@ -62,49 +62,72 @@ class RetrievePowerBiToken(APIView):
     permission_classes = [IsAuthenticated]
 
     def build_embed_url(self, group_id, report_id):
-        return f'https://app.powerbi.com/reportEmbed?reportId={report_id}&groupId={group_id}&w=2'
+        return f'https://app.powerbi.com/reportEmbed?reportId=548d80f0-df79-44be-be20-dc3d338e920b&groupId=76789884-6d41-48a4-a09a-2004737d536e&w=2'
 
     def get_embed_token(self, access_token):
-        url = "https://api.powerbi.com/v1.0/myorg/groups/76789884-6d41-48a4-a09a-2004737d536e/reports/116de701-d119-4ab8-962a-a07a906f45ac/GenerateToken"
+        url = "https://api.powerbi.com/v1.0/myorg/GenerateToken"
 
         data = {
-            "accessLevel": "View",
-            "datasetId": "0f821299-8a62-456f-93a2-5ec7b9fffb6f"
+            "reports": [
+                {
+                    "id": "548d80f0-df79-44be-be20-dc3d338e920b"
+                }
+            ],
+            "datasets": [
+                {
+                    "id": "0f821299-8a62-456f-93a2-5ec7b9fffb6f",
+                    "xmlaPermissions": "ReadOnly"
+                }
+            ],
+            "targetWorkspaces": [
+                {
+                    "id": "76789884-6d41-48a4-a09a-2004737d536e"
+                }
+            ]
         }
         headers = {
             'Authorization': f'Bearer {access_token}'
         }
 
+        print(data)
+
         response = requests.post(url, headers=headers, data=data)
         return response.json()
 
     def save_token(self, access_token, expiration):
-        expiration_date = parse_datetime(expiration)
+        expiration_date = expiration
         expiration_date = expiration_date.replace(tzinfo=timezone.utc)
         token, created = PowerBiToken.objects.get_or_create(
             token=access_token, expiration_date=expiration_date)
         return token
 
     def generate_token(self):
+        now = datetime.now()
         data = {
             'grant_type': 'client_credentials',
             'client_secret': POWERBI_CLIENT_SECRET,
             'client_id': POWERBI_CLIENT_ID,
-            'resource': 'https://analysis.windows.net/powerbi/api'
+            'scope': 'https://analysis.windows.net/powerbi/api/.default'
         }
 
         get_token_request = requests.post(
             url=f'https://login.microsoftonline.com/{
-                POWERBI_TENANT_ID}/oauth2/token',
+                POWERBI_TENANT_ID}/oauth2/v2.0/token',
             data=data
         )
 
         response = json.loads(get_token_request.text)
         access_token = response.get('access_token')
 
-        embed_data = self.get_embed_token(access_token)
-        expiration_date = embed_data.get('expiration')
+        print(access_token)
 
+        embed_data = self.get_embed_token(access_token)
+        print(embed_data)
+        expires_in = embed_data.get('expires_in')
+        seconds_sum = 3599 / 1000
+
+        expiration_date = now + timedelta(seconds=seconds_sum)
+        print(expiration_date)
         self.save_token(embed_data.get('token'), expiration_date)
 
     def get(self, request: Request):
@@ -120,7 +143,7 @@ class RetrievePowerBiToken(APIView):
 
         token_instance = PowerBiToken.objects.last()
         embed_url = self.build_embed_url('76789884-6d41-48a4-a09a-2004737d536e',
-                                         '116de701-d119-4ab8-962a-a07a906f45ac')
+                                         '548d80f0-df79-44be-be20-dc3d338e920b')
 
         print(token_instance.expiration_date, now)
 
