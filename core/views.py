@@ -73,7 +73,7 @@ class RetrievePowerBiToken(APIView):
         data = {
             "reports": [
                 {
-                    "id": "548d80f0-df79-44be-be20-dc3d338e920b"
+                    "id": "548d80f0-df79-44be-be20-dc3d338e920b",
                 }
             ],
             "datasets": [
