@@ -92,8 +92,6 @@ class RetrievePowerBiToken(APIView):
             'Authorization': f'Bearer {access_token}'
         }
 
-        # print(data)
-
         response = requests.post(url, headers=headers, json=data)
         return response.json()
 
@@ -121,11 +119,8 @@ class RetrievePowerBiToken(APIView):
 
         response = json.loads(get_token_request.text)
         access_token = response.get('access_token')
-
         embed_data = self.get_embed_token(access_token)
         expiration_date = parse_datetime(embed_data.get('expiration'))
-
-        # expiration_date = now + timedelta(seconds=seconds_sum)
         self.save_token(embed_data.get('token'), expiration_date)
 
     def get(self, request: Request):
@@ -140,7 +135,6 @@ class RetrievePowerBiToken(APIView):
                 self.generate_token()
 
         token_instance = PowerBiToken.objects.last()
-        # embed_token = token_instance.token.split('.')[0]
         embed_url = self.build_embed_url('76789884-6d41-48a4-a09a-2004737d536e',
                                          '548d80f0-df79-44be-be20-dc3d338e920b')
 
