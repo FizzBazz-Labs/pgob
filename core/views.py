@@ -13,15 +13,12 @@ from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
-from core.models import SiteConfiguration, AccreditationStatus, PowerBiToken, ReportId
+from core.models import SiteConfiguration, AccreditationStatus, PowerBiToken
 from core.serializers import SiteConfigurationSerializer
 
 from pgob_auth.permissions import IsAdmin, IsReviewer
 
 from pgob.settings import POWERBI_CLIENT_ID, POWERBI_CLIENT_SECRET, POWERBI_TENANT_ID
-
-from datetime import datetime, timedelta
-
 from accreditations.views import AccreditationViewSet, ComplexAccreditationViewSet
 
 
@@ -135,6 +132,7 @@ class RetrievePowerBiToken(APIView):
                 self.generate_token()
 
         token_instance = PowerBiToken.objects.last()
+        
         embed_url = self.build_embed_url('76789884-6d41-48a4-a09a-2004737d536e',
                                          '548d80f0-df79-44be-be20-dc3d338e920b')
 
