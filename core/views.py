@@ -111,7 +111,7 @@ class RetrievePowerBiToken(APIView):
     def get(self, request: Request):
 
         token_instance = PowerBiToken.objects.last()
-        now = django_timezone.make_aware(datetime.now(), timezone.utc)
+        now = django_timezone.now()
         access_token = None
 
         if token_instance is None:
