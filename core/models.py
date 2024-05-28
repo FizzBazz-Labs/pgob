@@ -89,9 +89,10 @@ class Certification(models.Model):
         return str(accreditation_type.label)
 
 
-class ReportId(models.Model):
+class Report(models.Model):
     name = models.CharField(max_length=255)
     report_id = models.CharField(max_length=255)
+    dataset_id = models.CharField(max_length=255)
 
     def __str__(self) -> str:
         return self.report_id

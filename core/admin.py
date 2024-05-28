@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from core.models import SiteConfiguration, Accreditation, Certification, PowerBiToken, ReportId
+from core.models import SiteConfiguration, Accreditation, Certification, PowerBiToken, Report
 
 
 @admin.register(Accreditation)
@@ -73,6 +73,6 @@ class PowerBiTokenAdmin(admin.ModelAdmin):
     readonly_fields = ('expiration_date',)
 
 
-@admin.register(ReportId)
-class ReportIdAdmin(admin.ModelAdmin):
+@admin.register(Report)
+class ReportAdmin(admin.ModelAdmin):
     ...

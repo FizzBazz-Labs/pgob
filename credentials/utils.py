@@ -18,7 +18,8 @@ from overflight_non_commercial_aircraft.models import OverflightNonCommercialAir
 
 def get_image_font(size: int) -> ImageFont:
     try:
-        path = settings.BASE_DIR / 'credentials' / 'static' / 'credentials' / 'Avenir-Book.ttf'
+        path = settings.BASE_DIR / 'credentials' / \
+            'static' / 'credentials' / 'Avenir-Book.ttf'
         return ImageFont.truetype(path, size=size, encoding='utf-8')
 
     except OSError as e:
@@ -60,7 +61,8 @@ def get_certification_data(
 
 
 def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
-    template = settings.BASE_DIR / 'credentials' / 'static' / 'credentials' / 'base.jpg'
+    template = settings.BASE_DIR / 'credentials' / \
+        'static' / 'credentials' / 'base.jpg'
 
     image = Image.open(template)
     image_draw = ImageDraw.Draw(image)
@@ -82,7 +84,8 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     # Draw subtitle
     subtitle = 'Presidente de la República'
     subtitle_font = get_image_font(45)
-    subtitle_position = (image.width - image_draw.textlength(subtitle, subtitle_font))
+    subtitle_position = (
+        image.width - image_draw.textlength(subtitle, subtitle_font))
 
     image_draw.text(
         (subtitle_position / 2, 815),
@@ -96,7 +99,8 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     # Draw text
     term_date = data['term_date']
     term_date_font = get_image_font(45)
-    term_date_position = (image.width - image_draw.textlength(term_date, term_date_font))
+    term_date_position = (
+        image.width - image_draw.textlength(term_date, term_date_font))
 
     image_draw.text(
         (term_date_position / 2, 875),
@@ -124,7 +128,8 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     # Draw Fullname
     fullname = data['fullname']
     fullname_font = get_image_font(90)
-    fullname_position = image.width - image_draw.textlength(fullname, fullname_font)
+    fullname_position = image.width - \
+        image_draw.textlength(fullname, fullname_font)
 
     image_draw.text(
         (fullname_position / 2, 1525),
@@ -142,7 +147,8 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     type_title_font_size = 60
     type_title_font = get_image_font(type_title_font_size)
-    type_title_with = type_box.width - type_box_draw.textlength(data['type'], type_title_font)
+    type_title_with = type_box.width - \
+        type_box_draw.textlength(data['type'], type_title_font)
 
     type_box_draw.text(
         (type_title_with / 2, ((type_height - type_title_font_size - 15) / 2)),
@@ -163,7 +169,8 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     image_copy.paste(qr_found_data_image, qr_position)
 
     # Draw QR Code
-    qr_data = f'{settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
+    qr_data = f'{
+        settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
     qr_image = get_qr_code(qr_data)
     image.paste(qr_image, qr_position)
 
@@ -213,35 +220,35 @@ def certificate_accreditation(
 def draw_overflight_permission(pk: int):
     def draw_flight_type(flightType: str):
         if flightType == Airfraft.FlightType.FLIGHT:
-            return (605, 390)
+            return (1210, 785)
         else:
-            return (605, 425)
+            return (1210, 850)
 
     def draw_aircraft_type(aircraftType: str):
         if aircraftType == Airfraft.AircraftType.EMERGENCY:
-            return (225, 510)
+            return (450, 1020)
         elif aircraftType == Airfraft.AircraftType.AMBULANCE:
-            return (418, 510)
+            return (832, 1020)
         elif aircraftType == Airfraft.AircraftType.CHARTER:
-            return (564, 510)
+            return (1125, 1020)
         elif aircraftType == Airfraft.AircraftType.MILITARY:
-            return (700, 510)
+            return (1400, 1020)
         elif aircraftType == Airfraft.AircraftType.TECHNICAL_SCALE:
-            return (1162, 510)
+            return (2325, 1020)
         else:
             return (0, 0)
 
     def draw_category(category: str):
         if category == Airfraft.Category.TECHNICIANS:
-            return (190, 1005)
+            return (379, 2010)
         elif category == Airfraft.Category.DIPLOMATS:
-            return (400, 1005)
+            return (800, 2010)
         elif category == Airfraft.Category.MILITARIES:
-            return (585, 1005)
+            return (1170, 2010)
         elif category == Airfraft.Category.RESCUERS:
-            return (977, 1005)
+            return (1955, 2010)
         elif category == Airfraft.Category.VOLUNTEERS:
-            return (790, 1005)
+            return (1580, 2010)
         else:
             return (0, 0)
 
@@ -254,57 +261,59 @@ def draw_overflight_permission(pk: int):
     image_draw = ImageDraw.Draw(image)
 
     # Draw Date
-    image_draw.text((160, 298), data.created_at.date().strftime('%Y-%m-%d'), fill='black',
-                    font=ImageFont.load_default(20))
+    image_draw.text((320, 605), data.created_at.date().strftime('%Y-%m-%d'), fill='black',
+                    font=ImageFont.load_default(42))
 
     # Draw Applicant
-    image_draw.text((220, 357), data.created_by.get_full_name(), fill='black',
-                    font=ImageFont.load_default(20))
+    image_draw.text((410, 720), data.created_by.get_full_name(), fill='black',
+                    font=ImageFont.load_default(42))
 
     # Draw applicant
-    image_draw.text((920, 357), data.country.name, fill='black',
-                    font=ImageFont.load_default(20))
+    image_draw.text((1830, 720), data.country.name, fill='black',
+                    font=ImageFont.load_default(42))
 
     image_draw.text(draw_flight_type(data.flight_type), 'X', fill='black',
-                    font=ImageFont.load_default(20))
+                    font=ImageFont.load_default(42))
 
     image_draw.text(draw_aircraft_type(data.aircraft_type), 'X',
-                    fill='black', font=ImageFont.load_default(20))
+                    fill='black', font=ImageFont.load_default(42))
 
-    image_draw.text((278, 680), data.arrival_date.strftime(
-        '%Y-%m-%d'), fill='black', font=ImageFont.load_default(19))
+    image_draw.text((550, 1360), data.arrival_date.strftime(
+        '%Y-%m-%d'), fill='black', font=ImageFont.load_default(40))
 
-    image_draw.text((470, 680), data.arrival_date.time().strftime(
-        '%H:%M'), fill='black', font=ImageFont.load_default(19))
+    image_draw.text((930, 1360), data.arrival_date.time().strftime(
+        '%H:%M'), fill='black', font=ImageFont.load_default(42))
 
-    # Draw applicant
-    image_draw.text((860, 680), data.origin, fill='black',
-                    font=ImageFont.load_default(20))
+    # flight procedence
+    image_draw.text((1700, 1360), data.origin, fill='black',
+                    font=ImageFont.load_default(42))
 
-    # Draw applicant
-    image_draw.text((320, 740), data.model, fill='black',
-                    font=ImageFont.load_default(20))
+    # flight model
+    image_draw.text((650, 1472), data.model, fill='black',
+                    font=ImageFont.load_default(42))
 
-    # Draw applicant
-    image_draw.text((687, 740), data.registration, fill='black',
-                    font=ImageFont.load_default(20))
+    # flight registration
+    image_draw.text((1360, 1472), data.registration, fill='black',
+                    font=ImageFont.load_default(42))
 
-    image_draw.text((1027, 740), data.get_aircraft_type_display(), fill='black',
-                    font=ImageFont.load_default(20))
+    # draw aircraft type
+    image_draw.text((2050, 1472), data.get_aircraft_type_display(), fill='black',
+                    font=ImageFont.load_default(42))
 
-    image_draw.text((300, 795), data.call_sign, fill='black',
-                    font=ImageFont.load_default(20))
+    # draw aircraft call sign
+    image_draw.text((560, 1590), data.call_sign, fill='black',
+                    font=ImageFont.load_default(42))
 
-    image_draw.text((280, 852), data.ground_facilities,
-                    fill='black', font=ImageFont.load_default(20))
+    image_draw.text((520, 1710), data.ground_facilities,
+                    fill='black', font=ImageFont.load_default(42))
 
-    image_draw.text((340, 913), str(data.passengers_count), fill='black',
-                    font=ImageFont.load_default(20))
+    image_draw.text((670, 1830), str(data.passengers_count), fill='black',
+                    font=ImageFont.load_default(42))
 
-    image_draw.text((990, 913), data.destination, fill='black',
-                    font=ImageFont.load_default(20))
+    image_draw.text((2000, 1830), data.destination, fill='black',
+                    font=ImageFont.load_default(42))
 
     image_draw.text(draw_category(data.category), 'X',
-                    fill='black', font=ImageFont.load_default(20))
+                    fill='black', font=ImageFont.load_default(42))
 
     image.save('aircraft.pdf')
