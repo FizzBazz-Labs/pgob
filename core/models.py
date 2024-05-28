@@ -15,7 +15,8 @@ class SiteConfiguration(models.Model):
         upload_to='site/backgrounds', null=True, blank=True)
     login_title = models.CharField(max_length=255, default='Iniciar Sesión')
     login_title_2 = models.CharField(max_length=255, default='Acreditaciones')
-    login_title_3 = models.CharField(max_length=255, default='Acreditaciones', null=True, blank=True)
+    login_title_3 = models.CharField(
+        max_length=255, default='Acreditaciones', null=True, blank=True)
     login_title_color = models.CharField(max_length=150, default='#FFFFFF')
     use_bold = models.BooleanField(default=True)
     login_title_size = models.CharField(max_length=150, default='24')
@@ -86,3 +87,19 @@ class Certification(models.Model):
         accreditation_type = self.AccreditationType(self.accreditation_type)
 
         return str(accreditation_type.label)
+
+
+class ReportId(models.Model):
+    name = models.CharField(max_length=255)
+    report_id = models.CharField(max_length=255)
+
+    def __str__(self) -> str:
+        return self.report_id
+
+
+class PowerBiToken(models.Model):
+    token = models.TextField()
+    expiration_date = models.DateTimeField()
+
+    def __str__(self) -> str:
+        return f'token {self.pk}'
