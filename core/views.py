@@ -62,7 +62,7 @@ class RetrievePowerBiToken(APIView):
     #     return f'https://app.powerbi.com/reportEmbed?reportId={report_id}&groupId={group_id}&w=2&config={embed_token}'
 
     def build_embed_url(self, group_id, report_id):
-        return f'https://app.powerbi.com/reportEmbed?reportId=548d80f0-df79-44be-be20-dc3d338e920b&groupId=76789884-6d41-48a4-a09a-2004737d536e&w=2'
+        return f'https://app.powerbi.com/reportEmbed?reportId=116de701-d119-4ab8-962a-a07a906f45ac&groupId=76789884-6d41-48a4-a09a-2004737d536e&w=2'
 
     def get_embed_token(self, access_token):
         url = "https://api.powerbi.com/v1.0/myorg/GenerateToken"
@@ -70,7 +70,7 @@ class RetrievePowerBiToken(APIView):
         data = {
             "reports": [
                 {
-                    "id": "548d80f0-df79-44be-be20-dc3d338e920b",
+                    "id": "116de701-d119-4ab8-962a-a07a906f45ac",
                 }
             ],
             "datasets": [
@@ -100,7 +100,7 @@ class RetrievePowerBiToken(APIView):
         return token
 
     def generate_token(self):
-        now = datetime.now()
+        now = django_timezone.now()
         data = {
             'grant_type': 'client_credentials',
             'client_secret': POWERBI_CLIENT_SECRET,
@@ -132,9 +132,9 @@ class RetrievePowerBiToken(APIView):
                 self.generate_token()
 
         token_instance = PowerBiToken.objects.last()
-        
+
         embed_url = self.build_embed_url('76789884-6d41-48a4-a09a-2004737d536e',
-                                         '548d80f0-df79-44be-be20-dc3d338e920b')
+                                         '116de701-d119-4ab8-962a-a07a906f45ac')
 
         return Response({
             'token': token_instance.token,
