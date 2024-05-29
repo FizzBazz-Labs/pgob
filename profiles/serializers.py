@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext as _
+from django.contrib.auth.password_validation import validate_password
 
 from rest_framework import serializers
 
@@ -156,3 +157,15 @@ class UserReadSerializer(serializers.ModelSerializer):
 
     def get_group(self, obj) -> str:
         return obj.groups.first().name if obj.groups.first() else None
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(required=True, validators=[validate_password])
+    password_confirm = serializers.CharField(required=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['password_confirm']:
+            raise serializers.ValidationError(
+                _("The two password fields didn't match."))
+
+        return data
