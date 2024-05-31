@@ -14,6 +14,10 @@ def authorization_letter_filename(instance, filename: str):
     return f'internationals/{instance.first_name}_{instance.last_name}/authorizations/{filename}'
 
 
+def passport_image_filename(instance, filename: str):
+    return f'internationals/{instance.first_name}_{instance.last_name}/passport/{filename}'
+
+
 def qr_filename(instance, filename: str):
     fullname = f'{instance.first_name.lower()}_{instance.last_name.lower()}'
     filename = filename.lower().replace(' ', '').replace('-', '')
@@ -43,6 +47,9 @@ class InternationalAccreditation(models.Model):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     passport_id = models.CharField(max_length=150)
+    passport_id_image = models.ImageField(
+        blank=True, null=True,
+        upload_to=passport_image_filename)
     private_insurance = models.CharField(max_length=150, blank=True)
 
     position = models.ForeignKey(

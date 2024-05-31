@@ -38,6 +38,7 @@ class InternationalAccreditationSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'passport_id',
+            'passport_id_image',
             'private_insurance',
             'position',
             'sub_position',
