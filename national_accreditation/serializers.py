@@ -83,6 +83,7 @@ class NationalSerializer(serializers.ModelSerializer):
             'certification',
             'uuid',
             'reviewed_comment',
+            'passport_id_image',
         ]
 
         extra_kwargs = {

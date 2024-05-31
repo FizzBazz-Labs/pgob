@@ -21,6 +21,10 @@ def authorization_letter_filename(instance, filename: str):
     return f'nationals/{fullname}/authorizations/{filename}'
 
 
+def passport_image_filename(instance, filename: str):
+    return f'nationals/{instance.first_name}_{instance.last_name}/passport/{filename}'
+
+
 def qr_filename(instance, filename: str):
     fullname = f'{instance.first_name.lower()}_{instance.last_name.lower()}'
     filename = filename.lower().replace(' ', '').replace('-', '')
@@ -49,7 +53,11 @@ class NationalAccreditation(models.Model):
 
     last_name = models.CharField(max_length=150, verbose_name=_('Apellido'))
     passport_id = models.CharField(
-        max_length=100, verbose_name=_('Cédula /Pasaporte'))
+        max_length=100,
+        verbose_name=_('Cédula /Pasaporte'))
+    passport_id_image = models.ImageField(
+        blank=True, null=True,
+        upload_to=passport_image_filename)
 
     private_insurance = models.CharField(max_length=150, blank=True)
 
