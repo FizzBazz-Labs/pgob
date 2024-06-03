@@ -101,6 +101,7 @@ class Report(models.Model):
 class PowerBiToken(models.Model):
     token = models.TextField()
     expiration_date = models.DateTimeField()
+    access_token = models.TextField()
 
     def __str__(self) -> str:
         return f'token {self.pk}'

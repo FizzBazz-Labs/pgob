@@ -61,8 +61,16 @@ class RetrievePowerBiToken(APIView):
     # def build_embed_url(self, group_id, report_id, embed_token):
     #     return f'https://app.powerbi.com/reportEmbed?reportId={report_id}&groupId={group_id}&w=2&config={embed_token}'
 
-    def build_embed_url(self, group_id, report_id):
-        return f'https://app.powerbi.com/reportEmbed?reportId=116de701-d119-4ab8-962a-a07a906f45ac&groupId=76789884-6d41-48a4-a09a-2004737d536e&w=2'
+    def build_embed_url(self, group_id, report_id, access_token):
+        url = f"https://api.powerbi.com/v1.0/myorg/groups/{group_id}/reports/{report_id}"
+
+        headers = {
+            'Authorization': f'Bearer {access_token}'
+        }
+        embed_request = requests.get(url, headers=headers)
+        response = json.loads(embed_request.text)
+        return response
+
 
     def get_embed_token(self, access_token):
         url = "https://api.powerbi.com/v1.0/myorg/GenerateToken"
@@ -71,6 +79,9 @@ class RetrievePowerBiToken(APIView):
             "reports": [
                 {
                     "id": "116de701-d119-4ab8-962a-a07a906f45ac",
+                },
+                {
+                    "id": "9e0162af-ec43-4457-8d9d-f992a0c9d78c",
                 }
             ],
             "datasets": [
@@ -92,11 +103,11 @@ class RetrievePowerBiToken(APIView):
         response = requests.post(url, headers=headers, json=data)
         return response.json()
 
-    def save_token(self, access_token, expiration):
+    def save_token(self, token, expiration, access_token):
         expiration_date = expiration
         expiration_date = expiration_date.replace(tzinfo=timezone.utc)
         token, created = PowerBiToken.objects.get_or_create(
-            token=access_token, expiration_date=expiration_date)
+            token=token, expiration_date=expiration_date, access_token=access_token)
         return token
 
     def generate_token(self):
@@ -118,9 +129,9 @@ class RetrievePowerBiToken(APIView):
         access_token = response.get('access_token')
         embed_data = self.get_embed_token(access_token)
         expiration_date = parse_datetime(embed_data.get('expiration'))
-        self.save_token(embed_data.get('token'), expiration_date)
+        self.save_token(embed_data.get('token'), expiration_date, access_token)
 
-    def get(self, request: Request):
+    def get(self, request: Request, report_id):
 
         token_instance = PowerBiToken.objects.last()
         now = django_timezone.now()
@@ -134,9 +145,10 @@ class RetrievePowerBiToken(APIView):
         token_instance = PowerBiToken.objects.last()
 
         embed_url = self.build_embed_url('76789884-6d41-48a4-a09a-2004737d536e',
-                                         '116de701-d119-4ab8-962a-a07a906f45ac')
+                                         report_id, token_instance.access_token)
 
         return Response({
             'token': token_instance.token,
-            'embed_url': embed_url
+            'embed_url': embed_url,
+            'repor_id': report_id
         })
