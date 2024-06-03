@@ -20,6 +20,22 @@ from commerce.serializers import CommerceSerializer, CommerceEmployeeSerializer
 from countries.models import Country
 
 
+def commerce_type_from_label(label):
+    match label:
+        case 'Fabrica':
+            return Commerce.CommerceType.factory
+        case 'Tienda':
+            return Commerce.CommerceType.store
+        case 'Super Mercado':
+            return Commerce.CommerceType.supermarket
+        case 'Comercio Local':
+            return Commerce.CommerceType.local
+        case 'Plaza Comercial':
+            return Commerce.CommerceType.square
+        case _:
+            return Commerce.CommerceType.other
+
+
 class CommerceViewSet(AccreditationViewSet):
     queryset = Commerce.objects.all()
     serializer_class = CommerceSerializer
@@ -95,6 +111,9 @@ class CommerceViewSet(AccreditationViewSet):
                 'Otro Tipo de Comercio': 'commerce_type_other',
             })
 
+            df_commerces['commerce_type_other'] = df_commerces['commerce_type_other'].apply(commerce_type_from_label)
+            df_commerces['commerce_type_other'] = df_commerces['commerce_type_other'].fillna('')
+
         except KeyError:
             return Response(
                 {"error": "Data file or columns not found"},
@@ -135,6 +154,8 @@ class CommerceViewSet(AccreditationViewSet):
                 'Cédula del Conductor': 'driver_id',
                 'Teléfono del Conductor': 'phone',
             })
+
+            df_vehicles['type_other'] = df_vehicles['type_other'].fillna('')
 
         except KeyError:
             return Response(
