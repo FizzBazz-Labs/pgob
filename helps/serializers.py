@@ -10,6 +10,8 @@ class HelpSectionItemSerializer(serializers.ModelSerializer):
 
 
 class HelpSectionSerializer(serializers.ModelSerializer):
+    items = HelpSectionItemSerializer(many=True, read_only=True)
+
     class Meta:
         model = HelpSection
         fields = '__all__'
