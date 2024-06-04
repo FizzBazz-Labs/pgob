@@ -58,8 +58,10 @@ class Accreditation(models.Model):
 
 class Certification(models.Model):
     class AccreditationType(models.TextChoices):
-        GENERAL_COORDINATION = 'GENERAL_COORDINATION', _(
-            'Coordinación General')
+        GENERAL_COORDINATION = (
+            'GENERAL_COORDINATION',
+            _('Coordinación General'),
+        )
         PROTOCOL = 'PROTOCOL', _('Protocolo')
         SECURITY = 'SECURITY', _('Seguridad')
         TECHNICAL_STAFF = 'TECHNICAL_STAFF', _('Personal Técnico')
@@ -68,11 +70,16 @@ class Certification(models.Model):
         SUPPLIER = 'SUPPLIER', _('Proveedor')
         NEWSLETTER_COMMITTEE = 'NEWSLETTER_COMMITTEE', _('Comisión de Prensa')
         COMMERCIAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Comercial')
-        OFFICIAL_DELEGATION_HEAD = 'OFFICIAL_DELEGATION_HEAD', _(
-            'Jefe de Delegación Oficial'),
+        OFFICIAL_DELEGATION_HEAD = (
+            'OFFICIAL_DELEGATION_HEAD',
+            _('Jefe de Delegación Oficial'),
+        )
         SUPPORT_STAFF = 'SUPPORT_STAFF', _('Personal de Apoyo')
         OFFICIAL_NEWSLETTER = 'OFFICIAL_NEWSLETTER', _('Prensa Oficial')
         CREW = 'CREW', _('Tripulación')
+        INTERNATIONAL_NEWSLETTER = 'INTERNATIONAL_NEWSLETTER', _('Prensa Internacional')
+        DIPLOMATIC_MISSION = 'DIPLOMATIC_MISSION', _('Misión Diplomática')
+        MINREX_OFFICIALS = 'MINREX_OFFICIALS', _('Funcionarios MINREX')
 
     accreditation_type = models.CharField(
         max_length=150,

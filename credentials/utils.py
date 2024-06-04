@@ -12,27 +12,30 @@ from core.models import SiteConfiguration, Certification
 
 from national_accreditation.models import NationalAccreditation as National
 from international_accreditation.models import InternationalAccreditation as International
-
+from general_vehicle_accreditation.models import GeneralVehicleAccreditation as GeneralVehicle
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft as Airfraft
 
 
 def get_image_font(size: int) -> ImageFont:
     try:
         path = settings.BASE_DIR / 'credentials' / \
-            'static' / 'credentials' / 'Avenir-Book.ttf'
+               'static' / 'credentials' / 'Avenir-Book.ttf'
         return ImageFont.truetype(path, size=size, encoding='utf-8')
 
     except OSError as e:
         return ImageFont.load_default(size)
 
 
-def get_qr_code(data: str) -> Image:
+def get_qr_code(data: str, size: tuple[int, int] = None) -> Image:
+    if size is None:
+        size = (275, 275)
+
     qr_code = qrcode.make(data)
     qr_buffer = BytesIO()
     qr_code.save(qr_buffer, format='PNG')
     qr_buffer.seek(0)
 
-    return Image.open(qr_buffer).resize((275, 275))
+    return Image.open(qr_buffer).resize(size)
 
 
 def get_certification_data(
@@ -62,7 +65,7 @@ def get_certification_data(
 
 def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     template = settings.BASE_DIR / 'credentials' / \
-        'static' / 'credentials' / 'base.jpg'
+               'static' / 'credentials' / 'base.jpg'
 
     image = Image.open(template)
     image_draw = ImageDraw.Draw(image)
@@ -129,7 +132,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     fullname = data['fullname']
     fullname_font = get_image_font(90)
     fullname_position = image.width - \
-        image_draw.textlength(fullname, fullname_font)
+                        image_draw.textlength(fullname, fullname_font)
 
     image_draw.text(
         (fullname_position / 2, 1525),
@@ -148,7 +151,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     type_title_font_size = 60
     type_title_font = get_image_font(type_title_font_size)
     type_title_with = type_box.width - \
-        type_box_draw.textlength(data['type'], type_title_font)
+                      type_box_draw.textlength(data['type'], type_title_font)
 
     type_box_draw.text(
         (type_title_with / 2, ((type_height - type_title_font_size - 15) / 2)),
@@ -170,7 +173,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     # Draw QR Code
     qr_data = f'{
-        settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
+    settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
     qr_image = get_qr_code(qr_data)
     image.paste(qr_image, qr_position)
 
@@ -317,3 +320,78 @@ def draw_overflight_permission(pk: int):
                     fill='black', font=ImageFont.load_default(42))
 
     image.save('aircraft.pdf')
+
+
+def get_vehicle_certification(
+    certification: Certification,
+    item: GeneralVehicle,
+) -> tuple[Image, Image]:
+    template = settings.BASE_DIR / 'credentials' / 'static' / 'credentials' / 'vehicle.jpg'
+
+    image = Image.open(template)
+    draw = ImageDraw.Draw(image)
+
+    # Draw title
+    title = f'{item.pk:0>3}'
+    title_font = get_image_font(350)
+    title_position = (image.width - draw.textlength(title, title_font))
+
+    draw.text(
+        (title_position / 2, 1250),
+        title,
+        fill='#002757',
+        font=title_font,
+        stroke_width=3,
+        stroke_fill='#002757'
+    )
+
+    # Draw Color
+    type_width = 1415
+    type_height = 407
+    type_box = Image.new('RGBA', (type_width, type_height), certification.color)
+
+    image.paste(type_box, (235, image.height - 625))
+
+    # Draw Temp Image QR code
+    qr_position = int(image.width - 540), int(image.height - 625)
+
+    image_copy = image.copy()
+    qr_found_data_image = get_qr_code(f'{settings.FRONTEND_DETAIL_URL}/404')
+    image_copy.paste(qr_found_data_image, qr_position)
+
+    # Draw QR Code
+    qr_data = f'{settings.FRONTEND_DETAIL_URL}/general-vehicles/{item.pk}/?uuid={item.uuid}'
+    qr_image = get_qr_code(qr_data, (407, 407))
+    image.paste(qr_image, qr_position)
+
+    return image, image_copy
+
+
+def certificate_vehicle_accreditation(item: GeneralVehicle):
+    certification = Certification.objects.get(accreditation_type=item.accreditation_type)
+
+    item.uuid = str(uuid4()).split('-')[0].upper()
+
+    data = get_vehicle_certification(certification, item)
+    image, image_copy = data
+
+    save_path = (
+        settings.BASE_DIR /
+        'certifications' /
+        'vehicles'
+    )
+
+    if not save_path.exists():
+        save_path.mkdir(parents=True)
+
+    filename = str(item.vehicle.plate)
+    image.save(save_path / f'{filename}.pdf')
+
+    item.certificated = True
+
+    image_bytes = BytesIO()
+    image_copy.save(image_bytes, format='PNG')
+    image_bytes.seek(0)
+
+    item.certification.save(f'{filename}.png', image_bytes, save=False)
+    item.save()
