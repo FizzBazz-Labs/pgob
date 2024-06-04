@@ -105,15 +105,10 @@ class HousingViewSet(AccreditationViewSet):
                 'Teléfono del Propietario': 'owner_phone_number',
             })
 
-            df_housings['building_type'] = df_housings['building_type'].map({
-                'Casa': 'HOUSE',
-                'Apartamento': 'APARTMENT'
-            })
+            df_housings['building_type'] = df_housings['building_type'] \
+                .apply(lambda label: 'HOUSE' if label == 'Casa' else 'APARTMENT')
 
-            df_housings['is_owner'] = df_housings['is_owner'].map({
-                'Sí': True,
-                'No': False,
-            })
+            df_housings['is_owner'] = df_housings['is_owner'].apply(lambda label: label == 'Sí')
 
         except KeyError:
             return Response(
