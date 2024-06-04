@@ -1,8 +1,9 @@
+from django.db.models import Prefetch, Q
 from rest_framework.generics import ListAPIView
-
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from helps.models import HelpSection
+from helps.models import HelpSection, HelpSectionItem
 from helps.serializers import HelpSectionSerializer
 
 
@@ -14,7 +15,14 @@ class HelpSectionListView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
 
-        return HelpSection.objects \
-            .prefetch_related('accreditation', 'items__group') \
-            .filter(accreditation__in=user.accreditations.all(), items__group__in=user.groups.all()) \
+        accreditations = user.profile.accreditations.all()
+        groups = user.groups.all()
+
+        section_items_qs = HelpSectionItem.objects \
+            .filter(groups__in=groups) \
             .distinct()
+
+        return HelpSection.objects \
+            .filter(accreditations__in=accreditations) \
+            .distinct() \
+            .prefetch_related(Prefetch('items', queryset=section_items_qs))
