@@ -54,4 +54,6 @@ class HousingPerson(models.Model):
     phone_number = models.CharField(max_length=150)
     email = models.EmailField()
     housing = models.ForeignKey(
-        Housing, on_delete=models.CASCADE, related_name='persons')
+        Housing,
+        on_delete=models.CASCADE,
+        related_name='persons')
