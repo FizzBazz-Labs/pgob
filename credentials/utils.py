@@ -356,7 +356,7 @@ def get_vehicle_certification(
     qr_position = int(image.width - 540), int(image.height - 625)
 
     image_copy = image.copy()
-    qr_found_data_image = get_qr_code(f'{settings.FRONTEND_DETAIL_URL}/404')
+    qr_found_data_image = get_qr_code(f'{settings.FRONTEND_DETAIL_URL}/404', (407, 407))
     image_copy.paste(qr_found_data_image, qr_position)
 
     # Draw QR Code
