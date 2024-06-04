@@ -110,6 +110,14 @@ class HousingViewSet(AccreditationViewSet):
 
             df_housings['is_owner'] = df_housings['is_owner'].apply(lambda label: label == 'Sí')
 
+            df_housings['house_number'] = df_housings['house_number'].fillna('')
+            df_housings['apartment_tower'] = df_housings['apartment_tower'].fillna('')
+            df_housings['apartment_number'] = df_housings['apartment_number'].fillna('')
+            df_housings['apartment_floor'] = df_housings['apartment_floor'].fillna('')
+            df_housings['owner_name'] = df_housings['owner_name'].fillna('')
+            df_housings['owner_phone_number'] = df_housings['owner_phone_number'].fillna('')
+            df_housings['building_admin_name'] = df_housings['building_admin_name'].fillna('')
+
         except KeyError:
             return Response(
                 {"error": "Data file or columns not found"},
@@ -124,13 +132,16 @@ class HousingViewSet(AccreditationViewSet):
                 'Torre de Apartamento': 'apartment_tower',
                 'Número de Apartamento': 'apartment_number',
                 'Nombres': 'first_name',
-                'Apellidos': 'first_last_name',
+                'Apellidos': 'last_name',
                 'Cédula/Pasaporte': 'passport_id',
                 'País': 'country',
                 'Fecha de Nacimiento': 'birthday',
                 'Teléfono': 'phone_number',
                 'Correo Electrónico': 'email',
             })
+
+            df_people['email'] = df_people['email'].fillna('')
+            df_people['phone_number'] = df_people['phone_number'].fillna('')
 
         except KeyError:
             return Response(
