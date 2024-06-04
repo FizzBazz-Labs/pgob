@@ -11,5 +11,5 @@ class HelpSectionItemInline(admin.TabularInline):
 @admin.register(HelpSection)
 class HelpSectionAdmin(admin.ModelAdmin):
     inlines = [HelpSectionItemInline]
-    list_display = ('title', 'description')
-    search_fields = ('title', 'description')
+    list_display = ['title']
+    search_fields = ['title']

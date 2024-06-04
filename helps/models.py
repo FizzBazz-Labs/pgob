@@ -3,7 +3,6 @@ from django.db import models
 
 class HelpSection(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
     accreditations = models.ManyToManyField('core.Accreditation')
 
     def __str__(self) -> str:
@@ -12,8 +11,7 @@ class HelpSection(models.Model):
 
 class HelpSectionItem(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    url = models.URLField(blank=True)
+    url = models.FileField(upload_to='helps/', blank=True)
     groups = models.ManyToManyField('auth.Group')
     section = models.ForeignKey(
         HelpSection,
