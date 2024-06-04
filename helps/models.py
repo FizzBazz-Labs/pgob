@@ -13,8 +13,12 @@ class HelpSection(models.Model):
 class HelpSectionItem(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    help_section = models.ForeignKey(
-        HelpSection, on_delete=models.CASCADE, related_name='items')
+    url = models.URLField(blank=True)
+    group = models.ManyToManyField('auth.Group')
+    section = models.ForeignKey(
+        HelpSection,
+        on_delete=models.CASCADE,
+        related_name='items')
 
     def __str__(self) -> str:
         return self.title

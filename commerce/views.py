@@ -111,7 +111,7 @@ class CommerceViewSet(AccreditationViewSet):
                 'Otro Tipo de Comercio': 'commerce_type_other',
             })
 
-            df_commerces['commerce_type_other'] = df_commerces['commerce_type_other'].apply(commerce_type_from_label)
+            df_commerces['commercial_name'] = df_commerces['commercial_name'].apply(commerce_type_from_label)
             df_commerces['commerce_type_other'] = df_commerces['commerce_type_other'].fillna('')
 
         except KeyError:
