@@ -6,10 +6,10 @@ from rest_framework.response import Response
 from core.models import SiteConfiguration, Certification, AccreditationStatus
 
 from national_accreditation.models import NationalAccreditation as National
-
 from international_accreditation.models import InternationalAccreditation as International
+from general_vehicle_accreditation.models import GeneralVehicleAccreditation as GeneralVehicle
 
-from .utils import certificate_accreditation
+from .utils import certificate_accreditation, certificate_vehicle_accreditation
 
 
 class CertificateView(APIView):
@@ -26,6 +26,9 @@ class CertificateView(APIView):
                 model = National
             case 'internationals':
                 model = International
+            case 'general-vehicles':
+                model = GeneralVehicle
+
             case _:
                 return Response(
                     {"error": "Invalid accreditation type."},
@@ -44,14 +47,17 @@ class CertificateView(APIView):
 
         for item in items:
             try:
-                certificate_accreditation(configuration, accreditation, item)
+                match accreditation:
+                    case 'general-vehicles':
+                        certificate_vehicle_accreditation(item)
+                    case _:
+                        certificate_accreditation(configuration, accreditation, item)
             except Certification.DoesNotExist:
                 return Response(
                     {"error": "Certification config not found."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-        # locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
         return Response(
             {"message": "Accepted"},
             status=status.HTTP_202_ACCEPTED,

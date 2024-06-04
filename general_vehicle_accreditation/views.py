@@ -16,7 +16,7 @@ from credentials.utils import certificate_vehicle_accreditation
 class GeneralVehicleViewSet(AccreditationViewSet):
     queryset = GeneralVehicle.objects.all()
     serializer_class = GeneralVehicleSerializer
-    filterset_fields = ['status', 'country']
+    filterset_fields = ['status', 'country', 'certificated']
     search_fields = ['created_at__date']
 
     @action(detail=True, methods=['patch'])
