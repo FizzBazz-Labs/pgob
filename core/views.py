@@ -9,12 +9,12 @@ from datetime import timezone
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
-from core.models import SiteConfiguration, AccreditationStatus, PowerBiToken
-from core.serializers import SiteConfigurationSerializer
+from core.models import SiteConfiguration, AccreditationStatus, PowerBiToken, Report
+from core.serializers import SiteConfigurationSerializer, ReportSerializer
 
 from pgob_auth.permissions import IsAdmin, IsReviewer
 
@@ -62,7 +62,8 @@ class RetrievePowerBiToken(APIView):
     #     return f'https://app.powerbi.com/reportEmbed?reportId={report_id}&groupId={group_id}&w=2&config={embed_token}'
 
     def build_embed_url(self, group_id, report_id, access_token):
-        url = f"https://api.powerbi.com/v1.0/myorg/groups/{group_id}/reports/{report_id}"
+        url = f"https://api.powerbi.com/v1.0/myorg/groups/{
+            group_id}/reports/{report_id}"
 
         headers = {
             'Authorization': f'Bearer {access_token}'
@@ -71,24 +72,21 @@ class RetrievePowerBiToken(APIView):
         response = json.loads(embed_request.text)
         return response
 
-
     def get_embed_token(self, access_token):
         url = "https://api.powerbi.com/v1.0/myorg/GenerateToken"
+        datasetsId = Report.objects.all().values_list('dataset_id', flat=True)
 
         data = {
             "reports": [
-                {
-                    "id": "116de701-d119-4ab8-962a-a07a906f45ac",
-                },
-                {
-                    "id": "9e0162af-ec43-4457-8d9d-f992a0c9d78c",
-                }
+                {'id': item.report_id}
+                for item in Report.objects.all()
             ],
             "datasets": [
                 {
-                    "id": "0f821299-8a62-456f-93a2-5ec7b9fffb6f",
+                    "id": dataset_id,
                     "xmlaPermissions": "ReadOnly"
                 }
+                for dataset_id in set(datasetsId)
             ],
             "targetWorkspaces": [
                 {
@@ -111,7 +109,6 @@ class RetrievePowerBiToken(APIView):
         return token
 
     def generate_token(self):
-        now = django_timezone.now()
         data = {
             'grant_type': 'client_credentials',
             'client_secret': POWERBI_CLIENT_SECRET,
@@ -132,17 +129,19 @@ class RetrievePowerBiToken(APIView):
         self.save_token(embed_data.get('token'), expiration_date, access_token)
 
     def get(self, request: Request, report_id):
-
         token_instance = PowerBiToken.objects.last()
         now = django_timezone.now()
 
         if token_instance is None:
             self.generate_token()
+            print('new token')
         else:
             if token_instance.expiration_date < now:
                 self.generate_token()
+                print('generate token')
 
         token_instance = PowerBiToken.objects.last()
+        print('no generate new token')
 
         embed_url = self.build_embed_url('76789884-6d41-48a4-a09a-2004737d536e',
                                          report_id, token_instance.access_token)
@@ -150,5 +149,12 @@ class RetrievePowerBiToken(APIView):
         return Response({
             'token': token_instance.token,
             'embed_url': embed_url,
-            'repor_id': report_id
+            'report_id': report_id
         })
+
+
+class ReportApiListView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Report.objects.all()
+    serializer_class = ReportSerializer
+    pagination_class = None

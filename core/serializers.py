@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from core.models import SiteConfiguration, Accreditation
+from core.models import SiteConfiguration, Accreditation, Report
 
 
 class SiteConfigurationSerializer(serializers.ModelSerializer):
@@ -34,3 +34,9 @@ class AccreditationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Accreditation
         fields = '__all__'
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = ['id', 'name', 'report_id']

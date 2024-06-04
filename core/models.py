@@ -95,7 +95,7 @@ class Report(models.Model):
     dataset_id = models.CharField(max_length=255)
 
     def __str__(self) -> str:
-        return self.report_id
+        return self.name
 
 
 class PowerBiToken(models.Model):
