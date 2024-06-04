@@ -1,3 +1,15 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import HelpSection, HelpSectionItem
+
+
+class HelpSectionItemInline(admin.TabularInline):
+    model = HelpSectionItem
+    extra = 0
+
+
+@admin.register(HelpSection)
+class HelpSectionAdmin(admin.ModelAdmin):
+    inlines = [HelpSectionItemInline]
+    list_display = ('title', 'description')
+    search_fields = ('title', 'description')

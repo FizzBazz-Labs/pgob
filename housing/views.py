@@ -164,7 +164,7 @@ class HousingViewSet(AccreditationViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        for _, data in df_housings:
+        for _, data in df_housings.iterrows():
             housing, created = Housing.objects.get_or_create(
                 address=data['address'],
                 building_type=data['building_type'],

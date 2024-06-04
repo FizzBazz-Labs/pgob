@@ -19,8 +19,6 @@ urlpatterns = [
     path('admin/logout/',
          auth_views.LogoutView.as_view(next_page='/admin/login/'), name='logout'),
 
-
-
     path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/v1/docs/',
          SpectacularSwaggerView.as_view(url_name='schema'),
@@ -47,7 +45,8 @@ urlpatterns = [
     path('api/v1/', include('profiles.urls')),
     path('api/v1/', include('credentials.urls')),
 
-    path('api/v1/', include(router.urls))
+    path('api/v1/', include(router.urls)),
+    path('api/v1/help/', include('helps.urls')),
 ]
 
 # urlpatterns += staticfiles_urlpatterns()

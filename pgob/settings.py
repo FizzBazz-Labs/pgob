@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'credentials.apps.CredentialsConfig',
     'housing.apps.HousingConfig',
     'commerce.apps.CommerceConfig',
+    'helps.apps.HelpsConfig',
 ]
 
 MIDDLEWARE = [
