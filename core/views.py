@@ -58,9 +58,6 @@ class ReviewAccreditationBase(APIView):
 class RetrievePowerBiToken(APIView):
     permission_classes = [IsAuthenticated]
 
-    # def build_embed_url(self, group_id, report_id, embed_token):
-    #     return f'https://app.powerbi.com/reportEmbed?reportId={report_id}&groupId={group_id}&w=2&config={embed_token}'
-
     def build_embed_url(self, group_id, report_id, access_token):
         url = f"https://api.powerbi.com/v1.0/myorg/groups/{
             group_id}/reports/{report_id}"
@@ -134,14 +131,12 @@ class RetrievePowerBiToken(APIView):
 
         if token_instance is None:
             self.generate_token()
-            print('new token')
+
         else:
             if token_instance.expiration_date < now:
                 self.generate_token()
-                print('generate token')
 
         token_instance = PowerBiToken.objects.last()
-        print('no generate new token')
 
         embed_url = self.build_embed_url('76789884-6d41-48a4-a09a-2004737d536e',
                                          report_id, token_instance.access_token)
@@ -158,3 +153,6 @@ class ReportApiListView(ListAPIView):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
     pagination_class = None
+
+    def get_queryset(self):
+        return super().get_queryset().filter(can_view__in=self.request.user.groups.all())

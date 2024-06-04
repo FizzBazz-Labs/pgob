@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
 
@@ -93,6 +94,7 @@ class Report(models.Model):
     name = models.CharField(max_length=255)
     report_id = models.CharField(max_length=255)
     dataset_id = models.CharField(max_length=255)
+    can_view = models.ManyToManyField(Group, related_name='can_view')
 
     def __str__(self) -> str:
         return self.name
