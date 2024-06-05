@@ -17,6 +17,7 @@ RUN apt-get update \
   pkg-config \
   locales \
   locales-all \
+  libreoffice-writer \
   && apt-get clean
 
 RUN pip install --upgrade pip
