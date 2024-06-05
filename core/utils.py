@@ -1,8 +1,11 @@
+import os
+import subprocess
+
 import pandas as pd
+
 from django.db.models import QuerySet
 
 from core.models import AccreditationStatus
-from housing.models import Housing
 from international_accreditation.models import InternationalAccreditation
 
 
@@ -95,3 +98,10 @@ def get_data_frame(queryset: QuerySet) -> pd.DataFrame:
 
     df = df.rename(columns=rename_fields)
     return df
+
+
+def convert_to_pdf(file, output):
+    """Converts a file to PDF using LibreOffice."""
+
+    command = ['libreoffice', '--headless', '--convert-to', 'pdf', file, '--outdir', os.path.dirname(output)]
+    subprocess.run(command)
