@@ -91,6 +91,7 @@ class RetrievePowerBiToken(APIView):
                 }
             ]
         }
+        # print(data['datasets'], 'data')
         headers = {
             'Authorization': f'Bearer {access_token}'
         }

@@ -3,8 +3,10 @@ from django.contrib.auth import get_user_model
 
 from core.models import AccreditationStatus
 
+from accreditations.models import Accreditation
 
-class VehicleAccessAirportAccreditations(models.Model):
+
+class VehicleAccessAirportAccreditations(Accreditation):
     country = models.ForeignKey('countries.Country', on_delete=models.CASCADE,
                                 related_name='vehicle_access_airport_accreditations')
     information_responsible = models.CharField(max_length=150)
