@@ -2,6 +2,7 @@ import pypandoc
 import jinja2
 
 from django.http import HttpResponse
+from django.db import models
 
 from rest_framework import status
 from rest_framework.views import APIView
@@ -31,7 +32,25 @@ from security_accreditations.models import SecurityWeaponAccreditation
 
 
 class CertificateView(APIView):
-    def get(self, request: Request, accreditation: str, *args, **kwargs) -> Response:
+    def generate_pdf(self, request, model: models.Model, filename: str) -> HttpResponse:
+        doc = DocxTemplate(filename)
+        jinja_env = jinja2.Environment()
+
+        context = model.objects.all().last()
+
+        context = {'data': context}
+
+        doc.render(context, jinja_env)
+
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        attachment = f'attachment; filename=PdfAeropuerto.docx'
+        response['Content-Disposition'] = attachment
+        doc.save(response)
+
+        return response
+
+    def get(self, request: Request, accreditation: str, *args, **kwargs) -> Response | HttpResponse:
         configuration = SiteConfiguration.objects.filter(
             available=True).first()
         if not configuration:
@@ -47,6 +66,12 @@ class CertificateView(APIView):
                 model = International
             case 'general-vehicles':
                 model = GeneralVehicle
+            case 'access-airport':
+                model = VehicleAccessAirportAccreditations
+            case 'communication-equipment':
+                model = IntercomEquipmentDeclaration
+            case 'securities':
+                model = SecurityWeaponAccreditation
 
             case _:
                 return Response(
@@ -69,9 +94,15 @@ class CertificateView(APIView):
                 match accreditation:
                     case 'general-vehicles':
                         certificate_vehicle_accreditation(item)
-                    case _:
+                    case 'nationals' | 'internationals':
                         certificate_accreditation(
-                            configuration, accreditation, item)
+                            configuration,
+                            accreditation,
+                            item,
+                        )
+                    case 'access-airport' | 'communication-equipment' | 'securities':
+                        return self.generate_pdf(request, model, f'{accreditation}.docx')
+
             except Certification.DoesNotExist:
                 return Response(
                     {"error": "Certification config not found."},
