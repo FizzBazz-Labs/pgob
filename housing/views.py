@@ -1,7 +1,9 @@
 from io import BytesIO
 
 import pandas as pd
+
 from django.http import HttpResponse
+
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
@@ -33,7 +35,11 @@ class HousingViewSet(AccreditationViewSet):
     queryset = Housing.objects.all()
     serializer_class = HousingSerializer
     filterset_fields = ['status']
-    search_fields = ['created_at__date']
+    search_fields = [
+        'persons__first_name',
+        'persons__last_name',
+        'created_at__date',
+    ]
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()

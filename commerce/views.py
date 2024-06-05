@@ -40,7 +40,11 @@ class CommerceViewSet(AccreditationViewSet):
     queryset = Commerce.objects.all()
     serializer_class = CommerceSerializer
     filterset_fields = ['status']
-    search_fields = ['created_at__date']
+    search_fields = [
+        'employees__first_name',
+        'employees__last_name',
+        'created_at__date',
+    ]
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
