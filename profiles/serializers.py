@@ -141,7 +141,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserReadSerializer(serializers.ModelSerializer):
-    country = serializers.CharField(source='profile.country.name')
+    country = serializers.PrimaryKeyRelatedField(source='profile.country', read_only=True)
     group = serializers.SerializerMethodField()
     passport_id = serializers.CharField(source='profile.passport_id')
     phone_number = serializers.CharField(source='profile.phone_number')
@@ -169,3 +169,66 @@ class ChangePasswordSerializer(serializers.Serializer):
                 _("The two password fields didn't match."))
 
         return data
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    country = serializers.PrimaryKeyRelatedField(
+        source='profile.country',
+        queryset=Country.objects.all(),
+        write_only=True, required=True)
+
+    group = serializers.CharField(write_only=True, required=True)
+    passport_id = serializers.CharField(source='profile.passport_id', write_only=True, required=True)
+    phone_number = serializers.CharField(source='profile.phone_number', write_only=True, required=True)
+    accreditations = serializers.ListField(child=serializers.CharField(), write_only=True, required=True)
+
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'country',
+            'group',
+            'phone_number',
+            'passport_id',
+            'accreditations',
+        )
+
+    @staticmethod
+    def validation_group(group: str):
+        if not Group.objects.filter(name=group).exists():
+            raise serializers.ValidationError(_('Group does not exist'))
+
+        return group
+
+    @staticmethod
+    def validation_accreditations(accreditations: list[str]):
+        for accreditation in accreditations:
+            if not Accreditation.objects.filter(name=accreditation).exists():
+                raise serializers.ValidationError(_('Accreditation does not exist'))
+
+        return accreditations
+
+    def update(self, instance: get_user_model(), validated_data: dict[str, any]):
+        profile = validated_data.pop('profile', {})
+        accreditations = validated_data.pop('accreditations')
+
+        instance.profile.country = profile.get('country', instance.profile.country)
+        instance.profile.phone_number = profile.get('phone_number', instance.profile.phone_number)
+        instance.profile.passport_id = profile.get('passport_id', instance.profile.passport_id)
+
+        instance.profile.accreditations.clear()
+        for accreditation in accreditations:
+            accreditation = Accreditation.objects.get(name=accreditation)
+            instance.profile.accreditations.add(accreditation)
+
+        instance.profile.save()
+
+        group = validated_data.pop('group')
+        instance.groups.clear()
+        instance.groups.add(Group.objects.get(name=group))
+
+        return instance
