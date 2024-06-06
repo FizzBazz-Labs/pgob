@@ -61,8 +61,29 @@ class SecurityWeaponAccreditationSerializer(serializers.ModelSerializer):
             'flight_departure_datetime',
             'flight_departure_number',
             'flight_departure_airport',
-            'downloaded',
             'permit_number',
+            'reviewed_by',
+            'authorized_by',
+            'rejected_by',
+            'downloaded',
+            'certificated',
+            'certification',
+            'reviewed_comment',
+            'authorized_comment',
+            'uuid',
+        ]
+
+        read_only_fields = [
+            'created_at',
+            'updated_at',
+            'reviewed_by',
+            'authorized_by',
+            'rejected_by',
+            'certificated',
+            'certification',
+            'reviewed_comment',
+            'authorized_comment',
+            'uuid',
         ]
 
     def create(self, validated_data):

@@ -23,6 +23,30 @@ class VehicleAccessAirportAccreditationsSerializer(serializers.ModelSerializer):
             'vehicles',
             'created_by',
             'status',
+            'created_at',
+            'updated_at',
+            'reviewed_by',
+            'authorized_by',
+            'rejected_by',
+            'certificated',
+            'certification',
+            'reviewed_comment',
+            'authorized_comment',
+            'uuid',
+
+        ]
+
+        read_only_fields = [
+            'created_at',
+            'updated_at',
+            'reviewed_by',
+            'authorized_by',
+            'rejected_by',
+            'certificated',
+            'certification',
+            'reviewed_comment',
+            'authorized_comment',
+            'uuid',
         ]
 
     def to_internal_value(self, data):

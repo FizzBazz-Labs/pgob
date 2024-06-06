@@ -6,7 +6,12 @@ from core.models import AccreditationStatus
 from accreditations.models import Accreditation
 
 
-class VehicleAccessAirportAccreditations(Accreditation):
+def get_information_responsible(instance, filename: str):
+    filename = filename.lower().replace(' ', '').replace('-', '')
+    return f'airport_vehicle_access/{instance.information_responsible}/{filename}'
+
+
+class VehicleAccessAirportAccreditations(models.Model):
     country = models.ForeignKey('countries.Country', on_delete=models.CASCADE,
                                 related_name='vehicle_access_airport_accreditations')
     information_responsible = models.CharField(max_length=150)
@@ -43,6 +48,13 @@ class VehicleAccessAirportAccreditations(Accreditation):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    certificated = models.BooleanField(default=False)
+    certification = models.FileField(
+        upload_to=get_information_responsible, blank=True, null=True)
+    reviewed_comment = models.TextField(blank=True, null=True)
+    authorized_comment = models.TextField(blank=True, null=True)
+    uuid = models.TextField(blank=True)
 
     def __str__(self):
         return f'{self.country.name} - {self.information_responsible}'

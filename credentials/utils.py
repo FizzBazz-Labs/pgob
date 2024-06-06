@@ -1,5 +1,8 @@
 import locale
 import jinja2
+import os
+import qrcode
+
 
 from uuid import uuid4
 from typing import Any
@@ -7,17 +10,19 @@ from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 from docxtpl import DocxTemplate
 
-import qrcode
-
 from django.conf import settings
+from django.core.files import File
+from django.db import models
 
 from core.models import SiteConfiguration, Certification
+from core.utils import convert_docx_to_pdf
 
 from national_accreditation.models import NationalAccreditation as National
 from international_accreditation.models import InternationalAccreditation as International
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation as GeneralVehicle
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft as Airfraft
 from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
+from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
 
 
 def get_image_font(size: int) -> ImageFont:
@@ -406,23 +411,36 @@ def certificate_vehicle_accreditation(item: GeneralVehicle):
     item.save()
 
 
-def get_airport_vehicles_accreditation(item: VehicleAccessAirportAccreditations):
-    template = settings.BASE_DIR / 'credentials' / \
-        'static' / 'credentials' / 'aeropuerto.docx'
-    doc = DocxTemplate('aeropuerto.docx')
+def get_credential(item: models.Model, template: str, filename, folder_name):
+    item.uuid = str(uuid4()).split('-')[0].upper()
+
+    doc = DocxTemplate(template)
     jinja_env = jinja2.Environment()
 
-    context = VehicleAccessAirportAccreditations.objects.all().last()
+    save_path = (
+        settings.BASE_DIR /
+        'certifications' /
+        folder_name
+    )
+
+    if not save_path.exists():
+        save_path.mkdir(parents=True)
 
     context = {
-        'data': context,
+        'data': item,
     }
 
     doc.render(context, jinja_env)
+    doc.save(save_path / f'{filename}.docx')
 
-    response = HttpResponse(
-        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    attachment = f'attachment; filename=PdfAeropuerto.docx'
-    response['Content-Disposition'] = attachment
-    doc.save(response)
-    return response
+    convert_docx_to_pdf(rf'{save_path / f'{filename}.docx'}')
+
+    item.certificated = True
+    file_path = save_path / f'{filename}.pdf'
+    file = File(file=open(file_path, 'rb'), name=f'{filename}.pdf')
+
+    if os.path.exists(f'{save_path / filename}.docx'):
+        os.remove(f'{save_path / filename}.docx')
+
+    item.certification.save(name=f'{filename}.pdf', content=file, save=False)
+    item.save()

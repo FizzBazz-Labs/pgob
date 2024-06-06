@@ -3,6 +3,8 @@ import subprocess
 
 import pandas as pd
 
+from pathlib import Path
+
 from django.db.models import QuerySet
 
 from core.models import AccreditationStatus
@@ -49,8 +51,10 @@ def get_data_frame(queryset: QuerySet) -> pd.DataFrame:
 
     df['birthday'] = df['birthday'].apply(lambda x: x.strftime('%d-%m-%Y'))
 
-    df['type'] = df['type'].apply(lambda x: str(model.AccreditationType(x).label) if not pd.isnull(x) else 'N/A')
-    df['status'] = df['status'].apply(lambda x: str(AccreditationStatus(x).label))
+    df['type'] = df['type'].apply(lambda x: str(
+        model.AccreditationType(x).label) if not pd.isnull(x) else 'N/A')
+    df['status'] = df['status'].apply(
+        lambda x: str(AccreditationStatus(x).label))
 
     if model == InternationalAccreditation:
         df['flight_arrival_datetime'] = df['flight_arrival_datetime'].apply(
@@ -100,8 +104,18 @@ def get_data_frame(queryset: QuerySet) -> pd.DataFrame:
     return df
 
 
-def convert_to_pdf(file, output):
+def convert_docx_to_pdf(file):
     """Converts a file to PDF using LibreOffice."""
+    os_name = os.name
+    command_name = 'soffice'
 
-    command = ['libreoffice', '--headless', '--convert-to', 'pdf', file, '--outdir', os.path.dirname(output)]
-    subprocess.run(command)
+    file_path = Path(file)
+    output_path = file_path.parent
+
+    if os_name == 'posix':
+        command_name = 'libreoffice'
+
+    command = f'{command_name} --headless --convert-to'
+    command += f' pdf "{file_path}" --outdir {output_path}'
+
+    subprocess.run(command, shell=True, check=True)

@@ -1,4 +1,3 @@
-import pypandoc
 import jinja2
 
 from django.http import HttpResponse
@@ -9,11 +8,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from docxtpl import DocxTemplate
-
-from docx import Document
-
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
 
 from core.models import SiteConfiguration, Certification, AccreditationStatus
 
@@ -82,63 +76,3 @@ class CertificateView(APIView):
             {"message": "Accepted"},
             status=status.HTTP_202_ACCEPTED,
         )
-
-
-def generate_pdf(request):
-    doc = DocxTemplate('aeropuerto.docx')
-    jinja_env = jinja2.Environment()
-
-    context = VehicleAccessAirportAccreditations.objects.all().last()
-
-    context = {
-        'data': context,
-    }
-
-    doc.render(context, jinja_env)
-
-    response = HttpResponse(
-        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    attachment = f'attachment; filename=PdfAeropuerto.docx'
-    response['Content-Disposition'] = attachment
-    doc.save(response)
-    return response
-
-
-def generate_communication_equipment_pdf(request):
-    doc = DocxTemplate('comunicacion.docx')
-    jinja_env = jinja2.Environment()
-
-    context = IntercomEquipmentDeclaration.objects.all().last()
-
-    context = {
-        'data': context,
-    }
-
-    doc.render(context, jinja_env)
-
-    response = HttpResponse(
-        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    attachment = f'attachment; filename=armas.docx'
-    response['Content-Disposition'] = attachment
-    doc.save(response)
-    return response
-
-
-def generate_weapons_pdf(request):
-    doc = DocxTemplate('armas.docx')
-    jinja_env = jinja2.Environment()
-
-    context = SecurityWeaponAccreditation.objects.all().last()
-
-    context = {
-        'data': context,
-    }
-
-    doc.render(context, jinja_env)
-
-    response = HttpResponse(
-        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    attachment = f'attachment; filename=comunicacion.docx'
-    response['Content-Disposition'] = attachment
-    doc.save(response)
-    return response

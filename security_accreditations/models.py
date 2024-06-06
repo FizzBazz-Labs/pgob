@@ -23,6 +23,11 @@ class Weapon(models.Model):
         return f'{self.weapon} - {self.caliber}'
 
 
+def get_declaration_country(instance, filename: str):
+    filename = filename.lower().replace(' ', '').replace('-', '')
+    return f'security_weapons/{instance.country.name}/{instance.name}/{filename}'
+
+
 class SecurityWeaponAccreditation(models.Model):
     country = models.ForeignKey(
         'countries.Country',
@@ -87,6 +92,13 @@ class SecurityWeaponAccreditation(models.Model):
         max_length=150,
         choices=AccreditationStatus.choices,
         default=AccreditationStatus.PENDING)
+
+    certificated = models.BooleanField(default=False)
+    certification = models.FileField(
+        upload_to=get_declaration_country, blank=True, null=True)
+    reviewed_comment = models.TextField(blank=True, null=True)
+    authorized_comment = models.TextField(blank=True, null=True)
+    uuid = models.TextField(blank=True)
 
     flight_arrival_datetime = models.DateTimeField(blank=True, null=True)
     flight_arrival_number = models.TextField(blank=True, null=True)
