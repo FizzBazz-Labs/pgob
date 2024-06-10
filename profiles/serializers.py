@@ -186,7 +186,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = (
             'id',
-            'username',
             'first_name',
             'last_name',
             'email',
@@ -231,4 +230,9 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         instance.groups.clear()
         instance.groups.add(Group.objects.get(name=group))
 
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.email = validated_data.get('email', instance.email)
+        instance.save()
+    
         return instance
