@@ -45,7 +45,8 @@ if __name__ == '__main__':
 
     print('Updating security records')
     for item in Security.objects.all():
-        item.name = item.name.title()
+        if item.name is not None:
+            item.name = item.name.title()
         item.save()
 
     print('Updating equipment records')
