@@ -1,4 +1,5 @@
-from django.db.models import Q, QuerySet
+import pandas as pd
+from django.db.models import QuerySet
 from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework.filters import SearchFilter
@@ -14,7 +15,9 @@ from accreditations.mixins import (
     ImportDataMixin,
 )
 
-from pgob_auth.permissions import IsNewsletters, IsUser
+from core import utils
+
+from pgob_auth.permissions import IsUser
 
 
 class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet):
@@ -50,4 +53,4 @@ class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet)
 
 
 class ComplexAccreditationViewSet(CertificateMixin, ExportDataMixin, ImportDataMixin, AccreditationViewSet):
-    ...
+    pass

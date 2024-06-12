@@ -120,9 +120,10 @@ class CertificateMixin:
 
 
 class ExportDataMixin:
-    @action(detail=False,
-            methods=[HTTPMethod.GET],
-            permission_classes=[AllowAny])
+    def get_data_frame(self, queryset: QuerySet) -> pd.DataFrame:
+        raise utils.get_data_frame(queryset)
+
+    @action(detail=False, methods=[HTTPMethod.GET], permission_classes=[AllowAny])
     def export(self, request, *args, **kwargs) -> HttpResponse:
         queryset = self.get_queryset().filter(status=AccreditationStatus.PENDING)
 
@@ -130,10 +131,7 @@ class ExportDataMixin:
             return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
         buffer = BytesIO()
-
-        utils.get_data_frame(queryset=queryset) \
-            .to_excel(buffer, index=False, sheet_name='Items')
-
+        self.get_data_frame(queryset=queryset).to_excel(buffer, index=False, sheet_name='Items')
         buffer.seek(0)
 
         response = HttpResponse(
