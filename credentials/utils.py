@@ -3,7 +3,6 @@ import jinja2
 import os
 import qrcode
 
-
 from uuid import uuid4
 from typing import Any
 from io import BytesIO
@@ -28,7 +27,7 @@ from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
 def get_image_font(size: int) -> ImageFont:
     try:
         path = settings.BASE_DIR / 'credentials' / \
-            'static' / 'credentials' / 'Avenir-Book.ttf'
+               'static' / 'credentials' / 'Avenir-Book.ttf'
         return ImageFont.truetype(path, size=size, encoding='utf-8')
 
     except OSError as e:
@@ -74,33 +73,33 @@ def get_certification_data(
 
 def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     template = settings.BASE_DIR / 'credentials' / \
-        'static' / 'credentials' / 'base.jpg'
+               'static' / 'credentials' / 'base.jpg'
 
     image = Image.open(template)
     image_draw = ImageDraw.Draw(image)
 
     # Draw title
     title = data['president']
-    title_font = get_image_font(80)
+    title_font = get_image_font(60)
     title_position = (image.width - image_draw.textlength(title, title_font))
 
     image_draw.text(
-        (title_position / 2, 710),
+        (title_position / 2, 375),
         title,
         fill='#808080',
         font=title_font,
-        stroke_width=3,
+        stroke_width=1,
         stroke_fill='#808080'
     )
 
     # Draw subtitle
     subtitle = 'Presidente de la República'
-    subtitle_font = get_image_font(45)
+    subtitle_font = get_image_font(35)
     subtitle_position = (
         image.width - image_draw.textlength(subtitle, subtitle_font))
 
     image_draw.text(
-        (subtitle_position / 2, 815),
+        (subtitle_position / 2, 450),
         subtitle,
         fill='#808080',
         font=subtitle_font,
@@ -110,19 +109,19 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     # Draw text
     term_date = data['term_date']
-    term_date_font = get_image_font(45)
+    term_date_font = get_image_font(35)
     term_date_position = (
         image.width - image_draw.textlength(term_date, term_date_font))
 
     image_draw.text(
-        (term_date_position / 2, 875),
+        (term_date_position / 2, 495),
         term_date,
         fill='#808080',
         font=term_date_font,
     )
 
     # Draw Profile
-    p_width, p_height = 500, 500
+    p_width, p_height = 450, 450
 
     profile = Image.open(data['profile']).resize((p_width, p_height))
     mask = Image.new('L', (p_width, p_height), 0)
@@ -133,18 +132,17 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     image.paste(
         profile_round,
-        (int((image.width - p_width) / 2), 1000),
+        (int((image.width - p_width) / 2), 600),
         mask=profile_round
     )
 
     # Draw Fullname
     fullname = data['fullname']
-    fullname_font = get_image_font(90)
-    fullname_position = image.width - \
-        image_draw.textlength(fullname, fullname_font)
+    fullname_font = get_image_font(60)
+    fullname_position = image.width - image_draw.textlength(fullname, fullname_font)
 
     image_draw.text(
-        (fullname_position / 2, 1525),
+        (fullname_position / 2, 1075),
         fullname,
         fill='#002757',
         font=fullname_font,
@@ -160,7 +158,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     type_title_font_size = 60
     type_title_font = get_image_font(type_title_font_size)
     type_title_with = type_box.width - \
-        type_box_draw.textlength(data['type'], type_title_font)
+                      type_box_draw.textlength(data['type'], type_title_font)
 
     type_box_draw.text(
         (type_title_with / 2, ((type_height - type_title_font_size - 15) / 2)),
@@ -182,7 +180,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     # Draw QR Code
     qr_data = f'{
-        settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
+    settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
     qr_image = get_qr_code(qr_data)
     image.paste(qr_image, qr_position)
 
@@ -336,7 +334,7 @@ def get_vehicle_certification(
     item: GeneralVehicle,
 ) -> tuple[Image, Image]:
     template = settings.BASE_DIR / 'credentials' / \
-        'static' / 'credentials' / 'vehicle.jpg'
+               'static' / 'credentials' / 'vehicle.jpg'
 
     image = Image.open(template)
     draw = ImageDraw.Draw(image)
@@ -373,7 +371,7 @@ def get_vehicle_certification(
 
     # Draw QR Code
     qr_data = f'{
-        settings.FRONTEND_DETAIL_URL}/general-vehicles/{item.pk}/?uuid={item.uuid}'
+    settings.FRONTEND_DETAIL_URL}/general-vehicles/{item.pk}/?uuid={item.uuid}'
     qr_image = get_qr_code(qr_data, (407, 407))
     image.paste(qr_image, qr_position)
 
