@@ -72,8 +72,8 @@ def get_certification_data(
 
 
 def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
-    template = settings.BASE_DIR / 'credentials' / \
-               'static' / 'credentials' / 'base.jpg'
+    offset = 100
+    template = settings.BASE_DIR / 'credentials' / 'static' / 'credentials' / 'base.jpg'
 
     image = Image.open(template)
     image_draw = ImageDraw.Draw(image)
@@ -84,7 +84,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     title_position = (image.width - image_draw.textlength(title, title_font))
 
     image_draw.text(
-        (title_position / 2, 375),
+        (title_position / 2, 375 - offset),
         title,
         fill='#808080',
         font=title_font,
@@ -99,7 +99,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
         image.width - image_draw.textlength(subtitle, subtitle_font))
 
     image_draw.text(
-        (subtitle_position / 2, 450),
+        (subtitle_position / 2, 450 - offset),
         subtitle,
         fill='#808080',
         font=subtitle_font,
@@ -114,14 +114,14 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
         image.width - image_draw.textlength(term_date, term_date_font))
 
     image_draw.text(
-        (term_date_position / 2, 495),
+        (term_date_position / 2, 495 - offset),
         term_date,
         fill='#808080',
         font=term_date_font,
     )
 
     # Draw Profile
-    p_width, p_height = 450, 450
+    p_width, p_height = 400, 400
 
     profile = Image.open(data['profile']).resize((p_width, p_height))
     mask = Image.new('L', (p_width, p_height), 0)
@@ -132,7 +132,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     image.paste(
         profile_round,
-        (int((image.width - p_width) / 2), 600),
+        (int((image.width - p_width) / 2), 600 - offset),
         mask=profile_round
     )
 
@@ -142,7 +142,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     fullname_position = image.width - image_draw.textlength(fullname, fullname_font)
 
     image_draw.text(
-        (fullname_position / 2, 1075),
+        (fullname_position / 2, 1000 - offset),
         fullname,
         fill='#002757',
         font=fullname_font,
@@ -172,16 +172,17 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     image.paste(type_box, (0, image.height - 200))
 
     # Draw Temp Image QR code
-    qr_position = int((image.width - 275) / 2), 1760
+    qr_size = (225, 225)
+    qr_position = int((image.width - qr_size[0]) / 2), 1125 - offset
 
     image_copy = image.copy()
-    qr_found_data_image = get_qr_code(f'{settings.FRONTEND_DETAIL_URL}/404')
+    qr_found_data_image = get_qr_code(f'{settings.FRONTEND_DETAIL_URL}/404', qr_size)
     image_copy.paste(qr_found_data_image, qr_position)
 
     # Draw QR Code
     qr_data = f'{
     settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
-    qr_image = get_qr_code(qr_data)
+    qr_image = get_qr_code(qr_data, qr_size)
     image.paste(qr_image, qr_position)
 
     return image, image_copy
