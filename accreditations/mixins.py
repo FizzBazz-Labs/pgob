@@ -121,7 +121,7 @@ class CertificateMixin:
 
 class ExportDataMixin:
     def get_data_frame(self, queryset: QuerySet) -> pd.DataFrame:
-        raise utils.get_data_frame(queryset)
+        return utils.get_data_frame(queryset)
 
     @action(detail=False, methods=[HTTPMethod.GET], permission_classes=[AllowAny])
     def export(self, request, *args, **kwargs) -> HttpResponse:
