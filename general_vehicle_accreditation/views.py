@@ -49,17 +49,22 @@ class GeneralVehicleViewSet(ExportDataMixin, ImportDataMixin, AccreditationViewS
             )
 
     def get_data_frame(self, queryset: QuerySet) -> pd.DataFrame:
-        fields = [
-            'id',
-            'assigned_to',
-            'country__name',
-            'distinctive',
-            'observations',
-            'accreditation_type',
-            'status',
-        ]
+        fields = {
+            'id': 'ID',
+            'assigned_to': 'Asignado A',
+            'country__name': 'País',
+            'distinctive': 'Distintivo',
+            'observations': 'Observaciones',
+            'accreditation_type': 'Tipo de Acreditación',
+            'vehicle__driver_name': 'Nombre del Conductor',
+            'vehicle__driver_id': 'Identificación del Conductor',
+            'vehicle__plate': 'Placa',
+            'vehicle__brand': 'Marca',
+            'vehicle__model': 'Modelo',
+            'status': 'Estado',
+        }
 
-        df = pd.DataFrame(queryset.values(*fields))
+        df = pd.DataFrame(queryset.values(*fields.keys()))
 
         df['accreditation_type'] = df['accreditation_type'].apply(
             lambda x: str(GeneralVehicle.AccreditationType(x).label),
@@ -68,14 +73,6 @@ class GeneralVehicleViewSet(ExportDataMixin, ImportDataMixin, AccreditationViewS
             lambda x: str(AccreditationStatus(x).label),
         )
 
-        df = df.rename(columns={
-            'id': 'ID',
-            'assigned_to': 'Asignado A',
-            'country__name': 'País',
-            'distinctive': 'Distintivo',
-            'observations': 'Observaciones',
-            'accreditation_type': 'Tipo de Acreditación',
-            'status': 'Estado',
-        })
+        df = df.rename(columns=fields)
 
         return df
