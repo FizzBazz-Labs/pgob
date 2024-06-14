@@ -14,11 +14,20 @@ class GeneralVehicleAccreditation(Accreditation):
         INTERNATIONAL_NEWSLETTER = 'INTERNATIONAL_NEWSLETTER', _('Prensa Internacional')
         DIPLOMATIC_MISSION = 'DIPLOMATIC_MISSION', _('Misión Diplomática')
         MINREX_OFFICIALS = 'MINREX_OFFICIALS', _('Funcionarios MINREX')
+        VEHICLES = 'VEHICLES', _('Vehículos')
+
+    class AccreditationTypeVehicle(models.TextChoices):
+        INSTITUTIONAL_SUPPORT = 'INSTITUTIONAL_SUPPORT', _('Apoyo Institucional')
+        OTHER = 'OTHER', _('Otro')
 
     accreditation_type = models.CharField(
         max_length=150,
         choices=AccreditationType.choices,
         default=AccreditationType.DIPLOMATIC_MISSION)
+    accreditation_type_vehicle = models.CharField(
+        max_length=150,
+        choices=AccreditationTypeVehicle.choices,
+        default=AccreditationTypeVehicle.INSTITUTIONAL_SUPPORT)
     assigned_to = models.CharField(max_length=150)
     vehicle = models.ForeignKey('vehicles.Vehicle', on_delete=models.PROTECT, null=True)
     country = models.ForeignKey(

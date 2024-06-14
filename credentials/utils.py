@@ -19,9 +19,7 @@ from core.utils import convert_docx_to_pdf
 from national_accreditation.models import NationalAccreditation as National
 from international_accreditation.models import InternationalAccreditation as International
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation as GeneralVehicle
-from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft as Airfraft
-from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
-from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
+from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft as Aircfraft
 
 
 def get_image_font(size: int) -> ImageFont:
@@ -230,40 +228,40 @@ def certificate_accreditation(
 
 def draw_overflight_permission(pk: int):
     def draw_flight_type(flightType: str):
-        if flightType == Airfraft.FlightType.FLIGHT:
+        if flightType == Aircfraft.FlightType.FLIGHT:
             return (1210, 785)
         else:
             return (1210, 850)
 
     def draw_aircraft_type(aircraftType: str):
-        if aircraftType == Airfraft.AircraftType.EMERGENCY:
+        if aircraftType == Aircfraft.AircraftType.EMERGENCY:
             return (450, 1020)
-        elif aircraftType == Airfraft.AircraftType.AMBULANCE:
+        elif aircraftType == Aircfraft.AircraftType.AMBULANCE:
             return (832, 1020)
-        elif aircraftType == Airfraft.AircraftType.CHARTER:
+        elif aircraftType == Aircfraft.AircraftType.CHARTER:
             return (1125, 1020)
-        elif aircraftType == Airfraft.AircraftType.MILITARY:
+        elif aircraftType == Aircfraft.AircraftType.MILITARY:
             return (1400, 1020)
-        elif aircraftType == Airfraft.AircraftType.TECHNICAL_SCALE:
+        elif aircraftType == Aircfraft.AircraftType.TECHNICAL_SCALE:
             return (2325, 1020)
         else:
             return (0, 0)
 
     def draw_category(category: str):
-        if category == Airfraft.Category.TECHNICIANS:
+        if category == Aircfraft.Category.TECHNICIANS:
             return (379, 2010)
-        elif category == Airfraft.Category.DIPLOMATS:
+        elif category == Aircfraft.Category.DIPLOMATS:
             return (800, 2010)
-        elif category == Airfraft.Category.MILITARIES:
+        elif category == Aircfraft.Category.MILITARIES:
             return (1170, 2010)
-        elif category == Airfraft.Category.RESCUERS:
+        elif category == Aircfraft.Category.RESCUERS:
             return (1955, 2010)
-        elif category == Airfraft.Category.VOLUNTEERS:
+        elif category == Aircfraft.Category.VOLUNTEERS:
             return (1580, 2010)
         else:
             return (0, 0)
 
-    data: Airfraft = Airfraft.objects.get(pk=pk)
+    data: Aircfraft = Aircfraft.objects.get(pk=pk)
 
     template = (settings.BASE_DIR / 'credentials' /
                 'static' / 'credentials' / 'overflight_permission.jpg')
