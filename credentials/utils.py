@@ -25,7 +25,7 @@ from overflight_non_commercial_aircraft.models import OverflightNonCommercialAir
 def get_image_font(size: int) -> ImageFont:
     try:
         path = settings.BASE_DIR / 'credentials' / \
-               'static' / 'credentials' / 'Avenir-Book.ttf'
+            'static' / 'credentials' / 'Avenir-Book.ttf'
         return ImageFont.truetype(path, size=size, encoding='utf-8')
 
     except OSError as e:
@@ -71,7 +71,8 @@ def get_certification_data(
 
 def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     offset = 100
-    template = settings.BASE_DIR / 'credentials' / 'static' / 'credentials' / 'base.jpg'
+    template = settings.BASE_DIR / 'credentials' / \
+        'static' / 'credentials' / 'base.jpg'
 
     image = Image.open(template)
     image_draw = ImageDraw.Draw(image)
@@ -137,7 +138,8 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     # Draw Fullname
     fullname = data['fullname']
     fullname_font = get_image_font(60)
-    fullname_position = image.width - image_draw.textlength(fullname, fullname_font)
+    fullname_position = image.width - \
+        image_draw.textlength(fullname, fullname_font)
 
     image_draw.text(
         (fullname_position / 2, 1000 - offset),
@@ -156,7 +158,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     type_title_font_size = 60
     type_title_font = get_image_font(type_title_font_size)
     type_title_with = type_box.width - \
-                      type_box_draw.textlength(data['type'], type_title_font)
+        type_box_draw.textlength(data['type'], type_title_font)
 
     type_box_draw.text(
         (type_title_with / 2, ((type_height - type_title_font_size - 15) / 2)),
@@ -174,12 +176,13 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     qr_position = int((image.width - qr_size[0]) / 2), 1125 - offset
 
     image_copy = image.copy()
-    qr_found_data_image = get_qr_code(f'{settings.FRONTEND_DETAIL_URL}/404', qr_size)
+    qr_found_data_image = get_qr_code(
+        f'{settings.FRONTEND_DETAIL_URL}/404', qr_size)
     image_copy.paste(qr_found_data_image, qr_position)
 
     # Draw QR Code
     qr_data = f'{
-    settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
+        settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
     qr_image = get_qr_code(qr_data, qr_size)
     image.paste(qr_image, qr_position)
 
@@ -333,18 +336,18 @@ def get_vehicle_certification(
     item: GeneralVehicle,
 ) -> tuple[Image, Image]:
     template = settings.BASE_DIR / 'credentials' / \
-               'static' / 'credentials' / 'vehicle.jpg'
+        'static' / 'credentials' / 'vehiclev02.jpg'
 
     image = Image.open(template)
     draw = ImageDraw.Draw(image)
 
     # Draw title
     title = f'{item.pk:0>3}'
-    title_font = get_image_font(350)
+    title_font = get_image_font(450)
     title_position = (image.width - draw.textlength(title, title_font))
 
     draw.text(
-        (title_position / 2, 1250),
+        (260, 1810),
         title,
         fill='#002757',
         font=title_font,
@@ -353,25 +356,25 @@ def get_vehicle_certification(
     )
 
     # Draw Color
-    type_width = 1415
-    type_height = 407
-    type_box = Image.new(
-        'RGBA', (type_width, type_height), certification.color)
+    # type_width = 1415
+    # type_height = 407
+    # type_box = Image.new(
+    #     'RGBA', (type_width, type_height), certification.color)
 
-    image.paste(type_box, (235, image.height - 625))
+    # image.paste(type_box, (235, image.height - 625))
 
     # Draw Temp Image QR code
-    qr_position = int(image.width - 540), int(image.height - 625)
+    qr_position = int(image.width - 570), int(image.height - 660)
 
     image_copy = image.copy()
     qr_found_data_image = get_qr_code(
-        f'{settings.FRONTEND_DETAIL_URL}/404', (407, 407))
+        f'{settings.FRONTEND_DETAIL_URL}/404', (435, 435))
     image_copy.paste(qr_found_data_image, qr_position)
 
     # Draw QR Code
     qr_data = f'{
-    settings.FRONTEND_DETAIL_URL}/general-vehicles/{item.pk}/?uuid={item.uuid}'
-    qr_image = get_qr_code(qr_data, (407, 407))
+        settings.FRONTEND_DETAIL_URL}/general-vehicles/{item.pk}/?uuid={item.uuid}'
+    qr_image = get_qr_code(qr_data, (435, 435))
     image.paste(qr_image, qr_position)
 
     return image, image_copy
