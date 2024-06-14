@@ -368,7 +368,7 @@ def get_vehicle_certification(
     title_position = (image.width - draw.textlength(title, title_font))
 
     draw.text(
-        (260, 1810),
+        (600, 1810),
         title,
         fill='#002757',
         font=title_font,
