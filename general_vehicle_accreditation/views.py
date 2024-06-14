@@ -73,6 +73,4 @@ class GeneralVehicleViewSet(ExportDataMixin, ImportDataMixin, AccreditationViewS
             lambda x: str(AccreditationStatus(x).label),
         )
 
-        df = df.rename(columns=fields)
-
-        return df
+        return df.rename(columns=fields)

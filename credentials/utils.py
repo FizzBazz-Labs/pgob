@@ -120,12 +120,33 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     )
 
     # Draw Profile
+    # p_width, p_height = 400, 400
+    #
+    # profile = Image.open(data['profile']).resize((p_width, p_height))
+    # mask = Image.new('L', (p_width, p_height), 0)
+    # draw = ImageDraw.Draw(mask)
+    # draw.ellipse((0, 0, p_width, p_height), fill=255)
+    # profile_round = Image.new('RGBA', (p_width, p_height))
+    # profile_round.paste(profile, (0, 0), mask=mask)
+    #
+    # image.paste(
+    #     profile_round,
+    #     (int((image.width - p_width) / 2), 600 - offset),
+    #     mask=profile_round
+    # )
+
+    # Draw Profile
     p_width, p_height = 400, 400
 
     profile = Image.open(data['profile']).resize((p_width, p_height))
     mask = Image.new('L', (p_width, p_height), 0)
     draw = ImageDraw.Draw(mask)
-    draw.ellipse((0, 0, p_width, p_height), fill=255)
+
+    # Draw a rectangle with rounded corners on the mask
+    round_rectangle = [(0, 0), (p_width, p_height)]
+    corner_radius = 30  # adjust this value according to your needs
+    draw.rounded_rectangle(round_rectangle, corner_radius, fill=255)
+
     profile_round = Image.new('RGBA', (p_width, p_height))
     profile_round.paste(profile, (0, 0), mask=mask)
 
