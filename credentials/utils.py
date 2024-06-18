@@ -6,7 +6,7 @@ import qrcode
 from uuid import uuid4
 from typing import Any
 from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ExifTags
 from docxtpl import DocxTemplate
 
 from django.conf import settings
@@ -69,6 +69,28 @@ def get_certification_data(
         'pk': item.pk,
         'uuid': accreditation_uuid,
     }
+
+def adjust_image_orientation(image):
+    """
+    Adjusts the orientation of an image based on its EXIF data.
+    """
+    try:
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
+        exif = image._getexif()
+        if exif is not None:
+            orientation = exif.get(orientation)
+            if orientation == 3:
+                image = image.rotate(180, expand=True)
+            elif orientation == 6:
+                image = image.rotate(270, expand=True)
+            elif orientation == 8:
+                image = image.rotate(90, expand=True)
+    except Exception as e:
+        # Log the exception if needed
+        print(f"Error adjusting image orientation: {e}")
+    return image
 
 
 def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
@@ -140,7 +162,9 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     # Draw Profile
     p_width, p_height = 300, 400
 
-    profile = Image.open(data['profile']).resize((p_width, p_height))
+    profile = Image.open(data['profile'])
+    profile = adjust_image_orientation(profile)
+    profile = profile.resize((p_width, p_height))
     mask = Image.new('L', (p_width, p_height), 0)
     draw = ImageDraw.Draw(mask)
 
@@ -189,7 +213,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
         first_name,
         fill='#002757',
         font=first_name_font,
-        stroke_width=3,
+        stroke_width=2,
         stroke_fill='#002757'
     )
 
@@ -198,7 +222,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
         last_name,
         fill='#002757',
         font=last_name_font,
-        stroke_width=3,
+        stroke_width=2,
         stroke_fill='#002757'
     )
 
