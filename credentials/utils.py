@@ -25,7 +25,7 @@ from overflight_non_commercial_aircraft.models import OverflightNonCommercialAir
 def get_image_font(size: int) -> ImageFont:
     try:
         path = settings.BASE_DIR / 'credentials' / \
-               'static' / 'credentials' / 'Avenir-Book.ttf'
+            'static' / 'credentials' / 'Avenir-Book.ttf'
         return ImageFont.truetype(path, size=size, encoding='utf-8')
 
     except OSError as e:
@@ -63,6 +63,8 @@ def get_certification_data(
         'color': certification.color,
         'text_color': certification.text_color,
         'fullname': f'{item.first_name} {item.last_name}',
+        'first_name': item.first_name,
+        'last_name': item.last_name,
         'profile': item.image,
         'pk': item.pk,
         'uuid': accreditation_uuid,
@@ -72,7 +74,7 @@ def get_certification_data(
 def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     offset = 100
     template = settings.BASE_DIR / 'credentials' / \
-               'static' / 'credentials' / 'base.jpg'
+        'static' / 'credentials' / 'base.jpg'
 
     image = Image.open(template)
     image_draw = ImageDraw.Draw(image)
@@ -158,15 +160,44 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     # Draw Fullname
     fullname = data['fullname']
+    first_name = data['first_name']
+    last_name = data['last_name']
+
     fullname_font = get_image_font(60)
     fullname_position = image.width - \
-                        image_draw.textlength(fullname, fullname_font)
+        image_draw.textlength(fullname, fullname_font)
+
+    first_name_font = get_image_font(60)
+    first_name_position = image.width - \
+        image_draw.textlength(first_name, first_name_font)
+
+    last_name_font = get_image_font(60)
+    last_name_position = image.width - \
+        image_draw.textlength(last_name, last_name_font)
+
+    # image_draw.text(
+    #     (fullname_position / 2, 1000 - offset),
+    #     fullname,
+    #     fill='#002757',
+    #     font=fullname_font,
+    #     stroke_width=3,
+    #     stroke_fill='#002757'
+    # )
 
     image_draw.text(
-        (fullname_position / 2, 1000 - offset),
-        fullname,
+        (first_name_position / 2, 1000 - offset),
+        first_name,
         fill='#002757',
-        font=fullname_font,
+        font=first_name_font,
+        stroke_width=3,
+        stroke_fill='#002757'
+    )
+
+    image_draw.text(
+        (last_name_position / 2, 1067 - offset),
+        last_name,
+        fill='#002757',
+        font=last_name_font,
         stroke_width=3,
         stroke_fill='#002757'
     )
@@ -179,7 +210,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     type_title_font_size = 60
     type_title_font = get_image_font(type_title_font_size)
     type_title_with = type_box.width - \
-                      type_box_draw.textlength(data['type'], type_title_font)
+        type_box_draw.textlength(data['type'], type_title_font)
 
     type_box_draw.text(
         (type_title_with / 2, ((type_height - type_title_font_size - 15) / 2)),
@@ -194,7 +225,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     # Draw Temp Image QR code
     qr_size = (225, 225)
-    qr_position = int((image.width - qr_size[0]) / 2), 1125 - offset
+    qr_position = int((image.width - qr_size[0]) / 2), 1140 - offset
 
     image_copy = image.copy()
     qr_found_data_image = get_qr_code(
@@ -203,7 +234,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     # Draw QR Code
     qr_data = f'{
-    settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
+        settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
     qr_image = get_qr_code(qr_data, qr_size)
     image.paste(qr_image, qr_position)
 
@@ -357,7 +388,7 @@ def get_vehicle_certification(
     item: GeneralVehicle,
 ) -> tuple[Image, Image]:
     template = settings.BASE_DIR / 'credentials' / \
-               'static' / 'credentials' / 'vehiclev02.jpg'
+        'static' / 'credentials' / 'vehiclev02.jpg'
 
     image = Image.open(template)
     draw = ImageDraw.Draw(image)
@@ -394,7 +425,7 @@ def get_vehicle_certification(
 
     # Draw QR Code
     qr_data = f'{
-    settings.FRONTEND_DETAIL_URL}/general-vehicles/{item.pk}/?uuid={item.uuid}'
+        settings.FRONTEND_DETAIL_URL}/general-vehicles/{item.pk}/?uuid={item.uuid}'
     qr_image = get_qr_code(qr_data, (435, 435))
     image.paste(qr_image, qr_position)
 
