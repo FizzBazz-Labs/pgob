@@ -43,8 +43,13 @@ class AccreditationViewSet(ApproveMixin, ReviewMixin, RejectMixin, ModelViewSet)
         return [permission() for permission in permissions]
 
     def filter_queryset(self, queryset):
-        date_filter = self.request.query_params.get('date')
         get_queryset = super().filter_queryset(queryset)
+
+        date_filter = self.request.query_params.get('date')
+        creator = self.request.query_params.get('creator')
+
+        if creator:
+            get_queryset = get_queryset.filter(created_by_id=creator)
 
         if date_filter:
             get_queryset = get_queryset.filter(created_at__date=date_filter)
