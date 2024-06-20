@@ -80,6 +80,7 @@ class Certification(models.Model):
         INTERNATIONAL_NEWSLETTER = 'INTERNATIONAL_NEWSLETTER', _('Prensa Internacional')
         DIPLOMATIC_MISSION = 'DIPLOMATIC_MISSION', _('Misión Diplomática')
         MINREX_OFFICIALS = 'MINREX_OFFICIALS', _('Funcionarios MINREX')
+        OFFICIAL_INTERNATIONAL_NEWSLETTER = 'OFFICIAL_INTERNATIONAL_NEWSLETTER', _('Prensa Oficial Internacional')
 
     accreditation_type = models.CharField(
         max_length=150,
