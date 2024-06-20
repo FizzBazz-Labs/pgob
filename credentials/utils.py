@@ -21,6 +21,8 @@ from international_accreditation.models import InternationalAccreditation as Int
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation as GeneralVehicle
 from overflight_non_commercial_aircraft.models import OverflightNonCommercialAircraft as Aircfraft
 
+from datetime import datetime
+from pathlib import Path
 
 def get_image_font(size: int) -> ImageFont:
     try:
@@ -280,18 +282,32 @@ def certificate_accreditation(
     if accreditation == 'internationals':
         country = item.country.name.lower().replace(' ', '_')
 
-    save_path = (
+    # Obtener la fecha actual en el formato YYYYMMDD
+    today_date = datetime.today().strftime('%Y%m%d')
+
+    # Generar el correlativo
+    base_save_path = (
         settings.BASE_DIR /
         'certifications' /
         accreditation /
-        country /
+        country
+    )
+    base_save_path.mkdir(parents=True, exist_ok=True)
+
+    correlativo = 1
+    while (base_save_path / f"{today_date}_{correlativo}").exists():
+        correlativo += 1
+
+    save_path = (
+        base_save_path /
+        f"{today_date}_{correlativo}" /
         str(data['type']).replace(' ', '_').lower()
     )
 
     if not save_path.exists():
         save_path.mkdir(parents=True)
 
-    filename = f'{data['type']} {data['fullname']}'.replace(' ', '_').lower()
+    filename = f'{data["type"]} {data["fullname"]}'.replace(' ', '_').lower()
     image.save(save_path / f'{filename}.pdf')
 
     item.uuid = data['uuid']
