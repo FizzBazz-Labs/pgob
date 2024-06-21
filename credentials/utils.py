@@ -274,18 +274,17 @@ def certificate_accreditation(
 ):
     certification = Certification.objects.get(accreditation_type=item.type)
 
-    data = get_certification_data(
-        configuration, certification, accreditation, item)
+    data = get_certification_data(configuration, certification, accreditation, item)
     image, image_copy = get_certification(data)
 
     country = ''
     if accreditation == 'internationals':
         country = item.country.name.lower().replace(' ', '_')
 
-    # Obtener la fecha actual en el formato YYYYMMDD
-    today_date = datetime.today().strftime('%Y%m%d')
+    # Obtener la fecha y hora actual en el formato YYYYMMDD_HH
+    today_date_time = datetime.today().strftime('%Y%m%d_%H')
 
-    # Generar el correlativo
+    # Generar la ruta base para guardar los archivos
     base_save_path = (
         settings.BASE_DIR /
         'certifications' /
@@ -294,29 +293,33 @@ def certificate_accreditation(
     )
     base_save_path.mkdir(parents=True, exist_ok=True)
 
-    correlativo = 1
-    while (base_save_path / f"{today_date}_{correlativo}").exists():
-        correlativo += 1
-
+    # Generar la ruta completa con fecha y hora sin minutos ni segundos
     save_path = (
         base_save_path /
-        f"{today_date}_{correlativo}" /
+        today_date_time /
         str(data['type']).replace(' ', '_').lower()
     )
 
+    # Crear la carpeta si no existe
     if not save_path.exists():
         save_path.mkdir(parents=True)
 
+    # Generar el nombre del archivo
     filename = f'{data["type"]} {data["fullname"]}'.replace(' ', '_').lower()
+
+    # Guardar la imagen PDF
     image.save(save_path / f'{filename}.pdf')
 
+    # Actualizar el objeto item con los datos necesarios
     item.uuid = data['uuid']
     item.certificated = True
 
+    # Guardar la imagen PNG en bytes
     image_bytes = BytesIO()
     image_copy.save(image_bytes, format='PNG')
     image_bytes.seek(0)
 
+    # Guardar la imagen PNG en el objeto item
     item.certification.save(f'{filename}.png', image_bytes, save=False)
     item.save()
 
