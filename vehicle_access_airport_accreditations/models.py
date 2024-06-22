@@ -12,11 +12,14 @@ def get_information_responsible(instance, filename: str):
 
 
 class VehicleAccessAirportAccreditations(models.Model):
-    country = models.ForeignKey('countries.Country', on_delete=models.CASCADE,
-                                related_name='vehicle_access_airport_accreditations')
+    country = models.ForeignKey(
+        'countries.Country',
+        on_delete=models.CASCADE,
+        related_name='vehicle_access_airport_accreditations')
     information_responsible = models.CharField(max_length=150)
     vehicles = models.ManyToManyField(
-        'vehicles.Vehicle', related_name='vehicle_access_airport_accreditations')
+        'vehicles.Vehicle',
+        related_name='vehicle_access_airport_accreditations')
     created_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
@@ -27,7 +30,6 @@ class VehicleAccessAirportAccreditations(models.Model):
         on_delete=models.PROTECT,
         blank=True, null=True,
         related_name='vehicle_airport_access_reviewed_set')
-    reviewed_comment = models.TextField(blank=True)
 
     authorized_by = models.ForeignKey(
         get_user_model(),
@@ -51,7 +53,9 @@ class VehicleAccessAirportAccreditations(models.Model):
 
     certificated = models.BooleanField(default=False)
     certification = models.FileField(
-        upload_to=get_information_responsible, blank=True, null=True)
+        upload_to=get_information_responsible,
+        blank=True, null=True)
+
     reviewed_comment = models.TextField(blank=True, null=True)
     authorized_comment = models.TextField(blank=True, null=True)
     uuid = models.TextField(blank=True)

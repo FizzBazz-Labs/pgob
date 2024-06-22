@@ -16,7 +16,9 @@ class IntercomEquipmentDeclaration(models.Model):
         related_name='intercom_equipment_declarations')
     institution = models.CharField(max_length=150)
     equipments = models.ManyToManyField(
-        'equipments.Equipment', related_name='intercom_equipment_declarations', blank=True)
+        'equipments.Equipment',
+        related_name='intercom_equipment_declarations',
+        blank=True)
     created_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.PROTECT,
