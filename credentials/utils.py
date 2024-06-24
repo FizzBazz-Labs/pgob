@@ -451,15 +451,20 @@ def get_vehicle_certification(item: GeneralVehicle) -> tuple[Image, Image]:
     )
 
     # Draw Color
-    # type_width = 1415
-    # type_height = 407
-    # type_box = Image.new(
-    #     'RGBA',
-    #     (type_width, type_height),
-    #     item.certification_information.color,
-    # )
+    type_width = image.width
+    type_height = 200
+    type_box = Image.new(
+        'RGBA',
+        (type_width, type_height),
+        item.certification_information.color,
+    )
 
-    # image.paste(type_box, (235, image.height - 625))
+    type_box_position = ((image.width - type_width) // 2, image.height - type_height)
+
+    image.paste(type_box, type_box_position, type_box)
+
+    # Draw Temp Image QR code
+    qr_position = int(image.width - 570), int(image.height - 660)
 
     # Draw Temp Image QR code
     qr_position = int(image.width - 570), int(image.height - 660)
