@@ -24,10 +24,11 @@ from overflight_non_commercial_aircraft.models import OverflightNonCommercialAir
 from datetime import datetime
 from pathlib import Path
 
+
 def get_image_font(size: int) -> ImageFont:
     try:
         path = settings.BASE_DIR / 'credentials' / \
-            'static' / 'credentials' / 'Avenir-Book.ttf'
+               'static' / 'credentials' / 'Avenir-Book.ttf'
         return ImageFont.truetype(path, size=size, encoding='utf-8')
 
     except OSError as e:
@@ -72,6 +73,7 @@ def get_certification_data(
         'uuid': accreditation_uuid,
     }
 
+
 def adjust_image_orientation(image):
     """
     Adjusts the orientation of an image based on its EXIF data.
@@ -98,7 +100,7 @@ def adjust_image_orientation(image):
 def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     offset = 100
     template = settings.BASE_DIR / 'credentials' / \
-        'static' / 'credentials' / 'base.jpg'
+               'static' / 'credentials' / 'base.jpg'
 
     image = Image.open(template)
     image_draw = ImageDraw.Draw(image)
@@ -191,15 +193,15 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     fullname_font = get_image_font(60)
     fullname_position = image.width - \
-        image_draw.textlength(fullname, fullname_font)
+                        image_draw.textlength(fullname, fullname_font)
 
     first_name_font = get_image_font(60)
     first_name_position = image.width - \
-        image_draw.textlength(first_name, first_name_font)
+                          image_draw.textlength(first_name, first_name_font)
 
     last_name_font = get_image_font(60)
     last_name_position = image.width - \
-        image_draw.textlength(last_name, last_name_font)
+                         image_draw.textlength(last_name, last_name_font)
 
     # image_draw.text(
     #     (fullname_position / 2, 1000 - offset),
@@ -236,7 +238,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
     type_title_font_size = 60
     type_title_font = get_image_font(type_title_font_size)
     type_title_with = type_box.width - \
-        type_box_draw.textlength(data['type'], type_title_font)
+                      type_box_draw.textlength(data['type'], type_title_font)
 
     type_box_draw.text(
         (type_title_with / 2, ((type_height - type_title_font_size - 15) / 2)),
@@ -260,7 +262,7 @@ def get_certification(data: dict[str, Any]) -> tuple[Image, Image]:
 
     # Draw QR Code
     qr_data = f'{
-        settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
+    settings.FRONTEND_DETAIL_URL}/{data['accreditation']}/{data['pk']}/?uuid={data['uuid']}'
     qr_image = get_qr_code(qr_data, qr_size)
     image.paste(qr_image, qr_position)
 
@@ -426,12 +428,9 @@ def draw_overflight_permission(pk: int):
     image.save('aircraft.pdf')
 
 
-def get_vehicle_certification(
-    certification: Certification,
-    item: GeneralVehicle,
-) -> tuple[Image, Image]:
+def get_vehicle_certification(item: GeneralVehicle) -> tuple[Image, Image]:
     template = settings.BASE_DIR / 'credentials' / \
-        'static' / 'credentials' / 'vehiclev02.jpg'
+               'static' / 'credentials' / 'vehiclev02.jpg'
 
     image = Image.open(template)
     draw = ImageDraw.Draw(image)
@@ -454,7 +453,10 @@ def get_vehicle_certification(
     # type_width = 1415
     # type_height = 407
     # type_box = Image.new(
-    #     'RGBA', (type_width, type_height), certification.color)
+    #     'RGBA',
+    #     (type_width, type_height),
+    #     item.certification_information.color,
+    # )
 
     # image.paste(type_box, (235, image.height - 625))
 
@@ -468,7 +470,7 @@ def get_vehicle_certification(
 
     # Draw QR Code
     qr_data = f'{
-        settings.FRONTEND_DETAIL_URL}/general-vehicles/{item.pk}/?uuid={item.uuid}'
+    settings.FRONTEND_DETAIL_URL}/general-vehicles/{item.pk}/?uuid={item.uuid}'
     qr_image = get_qr_code(qr_data, (435, 435))
     image.paste(qr_image, qr_position)
 
@@ -476,12 +478,9 @@ def get_vehicle_certification(
 
 
 def certificate_vehicle_accreditation(item: GeneralVehicle):
-    certification = Certification.objects.get(
-        accreditation_type=item.accreditation_type)
-
     item.uuid = str(uuid4()).split('-')[0].upper()
 
-    data = get_vehicle_certification(certification, item)
+    data = get_vehicle_certification(item)
     image, image_copy = data
 
     save_path = (

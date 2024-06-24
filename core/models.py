@@ -9,7 +9,8 @@ class SiteConfiguration(models.Model):
     name = models.CharField(max_length=255)
     logo = models.ImageField(upload_to='site/logo', null=True, blank=True)
     favicon = models.ImageField(
-        upload_to='site/favicon', null=True, blank=True)
+        upload_to='site/favicon',
+        null=True, blank=True)
 
     # Login Background
     login_background = models.ImageField(

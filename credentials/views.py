@@ -1,32 +1,39 @@
 import jinja2
 
+from docxtpl import DocxTemplate
+
 from django.http import HttpResponse
 from django.db import models
 
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from docxtpl import DocxTemplate
-
 from core.models import SiteConfiguration, Certification, AccreditationStatus
-
 from national_accreditation.models import NationalAccreditation as National
 from international_accreditation.models import InternationalAccreditation as International
 from general_vehicle_accreditation.models import GeneralVehicleAccreditation as GeneralVehicle
 
-from .utils import certificate_accreditation, certificate_vehicle_accreditation
-
 from vehicle_access_airport_accreditations.models import VehicleAccessAirportAccreditations
-
 from intercom_equipment_declaration.models import IntercomEquipmentDeclaration
-
 from security_accreditations.models import SecurityWeaponAccreditation
+
+from credentials.models import VehicleCertification
+from credentials.utils import certificate_accreditation, certificate_vehicle_accreditation
+from credentials.serializers import VehicleCertificationSerializer
+
+
+class VehicleCertificationViewSet(ReadOnlyModelViewSet):
+    queryset = VehicleCertification.objects.all()
+    serializer_class = VehicleCertificationSerializer
+    pagination_class = None
 
 
 class CertificateView(APIView):
-    def generate_pdf(self, request, model: models.Model, filename: str) -> HttpResponse:
+    @staticmethod
+    def generate_pdf(request, model: models.Model, filename: str) -> HttpResponse:
         doc = DocxTemplate(filename)
         jinja_env = jinja2.Environment()
 

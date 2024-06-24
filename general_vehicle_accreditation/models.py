@@ -57,5 +57,10 @@ class GeneralVehicleAccreditation(Accreditation):
         related_name='general_vehicle_rejected_set',
         blank=True, null=True)
 
+    certification_information = models.ForeignKey(
+        'credentials.VehicleCertification',
+        on_delete=models.PROTECT,
+        blank=True, null=True)
+
     def __str__(self):
         return f'{self.accreditation_type} {self.country} - {self.assigned_to}'
