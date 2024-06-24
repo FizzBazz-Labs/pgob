@@ -16,13 +16,14 @@ from core import utils
 from core.models import AccreditationStatus, SiteConfiguration, Certification
 
 from credentials.utils import certificate_accreditation
+from credentials.models import VehicleCertification
 
 from national_accreditation.models import NationalAccreditation as National
 
 
 class ApproveMixin:
     @action(detail=True, methods=['patch'])
-    def approve(self, request: HttpResponse, pk: None, *args, **kwargs) -> Response:
+    def approve(self, request: Request, pk: None, *args, **kwargs) -> Response:
         queryset: QuerySet = self.get_queryset()
 
         try:
@@ -34,12 +35,17 @@ class ApproveMixin:
             if 'type' in request.data:
                 item.type = request.data.get('type')
 
+            if 'certification' in request.data:
+                item.certification_information = VehicleCertification.objects.get(
+                    pk=request.data.get('certification')
+                )
+
             item.save()
 
             serializer = self.get_serializer_class()(item)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-        except queryset.model.DoesNotExist:
+        except (queryset.model.DoesNotExist, VehicleCertification.DoesNotExist):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
