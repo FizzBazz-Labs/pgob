@@ -83,6 +83,7 @@ class Certification(models.Model):
         MINREX_OFFICIALS = 'MINREX_OFFICIALS', _('Funcionarios MINREX')
         OFFICIAL_INTERNATIONAL_NEWSLETTER = 'OFFICIAL_INTERNATIONAL_NEWSLETTER', _('Prensa Oficial Internacional')
         TRANSPORT = 'TRANSPORT', _('Transporte')
+        BILATERAL_TECHNICAL = 'BILATERAL_TECHNICAL', _('Técnico Bilateral')
 
     accreditation_type = models.CharField(
         max_length=150,

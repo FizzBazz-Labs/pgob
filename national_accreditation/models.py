@@ -46,6 +46,7 @@ class NationalAccreditation(models.Model):
         COMMERCIAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Comercial')
         OFFICIAL_NEWSLETTER = 'OFFICIAL_NEWSLETTER', _('Prensa Oficial')
         TRANSPORT = 'TRANSPORT', _('Transporte')
+        BILATERAL_TECHNICAL = 'BILATERAL_TECHNICAL', _('Técnico Bilateral')
 
     image = models.ImageField(upload_to=image_filename)
     first_name = models.CharField(max_length=150, verbose_name=_('Nombre'))
