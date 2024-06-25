@@ -44,6 +44,8 @@ class NationalAccreditation(models.Model):
         SUPPLIER = 'SUPPLIER', _('Proveedor')
         NEWSLETTER_COMMITTEE = 'NEWSLETTER_COMMITTEE', _('Comisión de Prensa')
         COMMERCIAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Comercial')
+        OFFICIAL_NEWSLETTER = 'OFFICIAL_NEWSLETTER', _('Prensa Oficial')
+        TRANSPORT = 'TRANSPORT', _('Transporte')
 
     image = models.ImageField(upload_to=image_filename)
     first_name = models.CharField(max_length=150, verbose_name=_('Nombre'))

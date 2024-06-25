@@ -36,6 +36,7 @@ class InternationalAccreditation(models.Model):
         OFFICIAL_NEWSLETTER = 'OFFICIAL_NEWSLETTER', _('Prensa Oficial')
         CREW = 'CREW', _('Tripulación')
         COMMERCIAL_NEWSLETTER = 'COMMERCIAL_NEWSLETTER', _('Prensa Comercial')
+        OFFICIAL_INTERNATIONAL_NEWSLETTER = 'OFFICIAL_INTERNATIONAL_NEWSLETTER', _('Prensa Oficial Internacional')
 
     country = models.ForeignKey(
         'countries.Country',
