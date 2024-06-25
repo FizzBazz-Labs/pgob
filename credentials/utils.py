@@ -463,6 +463,19 @@ def get_vehicle_certification(item: GeneralVehicle) -> tuple[Image, Image]:
 
     image.paste(type_box, type_box_position, type_box)
 
+    cert_text = item.certification_information.name
+    cert_font = get_image_font(135)
+    text_position = (image.width - draw.textlength(cert_text, cert_font))
+
+    draw.text(
+        (text_position / 2, 2350),
+        cert_text,
+        fill=item.certification_information.text_color,
+        font=cert_font,
+        stroke_width=2,
+        stroke_fill=item.certification_information.text_color,
+    )
+
     # Draw Temp Image QR code
     qr_position = int(image.width - 570), int(image.height - 660)
 
