@@ -14,5 +14,6 @@ class InternationalResource(resources.ModelResource):
 @admin.register(International)
 class InternationalAdmin(ImportExportModelAdmin):
     list_display = ('first_name', 'last_name', 'passport_id', 'position', 'id')
+    list_filter = ('position', 'country', 'status')
     resource_classes = [InternationalResource]
     search_fields = ['first_name', 'last_name', 'passport_id', 'id']

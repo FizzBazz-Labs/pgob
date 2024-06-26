@@ -14,6 +14,7 @@ class NationalResource(resources.ModelResource):
 @admin.register(National)
 class NationalAdmin(ImportExportModelAdmin):
     list_display = ('first_name', 'last_name', 'passport_id', 'position', 'type', 'id')
+    list_filter = ('position', 'status', 'country')
     readonly_fields = ('created_at', 'updated_at')
     resource_classes = [NationalResource]
     search_fields = ['first_name', 'last_name', 'passport_id', 'id']
