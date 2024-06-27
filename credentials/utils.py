@@ -291,8 +291,7 @@ def certificate_accreditation(
     base_save_path = (
         settings.BASE_DIR /
         'certifications' /
-        accreditation /
-        country
+        accreditation
     )
     base_save_path.mkdir(parents=True, exist_ok=True)
 
@@ -300,6 +299,7 @@ def certificate_accreditation(
     save_path = (
         base_save_path /
         today_date_time /
+        country /
         str(data['type']).replace(' ', '_').lower()
     )
 
